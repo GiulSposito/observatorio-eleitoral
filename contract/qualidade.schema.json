@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qualidade.schema.json",
+  "type": "object",
+  "required": ["schema_version","release_id","election_id","municipio_tse","computed_at","pipeline_git_sha","method_version","validation_status","section_coverage","population","checks","model"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/definitions/schema_version"},
+    "release_id": {"$ref": "common.schema.json#/definitions/release_id"},
+    "election_id": {"$ref": "common.schema.json#/definitions/election_id"},
+    "municipio_tse": {"$ref": "common.schema.json#/definitions/municipio_tse"},
+    "computed_at": {"$ref": "common.schema.json#/definitions/timestamp"},
+    "pipeline_git_sha": {"$ref": "common.schema.json#/definitions/git_sha"},
+    "method_version": {"$ref": "common.schema.json#/definitions/method_version"},
+    "validation_status": {"$ref": "common.schema.json#/definitions/validation_status"},
+    "section_coverage": {
+      "type": "object",
+      "required": ["sections_total","sections_installed","units_paired","units_in_transition_analysis","eligible_share_used","excluded_by_reason","net_change_tolerance_rule"],
+      "additionalProperties": false,
+      "properties": {
+        "sections_total": {"type": "integer", "minimum": 0},
+        "sections_installed": {"type": "integer", "minimum": 0},
+        "units_paired": {"type": "integer", "minimum": 0},
+        "units_in_transition_analysis": {"type": "integer", "minimum": 0},
+        "eligible_share_used": {"$ref": "common.schema.json#/definitions/share"},
+        "excluded_by_reason": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0},
+          "propertyNames": {"enum": ["not_installed","integrity_failed","unmatched","transit_section","special_section","population_change_above_tau","possible_aggregation"]}},
+        "net_change_tolerance_rule": {"type": "string"}
+      }
+    },
+    "population": {
+      "type": "object", "required": ["closed","net_change","excluded_population"], "additionalProperties": false,
+      "properties": {"closed": {"type": "integer", "minimum": 0}, "net_change": {"type": "integer", "minimum": 0}, "excluded_population": {"type": "integer", "minimum": 0}}
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["id","family","passed","scope","count_failed"], "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "pattern": "^(integrity|harmonization|official_totals)\\.[a-z0-9_]+$"},
+          "family": {"type": "string", "enum": ["integrity","harmonization","official_totals"]},
+          "passed": {"type": "boolean"},
+          "scope": {"type": "string", "enum": ["sections","units","municipality"]},
+          "count_failed": {"type": "integer", "minimum": 0},
+          "explanation_code": {"type": ["string","null"]}
+        }
+      }
+    },
+    "model": {
+      "type": "object",
+      "required": ["status","reason_unavailable","methods","predictive_check","identified_change_share","n_units_used","calibration_id"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {"$ref": "common.schema.json#/definitions/feature_status"},
+        "reason_unavailable": {"type": ["string","null"]},
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "object", "required": ["method_id","version","status","runtime_s","diagnostics"], "additionalProperties": false,
+            "properties": {
+              "method_id": {"type": "string", "enum": ["md-bayes","lphom","ecolrxc"]},
+              "version": {"type": "string"},
+              "status": {"type": "string", "enum": ["ok","failed","skipped"]},
+              "runtime_s": {"type": ["number","null"], "minimum": 0},
+              "diagnostics": {"type": "object"}
+            }
+          }
+        },
+        "predictive_check": {
+          "type": ["object","null"], "required": ["k_folds","model_error","null_error","passed"], "additionalProperties": false,
+          "properties": {"k_folds": {"type": "integer", "minimum": 2}, "model_error": {"type": "number", "minimum": 0}, "null_error": {"type": "number", "minimum": 0}, "passed": {"type": "boolean"}}
+        },
+        "identified_change_share": {"$ref": "common.schema.json#/definitions/share"},
+        "n_units_used": {"type": "integer", "minimum": 0},
+        "calibration_id": {"type": ["string","null"]}
+      }
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "resumo.schema.json",
+  "type": "object",
+  "required": ["schema_version","release_id","election_id","status","validation_status","location","finalists","totals","accounting","coverage","display_notes"],
+  "additionalProperties": false,
+  "definitions": {
+    "round_totals": {
+      "type": "object",
+      "required": ["eligible","turnout","abstention","valid","other","blank","null","invalid"],
+      "additionalProperties": false,
+      "properties": {
+        "eligible": {"$ref": "common.schema.json#/definitions/count"},
+        "turnout": {"$ref": "common.schema.json#/definitions/count"},
+        "abstention": {"$ref": "common.schema.json#/definitions/count"},
+        "valid": {"$ref": "common.schema.json#/definitions/count"},
+        "other": {"$ref": "common.schema.json#/definitions/count"},
+        "blank": {"$ref": "common.schema.json#/definitions/count"},
+        "null": {"$ref": "common.schema.json#/definitions/count"},
+        "invalid": {"$ref": "common.schema.json#/definitions/count"}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/definitions/schema_version"},
+    "release_id": {"$ref": "common.schema.json#/definitions/release_id"},
+    "election_id": {"$ref": "common.schema.json#/definitions/election_id"},
+    "status": {"$ref": "common.schema.json#/definitions/feature_status"},
+    "validation_status": {"$ref": "common.schema.json#/definitions/validation_status"},
+    "location": {
+      "type": "object", "required": ["municipio_tse","uf","name","display_name"], "additionalProperties": false,
+      "properties": {
+        "municipio_tse": {"$ref": "common.schema.json#/definitions/municipio_tse"},
+        "uf": {"$ref": "common.schema.json#/definitions/uf"},
+        "name": {"type": "string"}, "display_name": {"type": "string"}
+      }
+    },
+    "finalists": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "items": {
+        "type": "object", "required": ["slot","number","name","round_1_votes","round_2_votes","delta_votes"], "additionalProperties": false,
+        "properties": {
+          "slot": {"$ref": "common.schema.json#/definitions/slot"},
+          "number": {"type": "string", "pattern": "^[0-9]{2}$"},
+          "name": {"type": "string"},
+          "round_1_votes": {"$ref": "common.schema.json#/definitions/count"},
+          "round_2_votes": {"$ref": "common.schema.json#/definitions/count"},
+          "delta_votes": {"type": ["integer","null"]}
+        }
+      }
+    },
+    "totals": {
+      "type": "object", "required": ["round_1","round_2"], "additionalProperties": false,
+      "properties": {"round_1": {"$ref": "#/definitions/round_totals"}, "round_2": {"$ref": "#/definitions/round_totals"}}
+    },
+    "accounting": {
+      "type": "object",
+      "required": ["other_round_1","delta_turnout","delta_invalid","delta_valid","delta_finalists","identity_residual","scope","evidence_type"],
+      "additionalProperties": false,
+      "properties": {
+        "other_round_1": {"$ref": "common.schema.json#/definitions/count"},
+        "delta_turnout": {"type": ["integer","null"]},
+        "delta_invalid": {"type": ["integer","null"]},
+        "delta_valid": {"type": ["integer","null"]},
+        "delta_finalists": {"type": ["integer","null"]},
+        "identity_residual": {"type": ["integer","null"]},
+        "scope": {"type": "string", "enum": ["all_sections"]},
+        "evidence_type": {"type": "string", "enum": ["observed"]}
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "required": ["sections_total","sections_installed","units_in_transition_analysis","eligible_share_used"],
+      "additionalProperties": false,
+      "properties": {
+        "sections_total": {"type": "integer", "minimum": 0},
+        "sections_installed": {"type": "integer", "minimum": 0},
+        "units_in_transition_analysis": {"type": "integer", "minimum": 0},
+        "eligible_share_used": {"$ref": "common.schema.json#/definitions/share"}
+      }
+    },
+    "display_notes": {"type": "array", "items": {"type": "string"}}
+  }
+}

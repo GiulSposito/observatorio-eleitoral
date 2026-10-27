@@ -1,0 +1,24 @@
+# Parâmetros do método (docs/05-metodo-analitico.md §6). Valores "simulacao" são substituídos
+# pelo resultado da calibração (§5.6) e gravados em metodo.json da release.
+method_version: "metodo-1.0.0"
+populacao:
+  tau_minimo_eleitores: 2          # tau = max(tau_minimo_eleitores, tau_fracao * E1)
+  tau_fracao: 0.01
+cobertura_minima: 0.90             # aptos do 1º turno nas unidades usadas / aptos do município
+estimacao:
+  n_secoes_min: 15                 # simulacao
+  rhat_max: 1.01
+  ess_min: 400
+  cadeias: 4
+  largura_determinada:
+    votos_minimo: 5                # largura <= max(votos_minimo, fracao_linha * total da linha)
+    fracao_linha: 0.01
+  r_estimado: 0.25                 # simulacao
+  r_fraco: 0.50                    # simulacao
+  k_folds: 5
+  ganho_preditivo_min: 0.90        # simulacao: erro_modelo <= ganho * erro_nulo
+  massa_identificada_min: 0.80
+  intervalo_nivel: 0.95
+calibracao:
+  cobertura_alvo: 0.90
+  processos: [G1, G2, G3, G4]

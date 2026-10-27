@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.2.0",
+  "release_id": "DEMO-001",
+  "election_id": "2026-presidente",
+  "status": "ready",
+  "validation_status": "partial",
+  "location": {
+    "municipio_tse": "00003",
+    "uf": "SC",
+    "name": "PORTO DAS ÁGUAS",
+    "display_name": "Porto das Águas"
+  },
+  "finalists": [
+    {
+      "slot": "A",
+      "number": "13",
+      "name": "CANDIDATO A (DEMONSTRAÇÃO)",
+      "round_1_votes": 3077,
+      "round_2_votes": 3466,
+      "delta_votes": 389
+    },
+    {
+      "slot": "B",
+      "number": "22",
+      "name": "CANDIDATO B (DEMONSTRAÇÃO)",
+      "round_1_votes": 2961,
+      "round_2_votes": 3198,
+      "delta_votes": 237
+    }
+  ],
+  "totals": {
+    "round_1": {
+      "eligible": 8849,
+      "turnout": 7123,
+      "abstention": 1726,
+      "valid": 6619,
+      "other": 581,
+      "blank": 203,
+      "null": 301,
+      "invalid": 504
+    },
+    "round_2": {
+      "eligible": 8892,
+      "turnout": 7140,
+      "abstention": 1751,
+      "valid": 6664,
+      "other": 0,
+      "blank": 191,
+      "null": 285,
+      "invalid": 476
+    }
+  },
+  "accounting": {
+    "other_round_1": 581,
+    "delta_turnout": 17,
+    "delta_invalid": -28,
+    "delta_valid": 45,
+    "delta_finalists": 626,
+    "identity_residual": 0,
+    "scope": "all_sections",
+    "evidence_type": "observed"
+  },
+  "coverage": {
+    "sections_total": 30,
+    "sections_installed": 29,
+    "units_in_transition_analysis": 27,
+    "eligible_share_used": 0.9419
+  },
+  "display_notes": [
+    "DADOS FICTÍCIOS. Bundle de demonstração para desenvolvimento; não é resultado eleitoral."
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.2.0",
+  "release_id": "DEMO-001",
+  "election_id": "2026-presidente",
+  "municipio_tse": "00002",
+  "computed_at": "2026-10-27T18:00:00Z",
+  "pipeline_git_sha": "DEMO",
+  "method_version": "metodo-1.0.0",
+  "validation_status": "passed",
+  "section_coverage": {
+    "sections_total": 8,
+    "sections_installed": 8,
+    "units_paired": 8,
+    "units_in_transition_analysis": 8,
+    "eligible_share_used": 1,
+    "excluded_by_reason": {},
+    "net_change_tolerance_rule": "max(2, 1% de E1)"
+  },
+  "population": {
+    "closed": 5,
+    "net_change": 3,
+    "excluded_population": 0
+  },
+  "checks": [
+    {
+      "id": "integrity.turnout_equals_votes",
+      "family": "integrity",
+      "passed": true,
+      "scope": "sections",
+      "count_failed": 0
+    },
+    {
+      "id": "integrity.eligible_equals_turnout_plus_abstention",
+      "family": "integrity",
+      "passed": true,
+      "scope": "sections",
+      "count_failed": 0
+    },
+    {
+      "id": "harmonization.pairing_one_to_one",
+      "family": "harmonization",
+      "passed": true,
+      "scope": "units",
+      "count_failed": 0
+    },
+    {
+      "id": "official_totals.round_1",
+      "family": "official_totals",
+      "passed": true,
+      "scope": "municipality",
+      "count_failed": 0,
+      "explanation_code": null
+    },
+    {
+      "id": "official_totals.round_2",
+      "family": "official_totals",
+      "passed": true,
+      "scope": "municipality",
+      "count_failed": 0,
+      "explanation_code": null
+    }
+  ],
+  "model": {
+    "status": "insufficient_data",
+    "reason_unavailable": "Menos de 15 seções comparáveis.",
+    "methods": [],
+    "predictive_check": null,
+    "identified_change_share": null,
+    "n_units_used": 8,
+    "calibration_id": "cal-DEMO-001"
+  }
+}

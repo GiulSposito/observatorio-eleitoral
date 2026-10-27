@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.2.0",
+  "release_id": "DEMO-001",
+  "election_id": "2026-presidente",
+  "municipio_tse": "00000",
+  "uf": "GO",
+  "name": "CIDADE MODELO",
+  "generated_at": "2026-10-27T18:00:00Z",
+  "validation_status": "passed",
+  "features": {
+    "summary": "ready",
+    "sections": "ready",
+    "bounds": "ready",
+    "scenarios": "ready",
+    "ecological_model": "ready"
+  },
+  "assets": {
+    "summary": {
+      "path": "2026-presidente/municipios/GO/00000/resumo.json",
+      "media_type": "application/json",
+      "sha256": "d1b22556a568128d5eb3a2134695761a7caac3c7f676d6f442755ed8ee264d96",
+      "bytes": 1598
+    },
+    "quality": {
+      "path": "2026-presidente/municipios/GO/00000/qualidade.json",
+      "media_type": "application/json",
+      "sha256": "1f32c04dde49c403c65a8e4266527b549f5846378656b09c98c546ee7a75ccc9",
+      "bytes": 2238
+    },
+    "sections": {
+      "path": "2026-presidente/uf=GO/secoes.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "32c7e0daaaa6187f3ef3646549cfeb07d505ddaa4531ad86c6acb5583b08a5f9",
+      "bytes": 8796
+    },
+    "bounds": {
+      "path": "2026-presidente/uf=GO/limites.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "70f556a010bba85916ba3ac69917d6f0951b93ccc467a6da8028c06ec6112ac6",
+      "bytes": 3835
+    },
+    "scenarios": {
+      "path": "2026-presidente/uf=GO/cenarios.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "fccf8ef20305077166d2ed9aef49f1cbf32c8d83f18ec1cf6122a9a362e11029",
+      "bytes": 1430
+    },
+    "flows": {
+      "path": "2026-presidente/uf=GO/fluxos_estimados.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "ada65872e35c6d6321efeb55bb321bfa24e91194c238c463edefabd8a429ce39",
+      "bytes": 5732
+    }
+  },
+  "sources": [
+    {
+      "provider": "FIXTURE",
+      "dataset": "Bundle sintético de demonstração",
+      "file": "make_bundle.R",
+      "source_url": null,
+      "collected_at": null,
+      "source_sha256": null,
+      "bytes": null
+    }
+  ],
+  "pipeline_git_sha": "DEMO",
+  "method_version": "metodo-1.0.0"
+}

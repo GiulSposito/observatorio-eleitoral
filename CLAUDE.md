@@ -48,7 +48,8 @@ Em caso de conflito: contratos (03) para schema; método (05) para verificaçõe
 - DuckDB-Wasm inicializado apenas ao solicitar detalhes; sempre protegido por fallback.
 - Plotly é a única biblioteca de gráficos (inclui Sankey); dependências de runtime com versão fixa no import map de `web/js/head.html`.
 - Sem UI kit genérico, gradientes, glassmorphism, sombras e cartões ornamentais. Não adicionar frameworks, mapas, ícones, animações ou bibliotecas sem requisito existente que justifique.
-- As cores de candidatos são **slots editoriais A/B**, nunca identidade político-partidária.
+- As cores de candidatos são **slots editoriais A/B**, nunca identidade político-partidária. Regra nacional: `A` = menor número de urna (03 §2).
+- Sem aba Horários nem logs de urna (fora do escopo).
 - Separar rigorosamente `observed`, `conditional_bound` e `model_estimate`. Não remover avisos de incerteza, cobertura e fonte para melhorar a estética.
 - Não introduzir mapas sem necessidade analítica comprovada.
 - Não acessar feeds de dados ao executar testes offline; arquivos TSE são obtidos por job próprio.
@@ -73,10 +74,10 @@ Em caso de conflito: contratos (03) para schema; método (05) para verificaçõe
 **R calcula; JSON/Parquet transportam; DuckDB-Wasm seleciona; JavaScript apresenta.** O navegador nunca estima, reconcilia nem corrige números.
 
 - **Pipeline (R, `targets`):** TSE → bronze (brutos + URL/sha256/coleta) → silver (IDs e seções normalizados, TSE ≠ IBGE) → gold (reconciliação, LP, modelo, diagnósticos) → `R/web/build_web_bundle()` → `validate_web_bundle()` (gate) → release em staging → só então atualizar `latest.json` (publicação atômica). Entrada única: `Rscript run.R <election_id>`. `data/` é gitignored.
-- **Release:** `latest.json` (único arquivo mutável) → `releases/<release_id>/catalogo.json` → manifesto por município → assets (`resumo.json`, `qualidade.json`, `secoes.parquet`, `limites.parquet`, `cenarios.parquet`, opcionais `fluxos_estimados.parquet`, `horarios.parquet`). O empacotamento físico pode mudar (Parquet agrupado por UF, ADR-04); o frontend só usa caminhos que o manifesto lista.
+- **Release:** `latest.json` (único arquivo mutável) → `releases/<release_id>/catalogo.json` → manifesto por município → assets (`resumo.json`, `qualidade.json`, `secoes.parquet`, `limites.parquet`, `cenarios.parquet`, `fluxos_estimados.parquet`), com JSON por município e Parquet por UF (03 §3); o frontend só usa caminhos que o manifesto lista.
 - **Frontend (`web/`):** páginas `index`, `explorar`, `metodologia`, `dados-e-codigo`, `sobre` (`.qmd` com ponto de montagem); lógica em `web/js/`. `data.js` é o **único** módulo que busca JSON e fala com DuckDB-Wasm; `catalog.js` busca município sem DuckDB; `state.js` mantém o recorte na URL; `format.js`, `evidence.js`, `components.js`, `charts.js` (Plotly), `app.js`, `pages/`.
 - **Carga:** `latest` → catálogo (busca) → manifesto → `resumo.json` (first paint, sem Wasm) → Parquet via DuckDB-Wasm só ao abrir aba de detalhe.
-- **Gates por status:** `manifest.features.*` ∈ `ready | partial | insufficient_data | failed | unavailable` decide quais abas aparecem (ex.: `vote_logs: unavailable` oculta Horários; `ecological_model`: `ready` permite Sankey, `partial` publica só a tabela, conforme 05 §5.7). `validation_status != passed` exige advertência e bloqueio de análises sensíveis. `catalogo.publication_status`: `ready | partial | unavailable`.
+- **Gates por status:** `manifest.features.*` ∈ `ready | partial | insufficient_data | failed | unavailable` decide quais abas aparecem (ex.: `ecological_model`: `ready` permite Sankey, `partial` publica só a tabela, conforme 05 §5.7). `validation_status != passed` exige advertência e bloqueio de análises sensíveis. `catalogo.publication_status`: `ready | partial | unavailable`.
 - **Classe de evidência:** `evidence_type ∈ {observed, conditional_bound, model_estimate}`; limite LP (`min_votes/max_votes` + `assumption_id` + `constraint_scope`) nunca se mistura com intervalo estatístico (`interval_low/estimate/interval_high` + `interval_type`).
 - **Versões rastreadas:** `app_version`, `schema_version` (semver; major em mudança incompatível), `pipeline_git_sha`, `method_version`, `release_id`.
 

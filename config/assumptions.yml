@@ -1,0 +1,29 @@
+# Hipóteses e cenários (docs/05-metodo-analitico.md §3–§5). Textos aparecem na interface.
+assumptions:
+  - id: pop-liquida-minima
+    label_ptbr: "Rotatividade mínima de eleitores"
+    description_ptbr: >-
+      Quando os aptos de uma seção mudam entre os turnos, supõe-se que só a diferença líquida entrou
+      ou saiu, sem eleitores saindo e outros entrando na mesma seção.
+  - id: homogeneidade-municipal
+    label_ptbr: "Taxas iguais nas seções do município"
+    description_ptbr: >-
+      O modelo supõe que as taxas de mudança entre categorias são as mesmas em todas as seções do
+      município, com variação aleatória em torno delas.
+  - id: sem-troca-finalistas
+    label_ptbr: "Sem troca direta entre os finalistas"
+    description_ptbr: >-
+      Nenhum eleitor do finalista A no 1º turno votou no finalista B no 2º, e vice-versa.
+scenarios:
+  - id: base
+    assumption_id: pop-liquida-minima
+    label_ptbr: "Só as margens observadas"
+    description_ptbr: "Limites que decorrem apenas dos totais de cada seção nos dois turnos."
+    constraints: []
+  - id: sem-troca-finalistas
+    assumption_id: pop-liquida-minima+sem-troca-finalistas
+    label_ptbr: "Sem troca direta entre os finalistas"
+    description_ptbr: "Limites supondo que nenhum eleitor trocou diretamente de um finalista para o outro."
+    constraints:
+      - {origin: A, destination: B, value: 0}
+      - {origin: B, destination: A, value: 0}

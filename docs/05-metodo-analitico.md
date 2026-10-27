@@ -48,9 +48,11 @@ seções difere entre turnos, a unidade é o conjunto agregado (§2.2). Cada uni
 `N` e `S` são pseudo-categorias de população (§3). Com elas, as somas de linhas e colunas fecham:
 `E₁ + max(0, E₂ − E₁) = E₂ + max(0, E₁ − E₂)`.
 
-Votos com tratamento especial do TSE (votos anulados por decisão judicial, votação por cédula,
-seções anuladas) têm sua categoria definida no teste exploratório com os arquivos de 2026, antes do
-contrato 1.x ser congelado (achado M2). Até lá, entram como verificação pendente, não como `I`.
+Votos com tratamento especial: no arquivo de detalhe de 2026 (gerado em 26/10/2026), presidente não
+tem votos de legenda nem votos anulados apurados em separado, e nenhuma seção está anulada. As 41
+seções não instaladas ficam fora (`not_installed`). Boletins recuperados (RED), urna de contingência e
+sistema de apuração são contagens normais da seção. Se uma nova versão do arquivo trouxer anulados
+apurados em separado, eles entram como verificação pendente, nunca como `I`.
 
 ---
 
@@ -141,6 +143,9 @@ Antes de fixar `τ`, medir em 2026 a distribuição de `D` por seção, separand
 voto em trânsito. `D` depende só dos aptos, não dos votos, então medir e publicar na mesma eleição
 não contamina a análise. A distribuição é publicada na página de metodologia.
 
+Medição preliminar (arquivo de detalhe de 26/10/2026, 499.248 seções pareadas): 88,8% com `D = 0`,
+10,6% com `|D| ≤ 2`, 0,5% com `|D|` entre 3 e 10 e 237 seções com `|D| > 10`.
+
 ---
 
 ## 4. Limites determinísticos
@@ -228,6 +233,9 @@ deixada de fora a partir da sua composição no 1º turno. O erro é o índice d
 ponderado por aptos (`Σⱼ |previsto − observado| ÷ 2E`). O **modelo nulo** prevê para toda unidade a
 distribuição municipal do 2º turno. A checagem passa se `erro_modelo ≤ ganho_preditivo_min ×
 erro_nulo`.
+
+O ajuste dentro da validação cruzada usa o `lphom`, que é rápido: a checagem testa a hipótese de
+homogeneidade, não um estimador específico.
 
 A checagem testa se a hipótese de homogeneidade explica a variação entre seções. Não testa os
 fluxos cruzados diretamente, por isso existe a calibração de §5.6.

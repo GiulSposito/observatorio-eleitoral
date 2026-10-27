@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "metodo.schema.json",
+  "type": "object",
+  "required": ["schema_version","release_id","method_version","parameters","categories","assumptions","scenarios","calibration","national_summary"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/definitions/schema_version"},
+    "release_id": {"$ref": "common.schema.json#/definitions/release_id"},
+    "method_version": {"$ref": "common.schema.json#/definitions/method_version"},
+    "parameters": {"type": "object"},
+    "categories": {
+      "type": "array",
+      "items": {"type": "object", "required": ["code","round","label_ptbr"], "additionalProperties": false,
+                "properties": {"code": {"type": "string", "enum": ["A","B","O","I","X","N","S"]}, "round": {"type": "integer", "enum": [1,2]}, "label_ptbr": {"type": "string"}}}
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {"type": "object", "required": ["id","label_ptbr","description_ptbr"], "additionalProperties": false,
+                "properties": {"id": {"type": "string"}, "label_ptbr": {"type": "string"}, "description_ptbr": {"type": "string"}}}
+    },
+    "scenarios": {
+      "type": "array",
+      "items": {"type": "object", "required": ["id","assumption_id","label_ptbr","description_ptbr"], "additionalProperties": false,
+                "properties": {"id": {"type": "string"}, "assumption_id": {"type": "string"}, "label_ptbr": {"type": "string"}, "description_ptbr": {"type": "string"}}}
+    },
+    "calibration": {
+      "type": "object", "required": ["calibration_id","status","target_coverage","results","decision"], "additionalProperties": false,
+      "properties": {
+        "calibration_id": {"type": ["string","null"]},
+        "status": {"type": "string", "enum": ["passed","failed","not_run"]},
+        "target_coverage": {"type": "number"},
+        "results": {"type": "array", "items": {"type": "object"}},
+        "decision": {"type": "string"}
+      }
+    },
+    "national_summary": {"type": "object"}
+  }
+}

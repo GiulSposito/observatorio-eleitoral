@@ -55,8 +55,8 @@ dados versionado que o navegador consulta com DuckDB-Wasm.
 6. **Proveniência ponta a ponta.** Qualquer número na tela leva até a release, o modelo, as
    hipóteses e os arquivos do TSE (URL + hash) que o produziram.
 7. **O motor é genérico; a eleição é configuração.** Nada no código conhece "Lula", "Flávio",
-   "2026" ou "presidente". Candidatos são mapeados para categorias (`finalist_a`, `finalist_b`,
-   `other`, `invalid`, `abstention`) por arquivo de configuração. O escopo do produto é a eleição
+   "2026" ou "presidente". Candidatos são mapeados para as categorias `A`, `B`, `O`, `I`, `X` (e `N`/`S`)
+   de 03 §2 por arquivo de configuração. O escopo do produto é a eleição
    presidencial de 2026 (1º × 2º turno); nenhuma outra eleição é usada.
 8. **Infraestrutura mínima.** `git clone` + dados de entrada + build = aplicação completa.
 
@@ -97,7 +97,7 @@ publicação** (arquivos estáticos em CDN).
 │  resultados/seção     arquivos       modelo canônico   resultados        │
 │  boletins de urna     originais,     harmonizado,      analíticos        │
 │  eleitorado/locais    hashes,        Parquet por UF,   completos:        │
-│  logs de urna         proveniência   chaves validadas  reconciliação,    │
+│                       proveniência   chaves validadas  reconciliação,    │
 │                                                        limites, modelos, │
 │                                                        cenários,         │
 │                                                        diagnósticos      │
@@ -136,7 +136,7 @@ proveniência deles. Nenhuma transformação de conteúdo.
 
 - **Adaptadores por tipo de fonte**, com interface comum `descobrir_fontes(config) →
   baixar_verificar(fonte) → arquivo`:
-  - download em lote por UF/turno (resultados por seção, BUs, eleitorado, locais, logs);
+  - download em lote por UF/turno (votação por seção e detalhe da votação por seção);
   - coleta individual de BUs quando o lote ainda não foi publicado (caso do 2º turno de 2026
     citado na visão).
 - **`source_files`** (tabela de proveniência): `file_id`, `election_id`, `uf`, `turno`, `kind`,
@@ -197,7 +197,6 @@ Módulos, cada um com entrada e saída tabulares:
 | `ecological/calibration` | margens reais do 1º turno + processos G1–G4 | `calibration_report` — cobertura e erro por classe de identificação e porte; fixa os limiares de `config/metodo.yml` | — |
 | `diagnostics/` | modelo + Silver | `model_diagnostics` — R-hat, ESS, unidades usadas, cobertura, checagem preditiva, classe de identificação por célula | — |
 | `context/` | `municipal_indicators` | `municipal_context` — posição do município entre comparáveis (UF, porte, perfil) | observed |
-| `logs/` (posterior) | logs de urna | `vote_time_profile` — distribuição temporal agregada, só onde a cobertura é confiável | observed |
 
 Regras do motor:
 
@@ -295,7 +294,7 @@ latest.json                                   único arquivo mutável (Cache-Con
 └── releases/<release_id>/catalogo.json       busca de município, sem DuckDB
     └── …/<municipio_tse>/manifest.json       features, assets (path + sha256), fontes, versões
         ├── resumo.json · qualidade.json      first paint e aba Qualidade, sem Wasm
-        └── secoes · limites · cenarios · fluxos_estimados · horarios (.parquet)
+        └── uf=<UF>/ secoes · limites · cenarios · fluxos_estimados (.parquet)
                                               via DuckDB-Wasm, só ao abrir a aba que usa
 ```
 
@@ -330,7 +329,6 @@ tipo de Parquet, contra mais de 16 mil no layout por município.
 | Transferências | `limites.parquet`; `fluxos_estimados.parquet` só com modelo `ready` | conditional_bound; model_estimate |
 | Cenários | `cenarios.parquet` | declarado por cenário |
 | Qualidade | `qualidade.json`, manifesto | — |
-| Horários | `horarios.parquet`, só com logs válidos | observed |
 
 ---
 

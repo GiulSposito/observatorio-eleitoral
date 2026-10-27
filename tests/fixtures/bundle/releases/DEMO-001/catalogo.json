@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.2.0",
+  "release_id": "DEMO-001",
+  "generated_at": "2026-10-27T18:00:00Z",
+  "election": {
+    "election_id": "2026-presidente",
+    "year": 2026,
+    "office": "presidente",
+    "label": "Presidência · 2026 · 1º × 2º turno (DEMONSTRAÇÃO)",
+    "rounds": [
+      {
+        "round": 1,
+        "date": "2026-10-04"
+      },
+      {
+        "round": 2,
+        "date": "2026-10-25"
+      }
+    ],
+    "slot_rule": "lowest_ballot_number",
+    "finalists": [
+      {
+        "slot": "A",
+        "number": "13",
+        "name": "CANDIDATO A (DEMONSTRAÇÃO)"
+      },
+      {
+        "slot": "B",
+        "number": "22",
+        "name": "CANDIDATO B (DEMONSTRAÇÃO)"
+      }
+    ]
+  },
+  "municipalities": [
+    {
+      "municipio_tse": "00000",
+      "municipio_ibge": null,
+      "name": "CIDADE MODELO",
+      "display_name": "Cidade Modelo",
+      "uf": "GO",
+      "n_sections": 40,
+      "manifest_url": "2026-presidente/municipios/GO/00000/manifest.json",
+      "publication_status": "ready"
+    },
+    {
+      "municipio_tse": "00001",
+      "municipio_ibge": null,
+      "name": "VALE SERENO",
+      "display_name": "Vale Sereno",
+      "uf": "MG",
+      "n_sections": 26,
+      "manifest_url": "2026-presidente/municipios/MG/00001/manifest.json",
+      "publication_status": "ready"
+    },
+    {
+      "municipio_tse": "00002",
+      "municipio_ibge": null,
+      "name": "VALE SERENO",
+      "display_name": "Vale Sereno",
+      "uf": "GO",
+      "n_sections": 8,
+      "manifest_url": "2026-presidente/municipios/GO/00002/manifest.json",
+      "publication_status": "ready"
+    },
+    {
+      "municipio_tse": "00003",
+      "municipio_ibge": null,
+      "name": "PORTO DAS ÁGUAS",
+      "display_name": "Porto das Águas",
+      "uf": "SC",
+      "n_sections": 30,
+      "manifest_url": "2026-presidente/municipios/SC/00003/manifest.json",
+      "publication_status": "partial"
+    }
+  ]
+}

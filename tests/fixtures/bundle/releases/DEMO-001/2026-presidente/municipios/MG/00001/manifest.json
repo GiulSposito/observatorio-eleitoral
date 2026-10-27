@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.2.0",
+  "release_id": "DEMO-001",
+  "election_id": "2026-presidente",
+  "municipio_tse": "00001",
+  "uf": "MG",
+  "name": "VALE SERENO",
+  "generated_at": "2026-10-27T18:00:00Z",
+  "validation_status": "passed",
+  "features": {
+    "summary": "ready",
+    "sections": "ready",
+    "bounds": "ready",
+    "scenarios": "ready",
+    "ecological_model": "partial"
+  },
+  "assets": {
+    "summary": {
+      "path": "2026-presidente/municipios/MG/00001/resumo.json",
+      "media_type": "application/json",
+      "sha256": "0537fa9b61f36e7d419b8be833694a732dcc98cc41edfa6ad3afb392f5efdefa",
+      "bytes": 1587
+    },
+    "quality": {
+      "path": "2026-presidente/municipios/MG/00001/qualidade.json",
+      "media_type": "application/json",
+      "sha256": "50be3aed481e8e01c526e3ad1337325b0762db67f17fa88da43caaed24f14d94",
+      "bytes": 2240
+    },
+    "sections": {
+      "path": "2026-presidente/uf=MG/secoes.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "1f98a8b7c4c8334cb02360bc84dc1d72e6a51795bc3492b1a956f148860c7bd7",
+      "bytes": 7864
+    },
+    "bounds": {
+      "path": "2026-presidente/uf=MG/limites.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "abd713da78e7b48cec32099bb68c731055b7f5a2b6d44668b50835ca2c3cbae9",
+      "bytes": 3696
+    },
+    "scenarios": {
+      "path": "2026-presidente/uf=MG/cenarios.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "c746aab777eb99e56160d02e25809b97ae5610c13a93717a51c87774411a67e5",
+      "bytes": 1404
+    },
+    "flows": {
+      "path": "2026-presidente/uf=MG/fluxos_estimados.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "5f7df59f391f9983633e231b1c6a32450567dedd36c502514e5239cf66bb6588",
+      "bytes": 5618
+    }
+  },
+  "sources": [
+    {
+      "provider": "FIXTURE",
+      "dataset": "Bundle sintético de demonstração",
+      "file": "make_bundle.R",
+      "source_url": null,
+      "collected_at": null,
+      "source_sha256": null,
+      "bytes": null
+    }
+  ],
+  "pipeline_git_sha": "DEMO",
+  "method_version": "metodo-1.0.0"
+}
