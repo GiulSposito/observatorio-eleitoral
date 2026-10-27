@@ -253,8 +253,8 @@ async function panelResumo(my) {
   const t2 = r.totals.round_2;
   const acc = r.accounting;
   const metrics = metricStrip([
-    { slot: "A", name: `${ev.shortName(A.name)} · 2º turno`, value: fmt.int(A.round_2_votes), sub: `${fmt.signedVotes(A.delta_votes)} ante o 1º turno` },
-    { slot: "B", name: `${ev.shortName(B.name)} · 2º turno`, value: fmt.int(B.round_2_votes), sub: `${fmt.signedVotes(B.delta_votes)} ante o 1º turno` },
+    { slot: "A", name: `${ev.finalistName(A)} · 2º turno`, value: fmt.int(A.round_2_votes), sub: `${fmt.signedVotes(A.delta_votes)} ante o 1º turno` },
+    { slot: "B", name: `${ev.finalistName(B)} · 2º turno`, value: fmt.int(B.round_2_votes), sub: `${fmt.signedVotes(B.delta_votes)} ante o 1º turno` },
     { name: "Variação no comparecimento", value: fmt.signed(acc.delta_turnout), sub: "pessoas que votaram" },
     { name: "Variação de brancos e nulos", value: fmt.signed(acc.delta_invalid), sub: "votos inválidos" },
   ]);
@@ -276,10 +276,10 @@ async function panelResumo(my) {
   // o título do SVG aponta para o h3 do frame
   slope.querySelector("svg")?.setAttribute("aria-labelledby", `${slope.querySelector("h3").id} ${slopeTitle}-desc`);
 
-  const note = el("aside", { class: "editorial-note" },
+  const note = el("div", { class: "editorial-note", role: "note" },
     el("div", { class: "ce-label" }, "Leitura dos dados"),
     el("h2", {}, "Os totais mudam. Os fluxos individuais não são observados."),
-    el("p", {}, `Entre os turnos, ${ev.shortName(A.name)} variou ${fmt.signedVotes(A.delta_votes)} e ${ev.shortName(B.name)}, ${fmt.signedVotes(B.delta_votes)}. O comparecimento variou ${fmt.signed(acc.delta_turnout)} e os brancos e nulos, ${fmt.signed(acc.delta_invalid)}.`),
+    el("p", {}, `Entre os turnos, o finalista A variou ${fmt.signedVotes(A.delta_votes)} e o finalista B, ${fmt.signedVotes(B.delta_votes)}. O comparecimento variou ${fmt.signed(acc.delta_turnout)} e os brancos e nulos, ${fmt.signed(acc.delta_invalid)}.`),
     el("p", {}, "Esses agregados não mostram como eleitores específicos mudaram de voto. Para estimar transferências são necessárias hipóteses adicionais, explicadas na aba Transferências."),
     el("a", { href: "metodologia.html" }, "Entenda a metodologia →"));
 
@@ -305,8 +305,8 @@ async function panelResumo(my) {
       ["Comparecimento", fmt.int(t1.turnout), fmt.int(t2.turnout)],
       ["Abstenção", fmt.int(t1.abstention), fmt.int(t2.abstention)],
       ["Votos válidos", fmt.int(t1.valid), fmt.int(t2.valid)],
-      [`A · ${ev.shortName(A.name)}`, fmt.int(A.round_1_votes), fmt.int(A.round_2_votes)],
-      [`B · ${ev.shortName(B.name)}`, fmt.int(B.round_1_votes), fmt.int(B.round_2_votes)],
+      [ev.finalistName(A), fmt.int(A.round_1_votes), fmt.int(A.round_2_votes)],
+      [ev.finalistName(B), fmt.int(B.round_1_votes), fmt.int(B.round_2_votes)],
       ["Demais candidatos", fmt.int(t1.other), fmt.int(t2.other)],
       ["Brancos", fmt.int(t1.blank), fmt.int(t2.blank)],
       ["Nulos", fmt.int(t1.null), fmt.int(t2.null)],
@@ -321,7 +321,7 @@ async function panelResumo(my) {
 
   return el("div", {},
     metrics,
-    el("div", { class: "content-grid" }, slope, note),
+    el("div", { class: "ce-split" }, slope, note),
     accounting,
     el("section", { "aria-label": "Totais por turno" }, el("h3", { class: "chart-title" }, "Totais por turno"), totals),
     foot);
@@ -346,7 +346,7 @@ async function panelSecoes(my) {
   const normSel = el("select", { id: ids.norm, class: "ce-input" },
     el("option", { value: "per100" }, "Por 100 aptos do 1º turno"), el("option", { value: "abs" }, "Votos absolutos"));
   const slotSel = el("select", { id: ids.slot, class: "ce-input" },
-    el("option", { value: "A" }, `A · ${ev.shortName(A.name)}`), el("option", { value: "B" }, `B · ${ev.shortName(B.name)}`));
+    el("option", { value: "A" }, ev.finalistTag(A)), el("option", { value: "B" }, ev.finalistTag(B)));
   const filters = el("div", { class: "filters" },
     el("div", {}, el("label", { for: ids.zona }, "Zona"), zonaSel),
     el("div", {}, el("label", { for: ids.norm }, "Escala"), normSel),
@@ -408,6 +408,7 @@ async function panelSecoes(my) {
 function sectionsTable(rows, A, B) {
   const status = (r) => (r.in_transition_analysis ? "Na análise" : ev.EXCLUSION_TEXT[r.exclusion_reason] || "Fora da análise");
   return dataTable({
+    rows,
     caption: `${fmt.int(rows.length)} seções. Valores observados; “–” indica dado ausente, nunca zero.`,
     pageSize: 50,
     rowClass: (r) => (r.in_transition_analysis ? null : "excluded"),
@@ -534,7 +535,7 @@ async function panelTransferencias(my) {
       caption: "Métodos comparados",
       head: ["Método", "Situação", "Tempo (s)", "Diagnóstico"],
       rows: model.methods.map((m) => [m.method_id, m.status, fmt.dec(m.runtime_s, 1),
-        Object.entries(m.diagnostics || {}).map(([k, v]) => `${k}: ${typeof v === "number" ? fmt.dec(v, 3) : v}`).join(" · ") || "–"]),
+        Object.entries(m.diagnostics || {}).map(([k, v]) => `${k}: ${typeof v === "number" ? (Number.isInteger(v) ? fmt.int(v) : fmt.dec(v, 3)) : v}`).join(" · ") || "–"]),
     }) : null,
     model?.predictive_check ? el("p", {}, `Checagem preditiva (${model.predictive_check.k_folds} grupos): erro do modelo ${fmt.dec(model.predictive_check.model_error, 3)} contra ${fmt.dec(model.predictive_check.null_error, 3)} do modelo nulo — ${model.predictive_check.passed ? "passou" : "não passou"}.`) : null,
     model?.identified_change_share != null ? el("p", {}, `Massa de mudança em células determinadas ou estimadas: ${fmt.pct(model.identified_change_share)}.`) : null,

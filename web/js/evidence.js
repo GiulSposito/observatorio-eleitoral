@@ -31,15 +31,19 @@ export function categoryLabels(metodo, finalists) {
   const out = { 1: { ...DEFAULT_LABELS[1] }, 2: { ...DEFAULT_LABELS[2] } };
   for (const c of metodo?.categories || []) out[c.round][c.code] = c.label_ptbr;
   for (const f of finalists || []) {
-    for (const r of [1, 2]) out[r][f.slot] = `${f.slot} · ${shortName(f.name)}`;
+    for (const r of [1, 2]) out[r][f.slot] = finalistTag(f);
   }
   return out;
 }
 
-export function shortName(name) {
-  const words = String(name || "").trim().split(/\s+/);
-  if (words.length <= 2) return titleCase(words.join(" "));
-  return titleCase(`${words[0]} ${words[words.length - 1]}`);
+// "Finalista A (13)": rótulo curto e neutro para matrizes, eixos e seletores.
+export function finalistTag(f) {
+  return `Finalista ${f.slot} (${f.number})`;
+}
+
+// "A · Luiz Inácio Lula da Silva": nome completo do TSE em caixa mista, com o slot.
+export function finalistName(f) {
+  return `${f.slot} · ${titleCase(f.name)}`;
 }
 
 export function titleCase(s) {
@@ -151,8 +155,8 @@ export function sankeyData(flows, labels) {
   const origins = ORIGINS.filter((o) => flows.some((f) => f.origin === o));
   const dests = DESTINATIONS.filter((d) => flows.some((f) => f.destination === d));
   const nodes = [
-    ...origins.map((o) => ({ id: `1:${o}`, label: `${labels[1][o]} (1º)`, code: o, round: 1 })),
-    ...dests.map((d) => ({ id: `2:${d}`, label: `${labels[2][d]} (2º)`, code: d, round: 2 })),
+    ...origins.map((o) => ({ id: `1:${o}`, label: `${labels[1][o]} · 1º turno`, code: o, round: 1 })),
+    ...dests.map((d) => ({ id: `2:${d}`, label: `${labels[2][d]} · 2º turno`, code: d, round: 2 })),
   ];
   const unknownId = "2:?";
   const links = [];

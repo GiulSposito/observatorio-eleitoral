@@ -59,18 +59,21 @@ export function slopeChart(finalists, titleId) {
   for (const [x, lab] of [[x1, "1º turno"], [x2, "2º turno"]]) {
     root.append(svg("text", { x, y: H - 18, fill: c.muted, "font-size": 13, "text-anchor": "middle" }, lab));
   }
-  const ends = finalists.map((f) => ({ f, y2: y(f.round_2_votes || 0) }));
-  const close = ends.length === 2 && Math.abs(ends[0].y2 - ends[1].y2) < 24;
-  ends.forEach(({ f, y2 }, i) => {
+  const ends = finalists.map((f) => ({ f, y1: y(f.round_1_votes || 0), y2: y(f.round_2_votes || 0) }));
+  // rótulos de pontas próximas são afastados para cima e para baixo
+  const offset = (key, i) => {
+    if (ends.length !== 2 || Math.abs(ends[0][key] - ends[1][key]) >= 24) return 5;
+    const upper = ends[0][key] <= ends[1][key] ? 0 : 1;
+    return i === upper ? -10 : 20;
+  };
+  ends.forEach(({ f, y1, y2 }, i) => {
     const col = c[f.slot] || c.ink;
-    const y1 = y(f.round_1_votes || 0);
     root.append(svg("line", { x1, y1, x2, y2, stroke: col, "stroke-width": 3.5, "stroke-linecap": "round" }));
     for (const [xx, yy] of [[x1, y1], [x2, y2]]) {
       root.append(svg("circle", { cx: xx, cy: yy, r: 5, fill: col, stroke: c.surface, "stroke-width": 1.5 }));
     }
-    const dy = close ? (ends[0].y2 <= ends[1].y2 ? (i === 0 ? -12 : 20) : (i === 0 ? 20 : -12)) : 5;
-    root.append(svg("text", { x: x2 + 14, y: y2 + dy, fill: col, "font-size": 14, "font-weight": 600 }, `${f.slot} · ${fmt.int(f.round_2_votes)}`));
-    root.append(svg("text", { x: x1 - 14, y: y1 + 5, fill: col, "font-size": 13, "text-anchor": "end" }, fmt.int(f.round_1_votes)));
+    root.append(svg("text", { x: x2 + 14, y: y2 + offset("y2", i), fill: col, "font-size": 14, "font-weight": 600 }, `${f.slot} · ${fmt.int(f.round_2_votes)}`));
+    root.append(svg("text", { x: x1 - 14, y: y1 + offset("y1", i), fill: col, "font-size": 13, "text-anchor": "end" }, `${f.slot} · ${fmt.int(f.round_1_votes)}`));
   });
   return root;
 }

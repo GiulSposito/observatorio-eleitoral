@@ -10,7 +10,8 @@ function isMissing(x) {
 }
 
 function fixed(x, dp) {
-  return Number(x).toLocaleString(LOCALE, { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  // sinal de menos tipográfico também nos negativos sem sinal explícito
+  return Number(x).toLocaleString(LOCALE, { minimumFractionDigits: dp, maximumFractionDigits: dp }).replace("-", MINUS);
 }
 
 // 1234 -> "1.234"

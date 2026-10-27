@@ -57,7 +57,9 @@ function score(item, text) {
 export function search(index, query, { limit = 12 } = {}) {
   const raw = String(query || "").trim();
   if (/^[0-9]{2,5}$/.test(raw)) {
-    return index.items.filter((m) => m.municipio_tse.startsWith(raw)).slice(0, limit);
+    return index.items.filter((m) => m.municipio_tse.startsWith(raw))
+      .sort((a, b) => a.municipio_tse.localeCompare(b.municipio_tse))
+      .slice(0, limit);
   }
   const qNorm = normalize(raw);
   if (qNorm.length < 2) return [];
