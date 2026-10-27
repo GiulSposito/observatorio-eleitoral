@@ -6,7 +6,8 @@
 >
 > **Atualização (27/10/2026):** C1, C2, C3, C4 e A1 foram tratados em
 > [`05-metodo-analitico.md`](05-metodo-analitico.md), e o escopo passou a ser a eleição
-> presidencial de 2026 (1º × 2º turno). Os demais achados seguem abertos.
+> presidencial de 2026 (1º × 2º turno), sem uso de outras eleições: onde esta revisão sugere
+> dados de 2022, leia-se arquivos de 2026. Os demais achados seguem abertos.
 
 ## Sumário executivo
 

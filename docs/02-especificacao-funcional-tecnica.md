@@ -15,7 +15,7 @@ O produto não identifica como cada eleitor votou, não infere fraude e não apr
 
 | Tema | Decisão |
 |---|---|
-| Escopo eleitoral | Presidente da República 2026: 1º turno (4/10) × 2º turno (25/10), todos os municípios; exterior fora; 2022 só como base interna (`05-metodo-analitico.md` §0) |
+| Escopo eleitoral | Presidente da República 2026: 1º turno (4/10) × 2º turno (25/10), todos os municípios; exterior fora; nenhuma outra eleição é usada (`05-metodo-analitico.md` §0) |
 | Idioma e localização | pt-BR; datas BRT ou ISO no metadata; números com `Intl.NumberFormat('pt-BR')` |
 | Interface | Site Quarto (`web/`) + JavaScript em ES modules sem etapa de build; CSS com tokens (`web/css/design-tokens.css`); sem biblioteca genérica de dashboards. Mesmo stack do DudesApp (ver `arquitetura.md`, ADR-03) |
 | Build/deploy | `quarto render web` gera `web/_site/` estático; hospedagem em Pages/CDN; sem Node no build do site |
@@ -58,7 +58,7 @@ Documentação oficial: https://quarto.org/docs/websites/ ; https://duckdb.org/d
 - Geolocalização individual do eleitor ou mapas de calor que aleguem conhecer preferências individuais.
 - WebR e modelagem MCMC executada no navegador.
 - Aplicação Shiny, backend REST, GraphQL, Postgres, autenticação ou infraestrutura serverless para a interface.
-- Outros cargos e outras eleições; 2022 só como base interna de desenvolvimento e calibração.
+- Outros cargos e outras eleições, inclusive como base de desenvolvimento ou calibração.
 - Comparação entre municípios como requisito de primeira versão; arquitetura preparada para fases seguintes.
 
 ## 2. Arquitetura e fluxo de dados

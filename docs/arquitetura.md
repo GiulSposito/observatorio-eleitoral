@@ -57,7 +57,7 @@ dados versionado que o navegador consulta com DuckDB-Wasm.
 7. **O motor é genérico; a eleição é configuração.** Nada no código conhece "Lula", "Flávio",
    "2026" ou "presidente". Candidatos são mapeados para categorias (`finalist_a`, `finalist_b`,
    `other`, `invalid`, `abstention`) por arquivo de configuração. O escopo do produto é a eleição
-   presidencial de 2026 (1º × 2º turno); 2022 é base interna de desenvolvimento e calibração.
+   presidencial de 2026 (1º × 2º turno); nenhuma outra eleição é usada.
 8. **Infraestrutura mínima.** `git clone` + dados de entrada + build = aplicação completa.
 
 Em uma frase (adaptada do DudesApp):
@@ -541,17 +541,17 @@ obsEleitoral/
 ## 13. Evolução por etapas
 
 Fases, gates e prompts: [`04-roteiro-implementacao-claude-code.md`](04-roteiro-implementacao-claude-code.md).
-O desenvolvimento usa uma eleição de dois turnos já publicada (ex.: 2022) como base de teste da
-infraestrutura; nenhuma fase depende de um município específico.
+O desenvolvimento usa só os arquivos de 2026, começando pelo 1º turno enquanto o 2º não for
+publicado; nenhuma fase depende de um município específico.
 
 ---
 
 ## 14. Riscos e questões em aberto
 
 - **Disponibilidade do 2º turno no TSE** (visão, §5). Mitigação: adaptador de coleta individual e
-  2022 como base de desenvolvimento.
+  desenvolvimento iniciado pelos arquivos do 1º turno.
 - **Harmonização entre turnos** (seções agregadas, voto em trânsito, variação de aptos). Regra
-  escrita em `05-metodo-analitico.md` §2–3; falta confirmar com os dados de 2022 a fonte do tipo de
+  escrita em `05-metodo-analitico.md` §2–3; falta confirmar com os arquivos de 2026 a fonte do tipo de
   seção e a distribuição da mudança de aptos.
 - **Custo computacional da estimação.** Dois ou mais métodos, validação cruzada e calibração por
   simulação para 5.570 municípios; medir o tempo por UF antes da Fase 3.

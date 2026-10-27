@@ -15,9 +15,10 @@ Este documento responde aos achados críticos C1–C4 (e ao A1) de `analise-crit
   presidencial teve 2º turno em todos eles.
 - **Fora do escopo:** outros cargos e outras eleições; votos no exterior (UF `ZZ`), que não
   pertencem a município.
-- **Uso interno de 2022:** a eleição presidencial de 2022, também com dois turnos, é base de
-  desenvolvimento, de testes com dados reais e de calibração (§3.4 e §5.6). Não é publicada no
-  produto.
+- **Nenhuma outra eleição** é usada, nem para desenvolvimento ou calibração. A calibração
+  (§3.4 e §5.6) usa só dados de 2026 que não envolvem o resultado do 2º turno: aptos por seção e
+  margens do 1º turno. Enquanto o TSE não publicar o 2º turno por seção, o desenvolvimento começa
+  pelos arquivos do 1º turno.
 - O motor continua genérico (eleição definida por configuração), mas a especificação, os testes de
   aceite e os textos da interface tratam só do caso acima.
 
@@ -48,7 +49,7 @@ seções difere entre turnos, a unidade é o conjunto agregado (§2.2). Cada uni
 `E₁ + max(0, E₂ − E₁) = E₂ + max(0, E₁ − E₂)`.
 
 Votos com tratamento especial do TSE (votos anulados por decisão judicial, votação por cédula,
-seções anuladas) têm sua categoria definida no teste exploratório com os dados de 2022, antes do
+seções anuladas) têm sua categoria definida no teste exploratório com os arquivos de 2026, antes do
 contrato 1.x ser congelado (achado M2). Até lá, entram como verificação pendente, não como `I`.
 
 ---
@@ -108,7 +109,7 @@ entre turnos.
 - `transit` e `special` ficam **fora da análise de transição** nos dois turnos. Entram nos totais
   observados e na cobertura.
 - A identificação vem dos metadados de seção ou de local do TSE, ou da lista de seções de trânsito
-  dos TREs. O teste exploratório com 2022 confirma qual fonte usar. Se o tipo não puder ser
+  dos TREs. O teste exploratório com os arquivos de 2026 confirma qual fonte usar. Se o tipo não puder ser
   identificado num município com trânsito, a análise de transição desse município fica
   `insufficient_data`, com motivo.
 
@@ -136,8 +137,9 @@ os limites se alargam.
 
 ### 3.4 Calibração de `τ`
 
-Antes de fixar `τ`, medir em 2022 a distribuição de `D` por seção, separando municípios com e sem
-voto em trânsito. A distribuição é publicada na página de metodologia.
+Antes de fixar `τ`, medir em 2026 a distribuição de `D` por seção, separando municípios com e sem
+voto em trânsito. `D` depende só dos aptos, não dos votos, então medir e publicar na mesma eleição
+não contamina a análise. A distribuição é publicada na página de metodologia.
 
 ---
 
@@ -234,8 +236,8 @@ fluxos cruzados diretamente, por isso existe a calibração de §5.6.
 
 Antes da primeira publicação de estimativas, uma simulação calibra os limiares da §6:
 
-1. Usar as margens reais do 1º turno de municípios de 2022 e 2026, estratificados por número de
-   seções.
+1. Usar as margens reais do 1º turno de 2026 dos municípios, estratificados por número de seções.
+   O resultado real do 2º turno não entra na calibração.
 2. Gerar o 2º turno com matrizes conhecidas sob quatro processos:
    - G1, taxas homogêneas;
    - G2, taxas que variam com a composição da seção;
@@ -274,7 +276,7 @@ partida e os marcados com "simulação" são substituídos pelos da calibração
 
 | Parâmetro | Valor inicial | Origem do valor final |
 |---|---|---|
-| `tau_populacao` | `max(2, 1% de E₁)` | distribuição de `D` em 2022 (§3.4) |
+| `tau_populacao` | `max(2, 1% de E₁)` | distribuição de `D` em 2026 (§3.4) |
 | `cobertura_minima` | 0,90 dos aptos do 1º turno | fixo |
 | `n_secoes_min` | 15 | simulação |
 | `rhat_max` | 1,01 | fixo |
@@ -311,5 +313,5 @@ partida e os marcados com "simulação" são substituídos pelos da calibração
 | C4 — "qualquer município" | escopo restrito a presidente 2026, com 2º turno em todos os municípios | §0 |
 | A1 — mediana posterior | só média posterior forma matriz | §5.2 |
 
-Pendências que dependem do teste exploratório com 2022: fonte do tipo de seção (§3.1), categorias
+Pendências que dependem do teste exploratório com os arquivos de 2026: fonte do tipo de seção (§3.1), categorias
 especiais de voto (§1), códigos de divergência explicada (§2.3) e distribuição de `D` (§3.4).
