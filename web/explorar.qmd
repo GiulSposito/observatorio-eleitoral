@@ -1,0 +1,13 @@
+---
+pagetitle: "Explorar · Caderno Eleitoral"
+description: "Resultados do 1º e do 2º turno da eleição presidencial de 2026 no município, por seção, com limites e estimativas de transição."
+---
+
+::: {#app}
+Carregando…
+:::
+
+<script type="module">
+import { boot } from "./js/app.js";
+boot("explorar");
+</script>

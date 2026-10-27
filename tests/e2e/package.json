@@ -1,0 +1,14 @@
+{
+  "name": "caderno-eleitoral-e2e",
+  "private": true,
+  "description": "Testes E2E e de acessibilidade do site (ferramenta só de desenvolvimento; não faz parte do build do site).",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "serve": "node server.mjs ../../web/_site 4173"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.1",
+    "@playwright/test": "1.49.1"
+  }
+}

@@ -1,0 +1,46 @@
+---
+title: "Dados e código"
+description: "Fontes oficiais, publicação dos dados e como reproduzir o Caderno Eleitoral."
+---
+
+::: {.prose}
+
+## Fontes
+
+Todos os números vêm de arquivos públicos do Tribunal Superior Eleitoral, baixados pelo pipeline com URL, tamanho, data de coleta e hash sha256 registrados:
+
+- [Votação por seção eleitoral, 2026](https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_2026_BR.zip) — votos por seção e candidato a presidente, nos dois turnos.
+- [Detalhe da votação por seção, 2026](https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_secao/detalhe_votacao_secao_2026.zip) — aptos, comparecimento, abstenção, brancos, nulos e situação da seção.
+- [Portal de Dados Abertos do TSE](https://dadosabertos.tse.jus.br/).
+
+Cada município mostra, na aba **Qualidade**, os arquivos usados e seus hashes.
+
+## Como os dados são publicados
+
+O pipeline em R gera uma publicação imutável (release) com um catálogo de municípios, um resumo e um relatório de qualidade por município, e arquivos Parquet por UF com os dados de cada seção, os limites, os cenários e as estimativas. O site lê o resumo diretamente e consulta os Parquets no próprio navegador, com DuckDB-Wasm, só quando você abre uma aba de detalhe.
+
+::: {#release-info}
+:::
+
+## Como reproduzir
+
+O código está em [github.com/GiulSposito/observatorio-eleitoral](https://github.com/GiulSposito/observatorio-eleitoral). Com R, `renv` e Quarto instalados:
+
+```bash
+Rscript -e 'renv::restore()'
+Rscript run.R 2026-presidente     # baixa os arquivos do TSE, verifica, calcula e gera a publicação
+quarto render web                 # gera o site estático em web/_site/
+```
+
+O contrato dos arquivos publicados está em `docs/03-contratos-de-dados.md` e `contract/`; o método, em `docs/05-metodo-analitico.md`.
+
+## Licença e uso
+
+Os dados de origem são públicos. Ao reutilizar números deste site, cite a publicação (release) e a classe de evidência: observado, limite condicional ou estimado pelo modelo.
+
+:::
+
+<script type="module">
+import { boot } from "./js/app.js";
+boot("dados");
+</script>
