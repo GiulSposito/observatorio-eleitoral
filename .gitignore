@@ -43,3 +43,6 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.swp
+
+# Claude Code subagent worktrees (temporary)
+/.claude/worktrees/

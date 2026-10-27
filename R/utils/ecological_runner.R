@@ -66,10 +66,10 @@ run_ecological_uf <- function(uf, units_path, totals_path, validation, calibrati
     }
 
     vstat <- validation$validation_status[validation$municipio_tse == mun]
-    if (!identical(vstat, "passed")) {
+    if (identical(vstat, "failed")) {
       est <- list(flows = NULL, status = "unavailable",
                   model = list(status = "unavailable",
-                               reason_unavailable = "Os dados do município não passaram em todas as verificações.",
+                               reason_unavailable = "Os totais do município divergem dos totais oficiais sem explicação registrada.",
                                methods = list(), predictive_check = NULL, identified_change_share = NULL,
                                n_units_used = nrow(u), calibration_id = calibration$result$calibration_id))
     } else {

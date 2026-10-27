@@ -40,7 +40,7 @@ O método expõe (em `R/ecological/`):
 ```r
 ec_bounds(units, scenario = "base", assumptions)  # -> tibble: origin, destination, min_votes, max_votes,
                                                   #    status, units_used, units_infeasible, method_id
-ec_estimate(units, params, seed)                  # -> list(flows = tibble (colunas de 03 §11 sem chaves),
+ec_estimate(units, params, seed, context)                # -> list(flows = tibble (colunas de 03 §11 sem chaves),
                                                   #         status = "ready"|"partial"|"insufficient_data"|"failed",
                                                   #         model = list(...)  # campos de qualidade.model (03 §12)
                                                   #    )
@@ -49,7 +49,8 @@ ec_calibrate(margins_t1, params, seed)            # -> list(report = tibble, thr
 ```
 
 - `params` é `config/metodo.yml` já carregado (lista), com os limiares calibrados quando existirem.
-- `seed` é derivado de `(release_id, municipio_tse, method_id)` por `seed_for()` em `R/utils/`.
+- `seed` é derivado de `(election_id | method_version, municipio_tse, method_id)` por `seed_for()` em
+  `R/utils/`; não depende do `release_id`, para o cache do `targets` sobreviver entre releases.
 - `ec_estimate()` aplica as regras de publicação de 05 §5.7 e nunca devolve linhas para
   `insufficient_data` ou `failed`.
 - A camada de dados não implementa nada de `R/ecological/`; nos testes dela, usar o stub de

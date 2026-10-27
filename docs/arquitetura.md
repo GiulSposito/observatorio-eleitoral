@@ -74,7 +74,7 @@ São regras de revisão: um PR que viole uma delas está errado, mesmo que funci
 | I2 | Toda seção, em cada turno, satisfaz comparecimento = soma dos votos e aptos = comparecimento + abstenção (V1). A identidade ΔA + ΔB = O₁ + ΔC − ΔI é consequência disso e não verifica o pareamento entre turnos | `reconcile/`, gate de integridade |
 | I3 | Somas por município e UF batem com os totais oficiais do TSE | `reconcile/` |
 | I4 | Todo valor numérico publicado tem `evidence_type`; `conditional_bound` sempre traz `assumption_id` e status de viabilidade; `model_estimate` sempre traz `model_id`, `model_version`, `assumption_id` e intervalo com tipo | `validate_web_bundle()` |
-| I5 | Município com `validation_status != "passed"` não publica `model_estimate` | `validate_web_bundle()` |
+| I5 | Município com `validation_status = "failed"` não publica `model_estimate` (03 §6) | `validate_web_bundle()` |
 | I6 | Todos os marts de uma release vêm do mesmo `release_id`, da mesma versão Silver e da mesma `model_version` | `validate_web_bundle()` |
 | I7 | Identificadores são `string` no bundle; não há list-columns; `NA` vira `NULL` no Parquet | `write_mart()` |
 | I8 | O frontend só conhece caminhos de dados via `latest.json` → catálogo → manifesto; nenhum caminho fixo no JS | revisão + teste de fumaça |

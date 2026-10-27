@@ -14,13 +14,13 @@ marts:
       zona: {type: VARCHAR, nullable: false}
       secao: {type: VARCHAR, nullable: false}
       comparison_unit_id: {type: VARCHAR, nullable: false}
-      unit_type: {type: VARCHAR, nullable: false, enum: [section, aggregated_sections]}
-      comparison_status: {type: VARCHAR, nullable: false, enum: [matched, aggregated, unmatched]}
-      section_type: {type: VARCHAR, nullable: false, enum: [regular, transit, special, unknown]}
+      unit_type: {type: VARCHAR, nullable: false, enum: ["section", "aggregated_sections"]}
+      comparison_status: {type: VARCHAR, nullable: false, enum: ["matched", "aggregated", "unmatched"]}
+      section_type: {type: VARCHAR, nullable: false, enum: ["regular", "transit", "special", "unknown"]}
       polling_place_id: {type: VARCHAR, nullable: true}
       polling_place_name: {type: VARCHAR, nullable: true}
       location_changed: {type: BOOLEAN, nullable: true}
-      integrity_status: {type: VARCHAR, nullable: false, enum: [passed, failed]}
+      integrity_status: {type: VARCHAR, nullable: false, enum: ["passed", "failed"]}
       installed: {type: BOOLEAN, nullable: false}
       eligible_t1: {type: INTEGER, nullable: true}
       eligible_t2: {type: INTEGER, nullable: true}
@@ -44,9 +44,9 @@ marts:
       delta_b: {type: INTEGER, nullable: true}
       delta_invalid: {type: INTEGER, nullable: true}
       eligible_net_change: {type: INTEGER, nullable: true}
-      population_status: {type: VARCHAR, nullable: true, enum: [closed, net_change, excluded_population]}
+      population_status: {type: VARCHAR, nullable: true, enum: ["closed", "net_change", "excluded_population"]}
       in_transition_analysis: {type: BOOLEAN, nullable: false}
-      exclusion_reason: {type: VARCHAR, nullable: true, enum: [not_installed, integrity_failed, unmatched, transit_section, special_section, population_change_above_tau, possible_aggregation]}
+      exclusion_reason: {type: VARCHAR, nullable: true, enum: ["not_installed", "integrity_failed", "unmatched", "transit_section", "special_section", "population_change_above_tau", "possible_aggregation"]}
   limites:
     file: "uf={uf}/limites.parquet"
     evidence_type: conditional_bound
@@ -58,15 +58,15 @@ marts:
       municipio_tse: {type: VARCHAR, nullable: false}
       scenario_id: {type: VARCHAR, nullable: false}
       assumption_id: {type: VARCHAR, nullable: false}
-      origin: {type: VARCHAR, nullable: false, enum: [A, B, O, I, X, N]}
-      destination: {type: VARCHAR, nullable: false, enum: [A, B, I, X, S]}
+      origin: {type: VARCHAR, nullable: false, enum: ["A", "B", "O", "I", "X", "N"]}
+      destination: {type: VARCHAR, nullable: false, enum: ["A", "B", "I", "X", "S"]}
       min_votes: {type: BIGINT, nullable: true}
       max_votes: {type: BIGINT, nullable: true}
-      status: {type: VARCHAR, nullable: false, enum: [feasible, infeasible, insufficient_data]}
+      status: {type: VARCHAR, nullable: false, enum: ["feasible", "infeasible", "insufficient_data"]}
       units_used: {type: INTEGER, nullable: false}
       units_infeasible: {type: INTEGER, nullable: false}
       eligible_share_used: {type: DOUBLE, nullable: false}
-      method_id: {type: VARCHAR, nullable: false, enum: [frechet, transport-lp]}
+      method_id: {type: VARCHAR, nullable: false, enum: ["frechet", "transport-lp"]}
       method_version: {type: VARCHAR, nullable: false}
   cenarios:
     file: "uf={uf}/cenarios.parquet"
@@ -79,7 +79,7 @@ marts:
       municipio_tse: {type: VARCHAR, nullable: false}
       scenario_id: {type: VARCHAR, nullable: false}
       assumption_id: {type: VARCHAR, nullable: false}
-      status: {type: VARCHAR, nullable: false, enum: [feasible, infeasible, insufficient_data]}
+      status: {type: VARCHAR, nullable: false, enum: ["feasible", "infeasible", "insufficient_data"]}
       units_used: {type: INTEGER, nullable: false}
       units_infeasible: {type: INTEGER, nullable: false}
   fluxos_estimados:
@@ -91,21 +91,21 @@ marts:
       election_id: {type: VARCHAR, nullable: false}
       uf: {type: VARCHAR, nullable: false}
       municipio_tse: {type: VARCHAR, nullable: false}
-      origin: {type: VARCHAR, nullable: false, enum: [A, B, O, I, X, N]}
-      destination: {type: VARCHAR, nullable: false, enum: [A, B, I, X, S]}
-      model_id: {type: VARCHAR, nullable: false, enum: [md-bayes]}
+      origin: {type: VARCHAR, nullable: false, enum: ["A", "B", "O", "I", "X", "N"]}
+      destination: {type: VARCHAR, nullable: false, enum: ["A", "B", "I", "X", "S"]}
+      model_id: {type: VARCHAR, nullable: false, enum: ["md-bayes"]}
       model_version: {type: VARCHAR, nullable: false}
       assumption_id: {type: VARCHAR, nullable: false}
       estimate_votes: {type: DOUBLE, nullable: false}
-      estimate_statistic: {type: VARCHAR, nullable: false, enum: [posterior_mean]}
+      estimate_statistic: {type: VARCHAR, nullable: false, enum: ["posterior_mean"]}
       interval_low: {type: DOUBLE, nullable: false}
       interval_high: {type: DOUBLE, nullable: false}
-      interval_type: {type: VARCHAR, nullable: false, enum: [credible_interval]}
+      interval_type: {type: VARCHAR, nullable: false, enum: ["credible_interval"]}
       interval_level: {type: DOUBLE, nullable: false}
       method_range_low: {type: DOUBLE, nullable: true}
       method_range_high: {type: DOUBLE, nullable: true}
       bounds_min: {type: DOUBLE, nullable: false}
       bounds_max: {type: DOUBLE, nullable: false}
       identification_ratio: {type: DOUBLE, nullable: true}
-      identification_class: {type: VARCHAR, nullable: false, enum: [determined, estimated, weak, not_identified]}
-      model_status: {type: VARCHAR, nullable: false, enum: [ready, partial]}
+      identification_class: {type: VARCHAR, nullable: false, enum: ["determined", "estimated", "weak", "not_identified"]}
+      model_status: {type: VARCHAR, nullable: false, enum: ["ready", "partial"]}

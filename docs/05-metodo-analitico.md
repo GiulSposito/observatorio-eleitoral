@@ -51,8 +51,10 @@ seções difere entre turnos, a unidade é o conjunto agregado (§2.2). Cada uni
 Votos com tratamento especial: no arquivo de detalhe de 2026 (gerado em 26/10/2026), presidente não
 tem votos de legenda nem votos anulados apurados em separado, e nenhuma seção está anulada. As 41
 seções não instaladas ficam fora (`not_installed`). Boletins recuperados (RED), urna de contingência e
-sistema de apuração são contagens normais da seção. Se uma nova versão do arquivo trouxer anulados
-apurados em separado, eles entram como verificação pendente, nunca como `I`.
+sistema de apuração são contagens normais da seção. Votos em candidato sem destinação válida na
+totalização oficial (nulos técnicos; em 2026, 5.123 votos no número 28) entram em `I`, como faz o TSE.
+Se uma nova versão do arquivo trouxer anulados apurados em separado, eles entram como verificação
+pendente.
 
 ---
 
