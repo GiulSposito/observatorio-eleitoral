@@ -2,7 +2,7 @@
 # temporário próprio (evita o diretório compartilhado ~/.duckdb entre workers do crew).
 
 db_open <- function(threads = NULL) {
-  con <- DBI::dbConnect(duckdb::duckdb(dbdir = ":memory:"))
+  con <- DBI::dbConnect(duckdb::duckdb(dbdir = ":memory:", shared_home = FALSE))
   tmp <- file.path(tempdir(), "duckdb_tmp")
   dir.create(tmp, showWarnings = FALSE, recursive = TRUE)
   DBI::dbExecute(con, sprintf("SET temp_directory = '%s'", tmp))

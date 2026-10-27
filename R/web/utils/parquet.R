@@ -20,5 +20,5 @@ write_mart_df <- function(con, name, df, path, contract = read_marts_contract())
   view <- paste0("mart_df_", name)
   duckdb::duckdb_register(con, view, df, overwrite = TRUE)
   on.exit(duckdb::duckdb_unregister(con, view), add = TRUE)
-  write_mart(con, name, view, path, contract)
+  write_mart(con, name, paste("SELECT * FROM", view), path, contract)
 }

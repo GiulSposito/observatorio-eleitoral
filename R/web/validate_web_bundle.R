@@ -121,7 +121,7 @@ validate_release <- function(release_dir, release_id, allow_demo = FALSE, valida
 validate_parquets <- function(release_dir, parquet_assets, eco_by_mun, allow_demo) {
   contract <- read_marts_contract()
   asset_to_mart <- c(sections = "secoes", bounds = "limites", scenarios = "cenarios", flows = "fluxos_estimados")
-  con <- DBI::dbConnect(duckdb::duckdb())
+  con <- DBI::dbConnect(duckdb::duckdb(shared_home = FALSE))
   on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
   DBI::dbExecute(con, "SET threads = 1")  # leitura em ordem física, para checar a ordenação
   for (rel in names(parquet_assets)) {

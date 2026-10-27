@@ -88,3 +88,22 @@ display_name <- function(x) {
     paste(out, collapse = " ")
   }, character(1), USE.NAMES = FALSE)
 }
+
+# Caminhos determinísticos das camadas (os targets de arquivo só registram dependência; as funções
+# recebem estes vetores nomeados).
+silver_paths <- function(cfg) {
+  d <- layer_dir("silver", cfg$election_id)
+  c(secao_turno = file.path(d, "secao_turno.parquet"), finalistas = file.path(d, "finalistas.json"),
+    municipios = file.path(d, "municipios.parquet"))
+}
+
+gold_paths <- function(cfg) {
+  d <- layer_dir("gold", cfg$election_id)
+  c(secoes = file.path(d, "secoes_mart.parquet"), checks = file.path(d, "checks.parquet"),
+    totais = file.path(d, "municipal_totals.parquet"), units = file.path(d, "units.parquet"))
+}
+
+extracted_paths <- function(cfg) {
+  d <- file.path(layer_dir("bronze", cfg$election_id), "extracted")
+  stats::setNames(file.path(d, vapply(cfg$fontes, `[[`, "", "membro")), names(cfg$fontes))
+}
