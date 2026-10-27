@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.1.0",
+  "release_id": "DEMO-001",
+  "published_at": "2026-10-27T12:00:00Z",
+  "catalog_url": "catalogo.demo.json",
+  "pipeline_git_sha": "DEMO"
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.1.0",
+  "release_id": "DEMO-001",
+  "election_id": "demo-presidente-2t",
+  "municipio_tse": "00000",
+  "uf": "GO",
+  "published_at": "2026-10-27T12:00:00Z",
+  "sections_expected": 34,
+  "sections_comparable": 34,
+  "coverage_fraction": 1.0,
+  "validation_status": "demo_only",
+  "fixtures_only": true,
+  "features": {
+    "summary": "ready",
+    "sections": "unavailable",
+    "bounds": "unavailable",
+    "scenarios": "unavailable",
+    "ecological_model": "unavailable",
+    "vote_logs": "unavailable"
+  },
+  "assets": {
+    "summary": {
+      "path": "resumo.demo.json",
+      "media_type": "application/json",
+      "sha256": "a2621a1c7c98cff59bcafb3e445225dc13f024c36120db75603c899af47681f1"
+    },
+    "quality": {
+      "path": "qualidade.demo.json",
+      "media_type": "application/json",
+      "sha256": "036c7d383a6e9864824c3e41339a2d34478d0b2b087f7fb1a31b59ce886150c9"
+    }
+  },
+  "sources": [
+    {
+      "provider": "FIXTURE",
+      "dataset": "Fictício para teste",
+      "source_url": null,
+      "collected_at": null
+    }
+  ],
+  "pipeline_version": "DEMO",
+  "method_version": "accounting-example-1.0.0"
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.1.0",
+  "release_id": "DEMO-001",
+  "election_id": "demo-presidente-2t",
+  "status": "ready",
+  "fixtures_only": true,
+  "location": {
+    "name": "CIDADE MODELO",
+    "uf": "GO",
+    "municipio_tse": "00000"
+  },
+  "finalists": [
+    {
+      "slot": "candidate_a",
+      "candidate_id": "A",
+      "name": "Candidato A",
+      "round_1_votes": 3120,
+      "round_2_votes": 3655,
+      "delta_votes": 535
+    },
+    {
+      "slot": "candidate_b",
+      "candidate_id": "B",
+      "name": "Candidato B",
+      "round_1_votes": 2780,
+      "round_2_votes": 3101,
+      "delta_votes": 321
+    }
+  ],
+  "totals": {
+    "round_1": {
+      "eligible": 8450,
+      "turnout": 6610,
+      "abstention": 1840,
+      "valid": 6312,
+      "other": 412,
+      "invalid": 298
+    },
+    "round_2": {
+      "eligible": 8450,
+      "turnout": 6838,
+      "abstention": 1612,
+      "valid": 6756,
+      "other": 0,
+      "invalid": 82
+    }
+  },
+  "reconciliation": {
+    "delta_turnout": 228,
+    "delta_invalid": -216,
+    "delta_valid": 444,
+    "delta_finalists": 856,
+    "identity_residual": 0,
+    "scope": "comparable_sections",
+    "evidence_type": "observed"
+  },
+  "coverage": {
+    "expected_sections": 34,
+    "comparable_sections": 34,
+    "fraction": 1.0
+  },
+  "display_notes": [
+    "DADOS FICTÍCIOS. Exemplo para desenvolvimento, não oficial."
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.1.0",
+  "release_id": "DEMO-001",
+  "fixtures_only": true,
+  "elections": [
+    {
+      "election_id": "demo-presidente-2t",
+      "year": 2026,
+      "office": "presidente",
+      "rounds": [
+        1,
+        2
+      ],
+      "label": "Demonstração sintética",
+      "finalist_slots": [
+        "candidate_a",
+        "candidate_b"
+      ]
+    }
+  ],
+  "municipalities": [
+    {
+      "municipio_tse": "00000",
+      "municipio_ibge": "0000000",
+      "name": "CIDADE MODELO",
+      "uf": "GO",
+      "election_ids": [
+        "demo-presidente-2t"
+      ],
+      "manifest_url": "manifest.demo.json",
+      "publication_status": "partial"
+    }
+  ]
+}

@@ -1,5 +1,13 @@
 # Projeto: Observatório Eleitoral Municipal
 
+> **Registro de origem — não é especificação.** A ideia da análise vem da
+> [thread de Rômulo Fiúza e Mello (@fiuzaemello)](https://x.com/fiuzaemello/status/2114763737425211824),
+> publicada no X em 26 de outubro de 2026. Este texto discute essa thread; o município e os números
+> citados são os dela e servem só para explicar o problema metodológico. O produto é genérico: todos
+> os números exibidos vêm do pipeline com dados oficiais do TSE, para qualquer município, sem
+> fixture, teste ou destaque para nenhum caso específico. Onde este texto diverge da arquitetura e
+> dos documentos 01–04 (stack, estrutura do repositório, etapas), valem eles.
+
 A proposta é tecnicamente viável, e R + Parquet + WebAssembly é uma combinação interessante para implementá-la. Eu estruturaria a solução como um motor de análise eleitoral reproduzível, capaz de processar os resultados de todas as seções eleitorais do Brasil e publicar análises interativas por município, sem depender de um backend de aplicação.
 
 O ponto mais importante é separar três coisas: a contabilidade exata dos votos, a análise estatística de padrões entre seções e a inferência sobre possíveis transferências de eleitores. Elas têm níveis de certeza muito diferentes.

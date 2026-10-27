@@ -8,19 +8,38 @@
 renv/library/
 renv/staging/
 renv/local/
+renv/python/
 
 # targets cache
 _targets/
 
-# Data layers and releases (see docs/arquitetura.md)
-data/
+# Data layers and releases: bronze/silver/gold/releases (see docs/arquitetura.md)
+/data/
 
-# Quarto
-web/_site/
-web/data/
-web/.quarto/
+# Quarto site: rendered output and local data bundle (source is web/*.qmd, web/js, web/css)
+/web/_site/
+/web/.quarto/
+/web/data/
 .quarto/
-/.quarto/
+/docs/*_files/
+/docs/*.html
 
-# OS
+# E2E tooling (tests/e2e is the only npm project; lockfile is tracked)
+node_modules/
+/tests/e2e/test-results/
+/tests/e2e/playwright-report/
+/tests/e2e/blob-report/
+/tests/e2e/.cache/
+
+# Local Claude Code settings (project skills in .claude/skills are tracked)
+.claude/settings.local.json
+
+# Secrets and local env
+.env
+.env.*
+.Renviron
+
+# OS / editors
 .DS_Store
+Thumbs.db
+*.swp

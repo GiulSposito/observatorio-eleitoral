@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Caderno Eleitoral — Referência visual</title>
+  <meta name="description" content="Protótipo de identidade editorial do Caderno Eleitoral. Todos os dados são fictícios." />
+  <link rel="stylesheet" href="../../web/css/design-tokens.css" />
+  <link rel="stylesheet" href="preview.css" />
+  <script defer src="preview.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <div class="demo-banner" role="note">REFERÊNCIA DE DESIGN · DADOS INTEIRAMENTE FICTÍCIOS · NÃO É UMA PUBLICAÇÃO ELEITORAL</div>
+  <header class="site-header">
+    <div class="ce-container header-inner">
+      <a class="brand" href="#inicio" aria-label="Caderno Eleitoral — início">caderno eleitoral<span class="brand-period">.</span></a>
+      <nav class="primary-nav" aria-label="Navegação principal">
+        <a href="#inicio" aria-current="page">Explorar</a>
+        <a href="#metodo">Metodologia</a>
+        <a href="#dados">Dados e código</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo" class="ce-container main-content">
+    <div class="breadcrumb">BRASIL <span>/</span> ESTUDOS MUNICIPAIS <span>/</span> <span id="breadcrumb-city">CIDADE MODELO</span></div>
+    <section id="inicio" class="intro">
+      <div class="intro-title">
+        <div class="ce-label">PRESIDÊNCIA · COMPARAÇÃO ENTRE TURNOS · SIMULAÇÃO</div>
+        <h1 id="city-title">Cidade Modelo, Goiás</h1>
+        <p class="lead">Uma leitura dos resultados, seção por seção. O que mudou entre os turnos e o que os dados permitem concluir.</p>
+      </div>
+      <div class="city-picker">
+        <label for="city">Município na demonstração</label>
+        <select id="city" class="ce-input">
+          <option value="modelo">Cidade Modelo — GO</option>
+          <option value="sereno">Vale Sereno — MG</option>
+        </select>
+        <p>Localidades e valores fictícios, criados para testar a interface.</p>
+      </div>
+    </section>
+
+    <div class="meta-row">
+      <span>Eleição de demonstração · 1º e 2º turnos</span>
+      <span id="coverage">34 de 34 seções comparáveis</span>
+      <span class="source-text">Fonte: fixture sintética</span>
+    </div>
+
+    <nav class="tabs ce-no-print" role="tablist" aria-label="Tipos de análise">
+      <button id="tab-resumo" class="tab active" type="button" role="tab" aria-controls="panel-resumo" aria-selected="true" data-tab="resumo">Resumo</button>
+      <button id="tab-secoes" class="tab" type="button" role="tab" aria-controls="panel-secoes" aria-selected="false" data-tab="secoes" tabindex="-1">Seções</button>
+      <button id="tab-transferencias" class="tab" type="button" role="tab" aria-controls="panel-transferencias" aria-selected="false" data-tab="transferencias" tabindex="-1">Transferências</button>
+      <button id="tab-cenarios" class="tab" type="button" role="tab" aria-controls="panel-cenarios" aria-selected="false" data-tab="cenarios" tabindex="-1">Cenários</button>
+      <button id="tab-qualidade" class="tab" type="button" role="tab" aria-controls="panel-qualidade" aria-selected="false" data-tab="qualidade" tabindex="-1">Qualidade</button>
+    </nav>
+
+    <section id="panel-resumo" class="tab-panel" role="tabpanel" aria-labelledby="tab-resumo">
+      <div class="metric-grid" aria-label="Indicadores do município">
+        <div class="metric metric-a"><span class="metric-name">Candidato A · 2º turno</span><strong id="metric-a" class="ce-numeric">3.655</strong><span id="metric-a-delta" class="metric-sub">+535 votos ante o 1º turno</span></div>
+        <div class="metric metric-b"><span class="metric-name">Candidato B · 2º turno</span><strong id="metric-b" class="ce-numeric">3.101</strong><span id="metric-b-delta" class="metric-sub">+321 votos ante o 1º turno</span></div>
+        <div class="metric"><span class="metric-name">Variação no comparecimento</span><strong id="metric-turnout" class="ce-numeric">+228</strong><span class="metric-sub">pessoas que votaram</span></div>
+        <div class="metric"><span class="metric-name">Variação de brancos e nulos</span><strong id="metric-invalid" class="ce-numeric">−216</strong><span class="metric-sub">votos inválidos</span></div>
+      </div>
+      <div class="content-grid">
+        <article class="chart-article" aria-labelledby="chart-title">
+          <div class="chart-top"><div><div class="ce-label">01 / EVOLUÇÃO</div><h2 id="chart-title">Votos dos finalistas por turno</h2><p class="chart-subtitle">Votos absolutos. Escala completa a partir de zero.</p></div><span class="ce-method-tag">OBSERVADO</span></div>
+          <figure class="chart-figure">
+            <svg id="vote-chart" role="img" aria-labelledby="plot-title plot-desc" viewBox="0 0 720 310" preserveAspectRatio="xMidYMid meet">
+              <title id="plot-title">Votação dos candidatos A e B nos dois turnos</title>
+              <desc id="plot-desc">Gráfico de duas linhas ligando os votos de cada candidato nos dois turnos. Dados fictícios.</desc>
+              <g id="chart-grid"></g><g id="chart-lines"></g>
+            </svg>
+            <div class="mobile-chart-table" aria-label="Tabela de votos por turno">
+              <table class="ce-table"><caption class="sr-only">Resultados comparados dos dois turnos</caption>
+              <thead><tr><th scope="col">Candidato</th><th scope="col" class="num">1º turno</th><th scope="col" class="num">2º turno</th></tr></thead>
+              <tbody><tr><th scope="row">A</th><td class="num" id="chart-a1">3.120</td><td class="num" id="chart-a2">3.655</td></tr>
+              <tr><th scope="row">B</th><td class="num" id="chart-b1">2.780</td><td class="num" id="chart-b2">3.101</td></tr></tbody></table>
+            </div>
+            <figcaption class="ce-caption">Comparação de resultados agregados por linha ou tabela; não identifica transferências individuais.</figcaption>
+          </figure>
+          <div class="legend"><span class="series-label"><span class="legend-line legend-a"></span>Candidato A</span><span class="series-label"><span class="legend-line legend-b"></span>Candidato B</span></div>
+        </article>
+        <aside class="editorial-note">
+          <div class="ce-label">LEITURA DOS DADOS</div>
+          <h2>Os totais mudam. Os fluxos individuais não são observados.</h2>
+          <p>É possível conferir exatamente quantos votos cada finalista ganhou ou perdeu, quanto variou o comparecimento e como se alteraram os votos brancos e nulos.</p>
+          <p>Esses agregados, isoladamente, não demonstram como eleitores específicos mudaram seu voto. Para estimar transferências, são necessárias hipóteses adicionais.</p>
+          <a href="#metodo">Entenda a metodologia <span aria-hidden="true">→</span></a>
+        </aside>
+      </div>
+      <section class="accounting" aria-labelledby="account-title">
+        <div class="section-heading"><div><div class="ce-label">02 / CONFERÊNCIA</div><h2 id="account-title">Como se fecha a variação dos votos</h2></div><span class="ce-method-tag">IDENTIDADE CONTÁBIL</span></div>
+        <div class="equation-grid" aria-label="Reconciliação aritmética dos votos">
+          <div class="equation-part"><span>Outros candidatos, 1º turno</span><strong class="ce-numeric" id="eq-others">412</strong></div>
+          <div class="equation-part"><span>Variação de comparecimento</span><strong class="ce-numeric" id="eq-turnout">228</strong></div>
+          <div class="equation-part"><span>Contribuição de brancos e nulos</span><strong class="ce-numeric" id="eq-invalid">+216</strong></div>
+          <div class="equation-symbol">=</div>
+          <div class="equation-part equation-result"><span>Ganho total dos finalistas</span><strong class="ce-numeric" id="eq-result">856</strong></div>
+        </div>
+        <p class="ce-caption">A igualdade é aritmética: outros votos no primeiro turno + variação de comparecimento + (inválidos do primeiro − inválidos do segundo) = ganho total dos finalistas. Não é uma matriz de migração de eleitores.</p>
+      </section>
+    </section>
+
+    <section id="panel-secoes" class="tab-panel" role="tabpanel" aria-labelledby="tab-secoes" hidden>
+      <div class="section-heading"><div><div class="ce-label">03 / UNIDADES DE VOTAÇÃO</div><h2>Variação observada por seção</h2><p>Exemplo de tabela e hierarquia informacional. Valores ilustrativos, sem conciliação com qualquer fonte real.</p></div><span class="ce-method-tag">OBSERVADO</span></div>
+      <div class="data-table-wrap"><table class="ce-table"><caption class="sr-only">Exemplo de tabela de comparação por seção</caption><thead><tr><th scope="col">Zona</th><th scope="col">Seção</th><th class="num" scope="col">Candidato A · Δ</th><th class="num" scope="col">Candidato B · Δ</th><th class="num" scope="col">Comparecimento · Δ</th></tr></thead><tbody><tr><td>001</td><td>0040</td><td class="num">+45</td><td class="num">+10</td><td class="num">+23</td></tr><tr><td>001</td><td>0102</td><td class="num">+12</td><td class="num">+8</td><td class="num">+11</td></tr><tr><td>001</td><td>0142</td><td class="num">+43</td><td class="num">−2</td><td class="num">+17</td></tr><tr><td>002</td><td>0153</td><td class="num">+50</td><td class="num">−5</td><td class="num">+19</td></tr></tbody></table></div>
+      <p class="ce-caption">Na aplicação final: ordenação, filtros de zona/local, scatter acessível, percentuais, fonte por seção e exportação CSV da seleção.</p>
+    </section>
+
+    <section id="panel-transferencias" class="tab-panel" role="tabpanel" aria-labelledby="tab-transferencias" hidden>
+      <div class="section-heading"><div><div class="ce-label">04 / INFERÊNCIA ECOLÓGICA</div><h2>O que os dados permitem — e o que não permitem</h2><p>O total de votos por seção não revela individualmente quem mudou de candidato ou deixou de votar.</p></div><span class="ce-method-tag">LIMITE CONDICIONAL</span></div>
+      <div class="content-grid">
+        <div class="method-example"><h3>Limites matemáticos</h3><p>Um modelo de transporte pode calcular um intervalo viável para cada fluxo, respeitando as margens e as hipóteses. Limites extremos de células distintas não devem ser somados como uma única matriz observada.</p><p class="method-inline">Situação na demonstração: <strong>sem modelo calculado</strong></p></div>
+        <div class="method-example"><h3>Estimativa ecológica</h3><p>Um modelo estatístico pode produzir uma matriz pontual com incerteza, desde que explicite suas premissas e os diagnósticos. Só nesse estado se mostraria um gráfico de fluxos.</p><p class="method-inline">Situação na demonstração: <strong>indisponível</strong></p></div>
+      </div>
+    </section>
+
+    <section id="panel-cenarios" class="tab-panel" role="tabpanel" aria-labelledby="tab-cenarios" hidden>
+      <div class="section-heading"><div><div class="ce-label">05 / HIPÓTESES</div><h2>Comparar explicações possíveis</h2><p>Na aplicação, somente cenários viáveis e pré-computados no pipeline R poderão ser selecionados.</p></div><span class="ce-method-tag">NÃO OBSERVADO</span></div>
+      <div class="plain-panel"><h3>Exemplo: ausência de troca direta entre os dois finalistas</h3><p>Esta é uma restrição hipotética, não uma observação. A aplicação deverá calcular e registrar a viabilidade desse cenário antes de apresentar quaisquer resultados.</p><p class="ce-caption">A prévia visual não calcula o cenário e não apresenta números simulados como estimativas.</p></div>
+    </section>
+
+    <section id="panel-qualidade" class="tab-panel" role="tabpanel" aria-labelledby="tab-qualidade" hidden>
+      <div class="section-heading"><div><div class="ce-label">06 / TRANSPARÊNCIA</div><h2>Qualidade, cobertura e proveniência</h2></div><span class="ce-method-tag">DEMONSTRAÇÃO</span></div>
+      <div class="quality-grid"><div><span>Fonte dos valores</span><strong>Fixture sintética</strong></div><div><span>Verificação oficial</span><strong>Não realizada</strong></div><div><span>Modelo ecológico</span><strong>Não calculado</strong></div><div><span>Status do protótipo</span><strong>Somente design</strong></div></div>
+      <p>Na aplicação real, esta aba exibe checks de somas por seção, totalização, arquivos TSE e hashes, universo comparável, versões, hipóteses e diagnósticos de modelo.</p>
+    </section>
+
+    <section id="metodo" class="methodology-note">
+      <div class="ce-label">NOTA DE MÉTODO</div>
+      <p>Este projeto distingue resultados observados, limites sob hipóteses e estimativas probabilísticas. Dados de urnas e seções descrevem contagens agregadas; não identificam a trajetória do voto de cada pessoa. Nesta demonstração, todos os números e municípios são fictícios.</p>
+    </section>
+  </main>
+
+  <footer id="dados" class="footer">
+    <div class="ce-container footer-inner"><span class="brand footer-brand">caderno eleitoral<span class="brand-period">.</span></span><span>Projeto independente · Referência visual v1.0 · Sem dados eleitorais reais<br />Análise inspirada na <a href="https://x.com/fiuzaemello/status/2114763737425211824">thread de Rômulo Fiúza e Mello</a> (@fiuzaemello)</span><span>27 de outubro de 2026</span></div>
+  </footer>
+</body>
+</html>

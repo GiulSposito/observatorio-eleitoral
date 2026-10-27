@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.1.0",
+  "release_id": "DEMO-001",
+  "fixtures_only": true,
+  "computed_at": "2026-10-27T12:00:00Z",
+  "pipeline_git_sha": "DEMO",
+  "validation_status": "demo_only",
+  "source_coverage": {
+    "provider": "fixture sintética",
+    "downloaded": 0,
+    "official_verified": false
+  },
+  "section_coverage": {
+    "expected": 34,
+    "comparable": 34,
+    "basis": "simulação: não existem linhas seccionais disponíveis no exemplo"
+  },
+  "checks": [
+    {
+      "id": "accounting_identity",
+      "passed": true,
+      "scope": "municipal_summary",
+      "count_failed": 0
+    }
+  ],
+  "accounting_residual": 0,
+  "model": {
+    "status": "unavailable",
+    "reason_unavailable": "nenhuma modelagem foi realizada na demonstração"
+  }
+}
