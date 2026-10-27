@@ -161,12 +161,12 @@ frechet <- function(u) {
   })
 }
 
-write_parquet <- function(df, path, order_by) {
+write_parquet <- function(df, path, order_by, select = "*") {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   con <- dbConnect(duckdb::duckdb())
   on.exit(dbDisconnect(con, shutdown = TRUE))
   duckdb::duckdb_register(con, "df", df)
-  dbExecute(con, sprintf("COPY (SELECT * FROM df ORDER BY %s) TO '%s' (FORMAT parquet, COMPRESSION zstd, ROW_GROUP_SIZE 2048)",
+  dbExecute(con, sprintf("COPY (SELECT %s FROM df ORDER BY %s) TO '%s' (FORMAT parquet, COMPRESSION zstd, ROW_GROUP_SIZE 2048)", select,
                          paste(order_by, collapse = ", "), path))
 }
 
@@ -272,7 +272,8 @@ fluxos_all <- fluxos_all[, flu_cols]
 for (uf in unique(municipios$uf)) {
   dir_uf <- file.path(out_root, release_base, election_id, paste0("uf=", uf))
   write_parquet(filter(secoes_all, .data$uf == !!uf), file.path(dir_uf, "secoes.parquet"), c("municipio_tse", "zona", "secao"))
-  write_parquet(filter(limites_all, .data$uf == !!uf), file.path(dir_uf, "limites.parquet"), c("municipio_tse", "scenario_id", "origin", "destination"))
+  write_parquet(filter(limites_all, .data$uf == !!uf), file.path(dir_uf, "limites.parquet"), c("municipio_tse", "scenario_id", "origin", "destination"),
+                select = "* REPLACE (CAST(min_votes AS BIGINT) AS min_votes, CAST(max_votes AS BIGINT) AS max_votes)")
   write_parquet(filter(cenarios_all, .data$uf == !!uf), file.path(dir_uf, "cenarios.parquet"), c("municipio_tse", "scenario_id"))
   write_parquet(filter(fluxos_all, .data$uf == !!uf), file.path(dir_uf, "fluxos_estimados.parquet"), c("municipio_tse", "origin", "destination"))
 }

@@ -36,8 +36,8 @@
     "bounds": {
       "path": "2026-presidente/uf=GO/limites.parquet",
       "media_type": "application/vnd.apache.parquet",
-      "sha256": "70f556a010bba85916ba3ac69917d6f0951b93ccc467a6da8028c06ec6112ac6",
-      "bytes": 3835
+      "sha256": "8b20b06b5b98f2e08f1282d8c438929c2176cb28adfb757e5a7dccbf2dd88592",
+      "bytes": 3892
     },
     "scenarios": {
       "path": "2026-presidente/uf=GO/cenarios.parquet",
