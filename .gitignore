@@ -1,0 +1,26 @@
+# R / RStudio
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# renv (lockfile is tracked, library is not)
+renv/library/
+renv/staging/
+renv/local/
+
+# targets cache
+_targets/
+
+# Data layers and releases (see docs/arquitetura.md)
+data/
+
+# Quarto
+web/_site/
+web/data/
+web/.quarto/
+.quarto/
+/.quarto/
+
+# OS
+.DS_Store
