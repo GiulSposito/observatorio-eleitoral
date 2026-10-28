@@ -96,7 +96,7 @@ export function metricStrip(items) {
 
 // columns: [{key, label, num?, format?(v,row), sortValue?(row)}]
 export function dataTable({ caption, columns, rows, pageSize = 0, rowClass, initialSort }) {
-  const wrap = el("div", { class: "data-table-wrap" });
+  const wrap = el("div", { class: "data-table-wrap", tabindex: "0", role: "region", "aria-label": caption || "Tabela" });
   let sortKey = initialSort?.key || null;
   let sortDir = initialSort?.dir || "ascending";
   let page = 0;
@@ -152,7 +152,7 @@ export function dataTable({ caption, columns, rows, pageSize = 0, rowClass, init
 
 // Tabela simples (sem ordenação) para equivalentes de gráfico.
 export function simpleTable({ caption, head, rows }) {
-  return el("div", { class: "data-table-wrap" },
+  return el("div", { class: "data-table-wrap", tabindex: "0", role: "region", "aria-label": caption || "Tabela" },
     el("table", { class: "ce-table" },
       caption ? el("caption", {}, caption) : null,
       el("thead", {}, el("tr", {}, head.map((h, i) => el("th", { scope: "col", class: i > 0 ? "num" : null }, h)))),

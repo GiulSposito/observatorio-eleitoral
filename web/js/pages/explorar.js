@@ -453,7 +453,8 @@ function downloadCsv(rows, filename) {
 // ---- aba Transferências -----------------------------------------------------
 
 function matrixTable({ caption, labels, rowsKeys, colsKeys, cell }) {
-  return el("div", { class: "data-table-wrap" },
+  return el("div", { class: "data-table-wrap", tabindex: "0", role: "region", "aria-label": "Matriz de fluxos entre o 1º e o 2º turno" },
+    el("p", { class: "scroll-hint", "aria-hidden": "true" }, "Deslize a tabela para o lado para ver todas as colunas."),
     el("table", { class: "ce-table flow-matrix" },
       el("caption", {}, caption),
       el("thead", {}, el("tr", {},
