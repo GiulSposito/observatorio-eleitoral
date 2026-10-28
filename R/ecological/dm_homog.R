@@ -59,6 +59,15 @@ ec_dm_cpp <- local({
     if (!file.exists(src)) src <- file.path("R", "ecological", "dm_homog.cpp")
     cache <- Sys.getenv("CADERNO_RCPP_CACHE", file.path(tools::R_user_dir("cadernoeleitoral", "cache"), "rcpp"))
     dir.create(cache, recursive = TRUE, showWarnings = FALSE)
+    # Workers do crew compartilham o cache: só um compila por vez (trava por diretório); os demais
+    # esperam e depois só carregam a biblioteca já compilada.
+    lock <- file.path(cache, "compile.lock")
+    waited <- 0
+    while (!dir.create(lock, showWarnings = FALSE) && waited < 600) {
+      Sys.sleep(1)
+      waited <- waited + 1
+    }
+    on.exit(unlink(lock, recursive = TRUE), add = TRUE)
     Rcpp::sourceCpp(src, cacheDir = cache, env = globalenv(), verbose = FALSE)
     loaded <<- TRUE
     invisible(TRUE)
