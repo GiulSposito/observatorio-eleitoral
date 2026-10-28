@@ -2,9 +2,26 @@
 
 ec_lphom_version <- function() paste0("lphom-", as.character(utils::packageVersion("lphom")))
 
+# O LP do lphom é denso e estoura a memória com milhares de unidades. Acima de max_units, as unidades
+# são somadas em grupos de composição parecida (ordenadas pela participação de A e de abstenção no 1º
+# turno); sob homogeneidade, somar unidades preserva a relação linear que o lphom ajusta.
+ec_group_units <- function(O, D, max_units) {
+  n <- nrow(O)
+  if (n <= max_units) return(list(O = O, D = D, grouped = FALSE))
+  tot <- rowSums(O)
+  ord <- order(round(O[, "A"] / pmax(tot, 1), 2), O[, "X"] / pmax(tot, 1))
+  g <- integer(n)
+  g[ord] <- ceiling(seq_len(n) * max_units / n)
+  list(O = rowsum(O, g), D = rowsum(D, g), grouped = TRUE)
+}
+
 # Ajusta lphom só nas categorias ativas. Devolve a matriz de proporções completa (6 x 5, linhas
 # somando 1 nas origens ativas) e a matriz de contagens municipais.
-ec_fit_lphom <- function(O, D) {
+ec_fit_lphom <- function(O, D, max_units = 800L) {
+  counts_rows <- colSums(O)
+  gu <- ec_group_units(O, D, max_units)
+  O <- gu$O
+  D <- gu$D
   act <- ec_active_categories(O, D)
   t0 <- proc.time()[["elapsed"]]
   Oa <- O[, act$origins, drop = FALSE]
@@ -35,8 +52,8 @@ ec_fit_lphom <- function(O, D) {
   }
   full <- matrix(0, length(EC_ORIGINS), length(EC_DESTINATIONS), dimnames = list(EC_ORIGINS, EC_DESTINATIONS))
   full[act$origins, act$destinations] <- P
-  counts <- colSums(O)[EC_ORIGINS] * full
-  list(status = "ok", P = full, counts = counts, runtime_s = proc.time()[["elapsed"]] - t0)
+  counts <- counts_rows[EC_ORIGINS] * full
+  list(status = "ok", P = full, counts = counts, runtime_s = proc.time()[["elapsed"]] - t0, grouped = gu$grouped)
 }
 
 # Validação cruzada em k grupos de unidades: ajusta lphom sem o grupo e prevê a distribuição

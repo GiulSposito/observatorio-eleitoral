@@ -112,7 +112,7 @@ ec_estimate_core <- function(O, D, params, seed) {
 ec_estimate <- function(units, params, seed, context = list(eligible_share_used = NA_real_)) {
   est <- params$estimacao
   n <- if (is.null(units)) 0L else nrow(units)
-  calib <- params$calibration_id
+  calib <- params$estimacao$calibration_id %||% params$calibration_id
   model <- function(status, reason = NULL, methods = list(), pc = NULL, share = NULL) {
     list(status = status, reason_unavailable = reason, methods = methods, predictive_check = pc,
          identified_change_share = share, n_units_used = as.integer(n), calibration_id = calib)
