@@ -73,18 +73,31 @@ log_msg <- function(...) {
   message(format(Sys.time(), "[%H:%M:%S] "), ...)
 }
 
-# Nome em caixa mista (03 §5): preposições em minúsculas.
+# Nome em caixa mista (03 §5): preposições em minúsculas; elisão "d'" refeita quando o TSE grava
+# "D ÁGUA" (espaço no lugar do apóstrofo).
 display_name <- function(x) {
+  cap <- function(w) paste0(toupper(substr(w, 1, 1)), substr(w, 2, nchar(w)))
   vapply(x, function(one) {
     words <- strsplit(tolower(one), " ", fixed = TRUE)[[1]]
-    keep_lower <- c("de", "da", "do", "das", "dos", "e", "d'")
-    out <- ifelse(
-      words %in% keep_lower, words,
-      paste0(toupper(substr(words, 1, 1)), substr(words, 2, nchar(words)))
-    )
-    # Hífens e apóstrofos: "pau-d'arco" -> "Pau-d'Arco"
+    keep_lower <- c("de", "da", "do", "das", "dos", "e")
+    out <- character()
+    i <- 1
+    while (i <= length(words)) {
+      w <- words[i]
+      if (w == "d" && i < length(words)) {
+        out <- c(out, paste0("d'", cap(words[i + 1])))
+        i <- i + 2
+        next
+      }
+      if (startsWith(w, "d'") && nchar(w) > 2) {
+        w <- paste0("d'", cap(substring(w, 3)))
+      } else if (!(w %in% keep_lower)) {
+        w <- cap(w)
+      }
+      out <- c(out, w)
+      i <- i + 1
+    }
     out <- gsub("-([a-zà-ú])", "-\\U\\1", out, perl = TRUE)
-    out <- gsub("^D'([a-zà-ú])", "D'\\U\\1", out, perl = TRUE)
     paste(out, collapse = " ")
   }, character(1), USE.NAMES = FALSE)
 }

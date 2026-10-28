@@ -254,7 +254,7 @@ Mesmo stack do DudesApp: **Quarto website + ES modules sem etapa de build + Duck
 
 ```text
 web/js/
-├── head.html        import map com versões fixas (DuckDB-Wasm, Plotly) — CDN ou vendor/
+├── vendor.js        URLs com versão fixa de DuckDB-Wasm e Plotly, carregados sob demanda — CDN ou vendor/
 ├── data.js          ÚNICO módulo que busca latest/catálogo/manifesto/resumo e fala com DuckDB-Wasm
 ├── catalog.js       busca de município sobre catalogo.json (sem DuckDB; acentos, homônimos por UF)
 ├── state.js         seleção canônica na URL (e, m, aba); invalida respostas de recortes anteriores
@@ -433,7 +433,8 @@ até uma política explícita de retenção.
 Como no DudesApp, `data/` e o bundle são gitignored e o build roda na máquina do autor; o CI, quando
 existir, roda testes com fixtures, não o pipeline nacional.
 
-Dependências de runtime (Plotly, DuckDB-Wasm) vêm de jsDelivr com versão fixa no import map,
+Dependências de runtime (Plotly, DuckDB-Wasm) vêm de jsDelivr com versão fixa em `web/js/vendor.js`
+(o Quarto insere scripts de módulo antes do `<head>` incluído, então import map não funciona),
 começando pelas mesmas do DudesApp (`@duckdb/duckdb-wasm@1.29.0`, `plotly.js-dist-min@2.35.2`).
 O `web/vendor/` permite servir tudo localmente, se o CDN de terceiros virar problema.
 

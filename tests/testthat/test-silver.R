@@ -41,5 +41,7 @@ test_that("homônimos em UFs diferentes continuam municípios distintos", {
 test_that("display_name usa caixa mista com preposições minúsculas", {
   expect_equal(display_name("SÃO JOSÉ DOS CAMPOS"), "São José dos Campos")
   expect_equal(display_name("BOM DESTINO"), "Bom Destino")
-  expect_equal(display_name("PAU D'ARCO"), "Pau D'Arco")
+  expect_equal(display_name("PAU D'ARCO"), "Pau d'Arco")
+  expect_equal(display_name("OLHO D ÁGUA DAS FLORES"), "Olho d'Água das Flores")
+  expect_equal(display_name("SÃO JOÃO DEL-REI"), "São João Del-Rei")
 })

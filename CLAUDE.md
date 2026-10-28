@@ -46,7 +46,7 @@ Em caso de conflito: contratos (03) para schema; método (05) para verificaçõe
 - Site estático; sem autenticação, API própria, Shiny, SSR, Node no build do site, chatbot, banco operacional ou WebR no MVP.
 - Catálogo/manifestos JSON e estatísticas Parquet versionados; `resumo.json` acessível sem WASM.
 - DuckDB-Wasm inicializado apenas ao solicitar detalhes; sempre protegido por fallback.
-- Plotly é a única biblioteca de gráficos (inclui Sankey); dependências de runtime com versão fixa no import map de `web/js/head.html`.
+- Plotly é a única biblioteca de gráficos (inclui Sankey); dependências de runtime (Plotly, DuckDB-Wasm) com URL e versão fixas em `web/js/vendor.js`, carregadas sob demanda. O Quarto insere scripts de módulo antes do `<head>` incluído, então import map não funciona.
 - Sem UI kit genérico, gradientes, glassmorphism, sombras e cartões ornamentais. Não adicionar frameworks, mapas, ícones, animações ou bibliotecas sem requisito existente que justifique.
 - As cores de candidatos são **slots editoriais A/B**, nunca identidade político-partidária. Regra nacional: `A` = menor número de urna (03 §2).
 - Sem aba Horários nem logs de urna (fora do escopo).
