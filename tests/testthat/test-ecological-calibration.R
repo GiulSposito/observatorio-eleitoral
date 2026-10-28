@@ -36,10 +36,11 @@ test_that("calibração reprovada desativa a estimação (só limites, 05 §5.6)
 test_that("ec_calibrate roda a simulação e reporta convergência por processo e estrato", {
   p <- ec_test_params()
   p$estimacao$cadeias <- 2
-  p$execucao$eipack$burnin <- 500
-  p$execucao$eipack$amostras <- 50
-  p$execucao$eipack$thin <- 1
-  p$execucao$eipack$tune <- FALSE
+  p$execucao$dm_homog$piloto <- 800
+  p$execucao$dm_homog$iteracoes <- 4000
+  p$execucao$dm_homog$thin <- 10
+  p$execucao$dm_homog$extensoes_max <- 0
+  p$execucao$dm_homog$amostras_contagem <- 60
   p$calibracao$municipios_por_estrato <- 1
   p$calibracao$estratos <- c(15)
   p$calibracao$processos <- c("G1", "G2")

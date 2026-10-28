@@ -234,9 +234,13 @@ ec_fit_dm_homog <- function(O, D, params, seed) {
   # cadeias estendidas por rodadas. A cada rodada: diagnóstico barato nas contagens esperadas O_r * P[r, c]
   # (todas as amostras); quando ele passa, calcula as contagens por IPF e decide com elas (critério final).
   Orow <- colSums(Oa)
+  # posição, na grade completa (ec_cell_grid), de cada célula da matriz ativa (ordem por coluna)
+  gidx <- as.vector(outer(match(act$origins, EC_ORIGINS), match(act$destinations, EC_DESTINATIONS),
+                          function(o, dd) (o - 1L) * length(EC_DESTINATIONS) + dd))
   expected_counts <- function(m) t(apply(m, 1, function(x) {
-    P <- ec_dm_theta_to_P(x[-d], pp$pos)
-    as.vector(Orow * P)
+    full <- numeric(length(cell_names))
+    full[gidx] <- as.vector(Orow * ec_dm_theta_to_P(x[-d], pp$pos))
+    full
   }))
   per_chain <- max(2L, floor(cfg$amostras_contagem / n_chains))
   ipf_draws <- function(chains) lapply(chains, function(chm) {
