@@ -22,3 +22,25 @@ estimacao:
 calibracao:
   cobertura_alvo: 0.90
   processos: [G1, G2, G3, G4]
+  # execução da calibração (05 §5.6)
+  estratos: [15, 30, 60, 150]      # limites inferiores dos estratos por número de unidades
+  municipios_por_estrato: 3
+  max_unidades: 499                # municípios maiores ficam fora da calibração (custo); ver benchmark
+  grade_r: [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.60, 0.75, 1.00]
+  cobertura_fraca: 0.75            # critério do r_fraco (o 05 só diz "simulação")
+  min_celulas: 30                  # células mínimas para aceitar um limiar
+# Parâmetros de execução (não são limiares do 05 §6). Fixados pelo benchmark (tests/benchmark/RESULTS.md).
+execucao:
+  orcamento_segundos_por_municipio: 14400  # custo previsto acima disso -> md-bayes "failed" com motivo
+  eipack:
+    lambda1: 4                     # prior gama dos alphas (padrão do eiPack; ver benchmark)
+    lambda2: 2
+    burnin: 10000
+    amostras: 1000
+    thin: 10
+    tune: true                     # eiPack::tuneMD antes de amostrar
+    ntunes: 5
+    tune_draws: 2000
+    fundir_populacao_abaixo_de: 0.01   # N e S com menos de 1% do total são fundidas com X para o ajuste
+  usar_ecolrxc: false              # ecolRxC só se couber no orçamento (ver benchmark)
+  ecolrxc_max_unidades: 60

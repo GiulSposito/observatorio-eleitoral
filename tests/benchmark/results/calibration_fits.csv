@@ -1,0 +1,13 @@
+"municipio_tse","n_units","stratum","process","status","reason","rhat_max","predictive_pass","runtime_s"
+"90883",23,"15-29","G1","failed","md-bayes: sem convergência: R-hat máximo 1.636 (célula B>A), ESS mínimo 79",1.6361,NA,10.422
+"90883",23,"15-29","G2","failed","md-bayes: sem convergência: R-hat máximo 1.198 (célula B>A), ESS mínimo 66",1.1982,NA,10.37
+"90883",23,"15-29","G3","failed","md-bayes: sem convergência: R-hat máximo 1.322 (célula B>B), ESS mínimo 78",1.3221,NA,11.975
+"90883",23,"15-29","G4","failed","md-bayes: sem convergência: R-hat máximo 1.319 (célula B>A), ESS mínimo 77",1.3185,NA,14.268
+"24678",36,"30-59","G1","failed","md-bayes: sem convergência: R-hat máximo 1.259 (célula B>I), ESS mínimo 65",1.2591,NA,13.347
+"24678",36,"30-59","G2","failed","md-bayes: sem convergência: R-hat máximo 1.647 (célula A>A), ESS mínimo 72",1.6473,NA,11.94
+"24678",36,"30-59","G3","failed","md-bayes: sem convergência: R-hat máximo 1.268 (célula A>A), ESS mínimo 43",1.2679,NA,14.139
+"24678",36,"30-59","G4","failed","md-bayes: sem convergência: R-hat máximo 1.232 (célula B>A), ESS mínimo 32",1.2318,NA,14.09
+"14710",119,"60+","G1","failed","md-bayes: sem convergência: R-hat máximo 1.574 (célula X>A), ESS mínimo 49",1.5737,NA,36.994
+"14710",119,"60+","G2","failed","md-bayes: sem convergência: R-hat máximo 1.522 (célula A>I), ESS mínimo 32",1.522,NA,38.1
+"14710",119,"60+","G3","failed","md-bayes: sem convergência: R-hat máximo 1.521 (célula X>I), ESS mínimo 35",1.5206,NA,36.643
+"14710",119,"60+","G4","failed","md-bayes: sem convergência: R-hat máximo 2.011 (célula A>B), ESS mínimo 43",2.0106,NA,36.764
