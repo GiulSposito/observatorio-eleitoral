@@ -21,6 +21,16 @@ test_that("ec_calibrate devolve a estrutura da interface e falha sem municípios
   expect_equal(r$status, "failed")
   expect_match(r$decision, "só limites")
   expect_match(r$calibration_id, "^cal-2026-presidente-")
+  expect_equal(r$thresholds$calibration_status, "failed")
+})
+
+test_that("calibração reprovada desativa a estimação (só limites, 05 §5.6)", {
+  p <- ec_test_params()
+  p$estimacao$calibration_status <- "failed"
+  r <- ec_estimate(ec_test_units(40, seed = 35), p, seed = 1, context = list(eligible_share_used = 1))
+  expect_equal(r$status, "unavailable")
+  expect_equal(nrow(r$flows), 0L)
+  expect_match(r$model$reason_unavailable, "só os limites")
 })
 
 test_that("ec_calibrate roda a simulação e reporta convergência por processo e estrato", {

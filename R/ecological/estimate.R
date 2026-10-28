@@ -118,6 +118,12 @@ ec_estimate <- function(units, params, seed, context = list(eligible_share_used 
          identified_change_share = share, n_units_used = as.integer(n), calibration_id = calib)
   }
   share_used <- context$eligible_share_used
+  # 05 §5.6: calibração reprovada -> a release publica só limites; nenhuma estimativa é calculada
+  if (identical(est$calibration_status, "failed")) {
+    return(list(flows = ec_empty_flows(), status = "unavailable",
+                model = model("unavailable", paste("A calibração por simulação não atingiu a cobertura mínima;",
+                                                   "nesta release só os limites são publicados."))))
+  }
   if (n < est$n_secoes_min) {
     return(list(flows = ec_empty_flows(), status = "insufficient_data",
                 model = model("insufficient_data", sprintf("Menos de %d seções comparáveis (%d).", est$n_secoes_min, n))))

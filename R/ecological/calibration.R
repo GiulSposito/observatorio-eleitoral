@@ -104,7 +104,8 @@ ec_calibrate <- function(margins_t1, params, seed) {
   empty_report <- tibble::tibble(process = character(), stratum = character(), fits = integer(), converged = integer(),
                                  cells_estimated = integer(), coverage_estimated = double(), mae_estimated = double())
   if (!nrow(counts)) {
-    return(list(report = empty_report, thresholds = list(calibration_id = calibration_id), calibration_id = calibration_id,
+    return(list(report = empty_report, thresholds = list(calibration_id = calibration_id, calibration_status = "failed"),
+                calibration_id = calibration_id,
                 status = "failed", decision = "Sem municípios elegíveis para calibrar: publicar só limites.",
                 runtime_s = proc.time()[["elapsed"]] - t_start))
   }
@@ -190,7 +191,8 @@ ec_calibrate <- function(margins_t1, params, seed) {
     attr(report, "grid") <- grid_tab
     attr(report, "fits") <- fits
     return(list(
-      report = report, thresholds = list(calibration_id = calibration_id), calibration_id = calibration_id, status = "failed",
+      report = report, thresholds = list(calibration_id = calibration_id, calibration_status = "failed"),
+      calibration_id = calibration_id, status = "failed",
       decision = sprintf(paste0("Nenhum limiar atinge cobertura de %.0f%% nas células estimadas (G2–G4); ",
                                 "md-bayes convergiu em %.0f%% dos ajustes simulados. Publicar só limites."),
                          100 * cal$cobertura_alvo, 100 * conv_rate),
@@ -216,7 +218,8 @@ ec_calibrate <- function(margins_t1, params, seed) {
   attr(report, "fits") <- fits
   list(
     report = report,
-    thresholds = list(r_estimado = r_est, r_fraco = r_weak, n_secoes_min = n_min, calibration_id = calibration_id),
+    thresholds = list(r_estimado = r_est, r_fraco = r_weak, n_secoes_min = n_min, calibration_id = calibration_id,
+                      calibration_status = "passed"),
     calibration_id = calibration_id, status = "passed",
     decision = sprintf("r_estimado = %.2f, r_fraco = %.2f, n_secoes_min = %d (cobertura-alvo %.0f%% em G2–G4).",
                        r_est, r_weak, as.integer(n_min), 100 * cal$cobertura_alvo),
