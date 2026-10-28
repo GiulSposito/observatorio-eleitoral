@@ -46,14 +46,14 @@ build_silver <- function(cfg, extracted) {
     finalistas = file.path(out_dir, "finalistas.json"),
     municipios = file.path(out_dir, "municipios.parquet")
   )
-  excl <- paste0("'", cfg$excluir_ufs, "'", collapse = ", ")
+  ufw <- uf_where(cfg)
   with_db(function(con) {
     DBI::dbExecute(con, sprintf(
-      "CREATE VIEW vot AS SELECT * FROM %s WHERE CD_CARGO = '%s' AND SG_UF NOT IN (%s)",
-      csv_reader(extracted[["votacao_secao"]]), cfg$cd_cargo, excl))
+      "CREATE VIEW vot AS SELECT * FROM %s WHERE CD_CARGO = '%s' AND %s",
+      csv_reader(extracted[["votacao_secao"]]), cfg$cd_cargo, ufw))
     DBI::dbExecute(con, sprintf(
-      "CREATE VIEW det AS SELECT * FROM %s WHERE CD_CARGO = '%s' AND SG_UF NOT IN (%s)",
-      csv_reader(extracted[["detalhe_votacao_secao"]]), cfg$cd_cargo, excl))
+      "CREATE VIEW det AS SELECT * FROM %s WHERE CD_CARGO = '%s' AND %s",
+      csv_reader(extracted[["detalhe_votacao_secao"]]), cfg$cd_cargo, ufw))
 
     DBI::dbExecute(con, sprintf(
       "CREATE TABLE valid_cand AS

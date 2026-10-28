@@ -9,7 +9,7 @@ Este site separa três coisas que têm graus de certeza muito diferentes: **o qu
 
 ## Escopo
 
-Eleição para Presidente da República de 2026: 1º turno em 4 de outubro e 2º turno em 25 de outubro. Todos os municípios do país; votos no exterior ficam fora, porque não pertencem a município. A unidade observada é a seção eleitoral, pareada entre os dois turnos.
+Eleição para Presidente da República de 2026: 1º turno em 4 de outubro e 2º turno em 25 de outubro. Nesta primeira versão, os municípios do Estado de São Paulo; os demais estados entram nas próximas versões, com o mesmo método. Votos no exterior ficam fora, porque não pertencem a município. A unidade observada é a seção eleitoral, pareada entre os dois turnos.
 
 ## Notação e categorias
 

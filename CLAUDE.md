@@ -42,7 +42,7 @@ Em caso de conflito: contratos (03) para schema; método (05) para verificaçõe
 ## Decisões fixas
 
 - Português brasileiro, acessibilidade WCAG 2.2 AA.
-- Escopo eleitoral: Presidente da República 2026, 1º turno (4/10) × 2º turno (25/10), todos os municípios; exterior fora. Nenhuma outra eleição é usada, nem para desenvolvimento ou calibração.
+- Escopo eleitoral: Presidente da República 2026, 1º turno (4/10) × 2º turno (25/10), todos os municípios; exterior fora. Nenhuma outra eleição é usada, nem para desenvolvimento ou calibração. **Primeira versão: só o Estado de São Paulo** (`incluir_ufs: [SP]` na configuração da eleição).
 - Site estático; sem autenticação, API própria, Shiny, SSR, Node no build do site, chatbot, banco operacional ou WebR no MVP.
 - Catálogo/manifestos JSON e estatísticas Parquet versionados; `resumo.json` acessível sem WASM.
 - DuckDB-Wasm inicializado apenas ao solicitar detalhes; sempre protegido por fallback.

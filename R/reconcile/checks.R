@@ -152,7 +152,7 @@ section_mart_sql <- function(election_id) {
 # V3: confronto com os totais oficiais por município (votação por candidato e detalhe por município/zona).
 official_totals_checks <- function(con, cfg, extracted, finalists) {
   a <- finalists$number[finalists$slot == "A"]; b <- finalists$number[finalists$slot == "B"]
-  excl <- paste0("'", cfg$excluir_ufs, "'", collapse = ", ")
+  ufw <- uf_where(cfg)
   DBI::dbExecute(con, sprintf("
     CREATE OR REPLACE TABLE off_cand AS
     SELECT lpad(CD_MUNICIPIO, 5, '0') AS municipio_tse, NR_TURNO::INTEGER AS turno,
@@ -160,15 +160,15 @@ official_totals_checks <- function(con, cfg, extracted, finalists) {
            sum(CASE WHEN NR_CANDIDATO = '%s' THEN QT_VOTOS_NOMINAIS::BIGINT ELSE 0 END) AS b,
            sum(CASE WHEN NR_CANDIDATO NOT IN ('%s', '%s') AND NM_TIPO_DESTINACAO_VOTOS = 'Válido'
                     THEN QT_VOTOS_NOMINAIS::BIGINT ELSE 0 END) AS other
-      FROM %s WHERE CD_CARGO = '%s' AND SG_UF NOT IN (%s) GROUP BY ALL",
-    a, b, a, b, csv_reader(extracted[["votacao_candidato_munzona"]]), cfg$cd_cargo, excl))
+      FROM %s WHERE CD_CARGO = '%s' AND %s GROUP BY ALL",
+    a, b, a, b, csv_reader(extracted[["votacao_candidato_munzona"]]), cfg$cd_cargo, ufw))
   DBI::dbExecute(con, sprintf("
     CREATE OR REPLACE TABLE off_det AS
     SELECT lpad(CD_MUNICIPIO, 5, '0') AS municipio_tse, NR_TURNO::INTEGER AS turno,
            sum(QT_APTOS::BIGINT) AS aptos, sum(QT_COMPARECIMENTO::BIGINT) AS comparecimento,
            sum(QT_VOTOS_BRANCOS::BIGINT) AS brancos, sum(QT_TOTAL_VOTOS_NULOS::BIGINT) AS nulos
-      FROM %s WHERE CD_CARGO = '%s' AND SG_UF NOT IN (%s) GROUP BY ALL",
-    csv_reader(extracted[["detalhe_votacao_munzona"]]), cfg$cd_cargo, excl))
+      FROM %s WHERE CD_CARGO = '%s' AND %s GROUP BY ALL",
+    csv_reader(extracted[["detalhe_votacao_munzona"]]), cfg$cd_cargo, ufw))
 
   DBI::dbExecute(con, "
     CREATE OR REPLACE TABLE sec_tot AS
