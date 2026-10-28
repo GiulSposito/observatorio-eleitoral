@@ -59,13 +59,13 @@ ec_estimate_core <- function(O, D, params, seed) {
   bmin <- ec_matrix_to_long(fb$min, "v")$v
   bmax <- ec_matrix_to_long(fb$max, "v")$v
 
-  md <- ec_fit_md(O, D, params, seed)
+  md <- ec_fit_main(O, D, params, seed)
   lp <- ec_fit_lphom(O, D)
   use_ecx <- isTRUE(exec$usar_ecolrxc) && nrow(O) <= exec$ecolrxc_max_unidades
   ecx <- if (use_ecx) ec_fit_ecolrxc(O, D) else list(status = "skipped", runtime_s = 0)
 
   methods <- list(
-    list(method_id = "md-bayes", version = md$version, status = md$status, runtime_s = round(md$runtime_s, 2),
+    list(method_id = ec_main_model_id, version = md$version, status = md$status, runtime_s = round(md$runtime_s, 2),
          diagnostics = c(md$diagnostics, if (!is.null(md$reason)) list(reason = md$reason))),
     list(method_id = "lphom", version = ec_lphom_version(), status = lp$status, runtime_s = round(lp$runtime_s, 2),
          diagnostics = if (!is.null(lp$reason)) list(reason = lp$reason) else ec_empty_diag()),
@@ -76,7 +76,7 @@ ec_estimate_core <- function(O, D, params, seed) {
   out <- list(methods = methods, md = md, bounds_min = bmin, bounds_max = bmax)
   if (!identical(md$status, "ok")) {
     out$status <- "failed"
-    out$reason <- paste("md-bayes:", md$reason)
+    out$reason <- paste0(ec_main_model_id, ": ", md$reason)
     return(out)
   }
   points <- list(md$summary$mean)
@@ -147,7 +147,7 @@ ec_estimate <- function(units, params, seed, context = list(eligible_share_used 
   status <- if (isTRUE(pc$passed) && share >= est$massa_identificada_min) "ready" else "partial"
   flows <- cells |>
     dplyr::mutate(
-      model_id = "md-bayes", model_version = core$md$version,
+      model_id = ec_main_model_id, model_version = core$md$version,
       assumption_id = "homogeneidade-municipal+pop-liquida-minima",
       estimate_statistic = "posterior_mean", interval_type = "credible_interval",
       interval_level = est$intervalo_nivel, model_status = status

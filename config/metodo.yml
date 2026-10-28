@@ -31,16 +31,15 @@ calibracao:
   min_celulas: 30                  # células mínimas para aceitar um limiar
 # Parâmetros de execução (não são limiares do 05 §6). Fixados pelo benchmark (tests/benchmark/RESULTS.md).
 execucao:
-  orcamento_segundos_por_municipio: 14400  # custo previsto acima disso -> md-bayes "failed" com motivo
-  eipack:
-    lambda1: 4                     # prior gama dos alphas (padrão do eiPack; ver benchmark)
-    lambda2: 2
-    burnin: 10000
-    amostras: 1000
-    thin: 10
-    tune: true                     # eiPack::tuneMD antes de amostrar
-    ntunes: 5
-    tune_draws: 2000
-    fundir_populacao_abaixo_de: 0.01   # N e S com menos de 1% do total são fundidas com X para o ajuste
+  orcamento_segundos_por_municipio: 1800   # custo previsto acima disso -> motor principal "failed" com motivo
+  dm_homog:                        # motor principal (05 §5.2)
+    alpha_prior: 2                 # Dirichlet nas linhas: ~2 pseudo-votos por célula
+    phi_limites: [0.5, 100000]     # sobredispersão limitada (precisão numérica do lgamma)
+    piloto: 4000                   # passeio aleatório a partir do MAP para a covariância da proposta
+    iteracoes: 100000              # por cadeia e por rodada; metade inicial de cada cadeia é aquecimento
+    thin: 50
+    extensoes_max: 5               # rodadas extras enquanto R-hat/ESS não atingem os limiares
+    amostras_contagem: 2000        # amostras de P convertidas em contagens municipais por IPF
+    max_unidades_ajuste: 400       # acima disso a verossimilhança usa grupos de unidades de composição parecida
   usar_ecolrxc: false              # ecolRxC só se couber no orçamento (ver benchmark)
   ecolrxc_max_unidades: 60
