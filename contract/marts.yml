@@ -1,6 +1,6 @@
-# Parquets publicados por UF (docs/03-contratos-de-dados.md §8–§11), contrato 1.2.0.
+# Parquets publicados por UF (docs/03-contratos-de-dados.md §8–§11), contrato 1.3.0.
 # Tipos DuckDB. "nullable: false" é verificado pelo validador. "sort" é a ordenação física exigida.
-schema_version: "1.2.0"
+schema_version: "1.3.0"
 marts:
   secoes:
     file: "uf={uf}/secoes.parquet"
@@ -93,7 +93,7 @@ marts:
       municipio_tse: {type: VARCHAR, nullable: false}
       origin: {type: VARCHAR, nullable: false, enum: ["A", "B", "O", "I", "X", "N"]}
       destination: {type: VARCHAR, nullable: false, enum: ["A", "B", "I", "X", "S"]}
-      model_id: {type: VARCHAR, nullable: false, enum: ["md-bayes"]}
+      model_id: {type: VARCHAR, nullable: false, enum: ["dm-homog"]}
       model_version: {type: VARCHAR, nullable: false}
       assumption_id: {type: VARCHAR, nullable: false}
       estimate_votes: {type: DOUBLE, nullable: false}

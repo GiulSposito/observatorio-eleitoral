@@ -1,4 +1,4 @@
-# Gera o bundle sintético DEMO-001 em tests/fixtures/bundle/ (contrato 1.2.0).
+# Gera o bundle sintético DEMO-001 em tests/fixtures/bundle/ (contrato 1.3.0).
 #
 # DADOS FICTÍCIOS. Municípios, candidatos e números são inventados para desenvolver e testar o site.
 # Os limites e as estimativas daqui NÃO são o cálculo do método (R/ecological/): servem só para
@@ -19,7 +19,7 @@ set.seed(20261027)
 out_root <- "tests/fixtures/bundle"
 release_id <- "DEMO-001"
 election_id <- "2026-presidente"
-schema_version <- "1.2.0"
+schema_version <- "1.3.0"
 method_version <- "metodo-1.0.0"
 generated_at <- "2026-10-27T18:00:00Z"
 git_sha <- "DEMO"
@@ -232,7 +232,7 @@ for (k in seq_len(nrow(municipios))) {
           TRUE ~ "not_identified"
         ),
         election_id = election_id, uf = m$uf, municipio_tse = m$municipio_tse,
-        model_id = "md-bayes", model_version = "eiPack-0.2-2", assumption_id = "homogeneidade-municipal+pop-liquida-minima",
+        model_id = "dm-homog", model_version = "dm-homog-1.0.0", assumption_id = "homogeneidade-municipal+pop-liquida-minima",
         estimate_statistic = "posterior_mean", interval_type = "credible_interval", interval_level = 0.95,
         model_status = m$model_status
       ) |>
@@ -358,7 +358,7 @@ for (k in seq_len(nrow(municipios))) {
       status = m$model_status,
       reason_unavailable = if (m$model_status == "insufficient_data") "Menos de 15 seções comparáveis." else NULL,
       methods = if (m$model_status %in% c("ready", "partial")) list(
-        list(method_id = "md-bayes", version = "eiPack-0.2-2", status = "ok", runtime_s = 3.2, diagnostics = list(rhat_max = 1.004, ess_min = 900)),
+        list(method_id = "dm-homog", version = "dm-homog-1.0.0", status = "ok", runtime_s = 3.2, diagnostics = list(rhat_max = 1.004, ess_min = 900)),
         list(method_id = "lphom", version = "lphom-0.3.5-7", status = "ok", runtime_s = 0.2, diagnostics = setNames(list(), character()))
       ) else list(),
       predictive_check = if (m$model_status %in% c("ready", "partial"))

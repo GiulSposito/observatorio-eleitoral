@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "release_id": "DEMO-001",
   "method_version": "metodo-1.0.0",
   "parameters": {
@@ -27,7 +27,31 @@
     },
     "calibracao": {
       "cobertura_alvo": 0.9,
-      "processos": ["G1", "G2", "G3", "G4"]
+      "processos": ["G1", "G2", "G3", "G4"],
+      "estratos": [15, 30, 60, 150],
+      "municipios_por_estrato": 3,
+      "max_unidades": 499,
+      "grade_r": [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.75, 1],
+      "cobertura_fraca": 0.75,
+      "min_celulas": 30
+    },
+    "execucao": {
+      "orcamento_segundos_por_municipio": 1800,
+      "dm_homog": {
+        "alpha_prior": 2,
+        "phi_limites": [
+          0.5,
+          100000
+        ],
+        "piloto": 4000,
+        "iteracoes": 100000,
+        "thin": 50,
+        "extensoes_max": 5,
+        "amostras_contagem": 2000,
+        "max_unidades_ajuste": 400
+      },
+      "usar_ecolrxc": false,
+      "ecolrxc_max_unidades": 60
     }
   },
   "categories": [

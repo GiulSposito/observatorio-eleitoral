@@ -1,9 +1,9 @@
-# Web bundle — contrato executável (contract/marts.yml e JSON Schemas), contrato 1.2.0.
+# Web bundle — contrato executável (contract/marts.yml e JSON Schemas), contrato 1.3.0.
 #
 # Todo mart passa por um único ponto de escrita (write_mart, em parquet.R), que seleciona as colunas na
 # ordem do contrato, converte para o tipo declarado e grava na ordenação física exigida.
 
-CONTRACT_SCHEMA_VERSION <- "1.2.0"
+CONTRACT_SCHEMA_VERSION <- "1.3.0"
 
 # YAML 1.1 lê `N`, `Y`, `no`, `yes` sem aspas como booleanos; no contrato só `true`/`false` são
 # booleanos (a categoria `N` de origem, por exemplo, é texto).

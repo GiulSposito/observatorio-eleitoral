@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "release_id": "DEMO-001",
   "election_id": "2026-presidente",
   "municipio_tse": "00001",
@@ -18,14 +18,14 @@
     "summary": {
       "path": "2026-presidente/municipios/MG/00001/resumo.json",
       "media_type": "application/json",
-      "sha256": "0537fa9b61f36e7d419b8be833694a732dcc98cc41edfa6ad3afb392f5efdefa",
+      "sha256": "5e342a3de4b9dc7d998567d03bdf84b65fea3af6c18e517acf71a70339805896",
       "bytes": 1587
     },
     "quality": {
       "path": "2026-presidente/municipios/MG/00001/qualidade.json",
       "media_type": "application/json",
-      "sha256": "50be3aed481e8e01c526e3ad1337325b0762db67f17fa88da43caaed24f14d94",
-      "bytes": 2240
+      "sha256": "159c9fbb2e743455e6ada82503c6b1fd5ef79fda88bda9c775352026bc570d7e",
+      "bytes": 2242
     },
     "sections": {
       "path": "2026-presidente/uf=MG/secoes.parquet",
@@ -48,8 +48,8 @@
     "flows": {
       "path": "2026-presidente/uf=MG/fluxos_estimados.parquet",
       "media_type": "application/vnd.apache.parquet",
-      "sha256": "5f7df59f391f9983633e231b1c6a32450567dedd36c502514e5239cf66bb6588",
-      "bytes": 5618
+      "sha256": "ebaf3651c6d62b4bcd28533d26c538db4bedc2b09d08669232664beeef1fc697",
+      "bytes": 5628
     }
   },
   "sources": [

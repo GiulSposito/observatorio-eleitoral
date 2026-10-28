@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "release_id": "DEMO-001",
   "election_id": "2026-presidente",
   "municipio_tse": "00001",
@@ -65,8 +65,8 @@
     "reason_unavailable": null,
     "methods": [
       {
-        "method_id": "md-bayes",
-        "version": "eiPack-0.2-2",
+        "method_id": "dm-homog",
+        "version": "dm-homog-1.0.0",
         "status": "ok",
         "runtime_s": 3.2,
         "diagnostics": {
