@@ -59,6 +59,10 @@ main.content { padding-top: 1.5rem; }
 .nowrap { white-space: nowrap; }
 :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
 button { font: inherit; }
+mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; max-width: 100%; }
+div.sourceCode pre, pre.sourceCode { white-space: pre-wrap; overflow-x: visible; }
+div.sourceCode { overflow: visible; }
+@media (max-width: 480px) { mjx-container[display="true"] { font-size: 88% !important; } }
 
 // ---- estados -----------------------------------------------------------------
 .ce-state { border-top: 1px solid var(--color-border-strong); padding: 1rem 0; color: var(--color-muted); max-width: var(--layout-text); }

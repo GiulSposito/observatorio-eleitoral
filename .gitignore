@@ -30,6 +30,7 @@ node_modules/
 /tests/e2e/playwright-report/
 /tests/e2e/blob-report/
 /tests/e2e/.cache/
+/tests/e2e/screenshots/
 
 # Local Claude Code settings (project skills in .claude/skills are tracked)
 .claude/settings.local.json

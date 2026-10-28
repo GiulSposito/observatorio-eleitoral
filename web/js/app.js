@@ -12,6 +12,10 @@ const PAGES = {
 };
 
 async function shell() {
+  // O Quarto insere o include-before-body depois do cabeçalho; o link de pular precisa ser o
+  // primeiro foco da página.
+  const skip = document.querySelector(".skip-link");
+  if (skip && document.body.firstElementChild !== skip) document.body.prepend(skip);
   const version = document.getElementById("data-version");
   try {
     const latest = await data.loadLatest();
