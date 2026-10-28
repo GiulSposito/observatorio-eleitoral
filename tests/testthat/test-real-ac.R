@@ -4,6 +4,7 @@
 test_that("dados reais do AC passam em V1, V2 e V3 e têm unidades balanceadas", {
   real_root <- data_root()
   cfg <- read_election_config("2026-presidente")
+  cfg$incluir_ufs <- "AC"
   zips <- file.path(real_root, "bronze", cfg$election_id, vapply(cfg$fontes, function(s) basename(s$url), ""))
   skip_if_not(all(file.exists(zips)), "zips do TSE 2026 ausentes")
   ex_dir <- file.path(real_root, "bronze", cfg$election_id, "extracted")

@@ -2,7 +2,7 @@ election_id: "2026-presidente"
 year: 2026
 office: presidente
 cd_cargo: "1"
-label: "Presidência · 2026 · 1º × 2º turno"
+label: "Presidência · 2026 · 1º × 2º turno · Estado de São Paulo"
 rounds:
   - {round: 1, date: "2026-10-04"}
   - {round: 2, date: "2026-10-25"}
@@ -10,6 +10,8 @@ slot_rule: lowest_ballot_number
 votavel_branco: "95"
 votavel_nulo: "96"
 excluir_ufs: [ZZ]
+# Primeira versão publicada: só municípios do Estado de São Paulo. Remover para cobrir o país.
+incluir_ufs: [SP]
 fontes:
   votacao_secao:
     dataset: "Votação por seção eleitoral 2026"

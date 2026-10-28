@@ -5,7 +5,7 @@ description: "Independência, princípios editoriais e a origem da análise do C
 
 ::: {.prose}
 
-O Caderno Eleitoral é um projeto independente, sem vínculo com o Tribunal Superior Eleitoral, partidos ou candidaturas. Seu objetivo é mostrar, para qualquer município, como mudou o resultado da eleição presidencial de 2026 entre o 1º e o 2º turno, separando o que foi observado, o que é matematicamente possível e o que um modelo estima sob hipóteses declaradas.
+O Caderno Eleitoral é um projeto independente, sem vínculo com o Tribunal Superior Eleitoral, partidos ou candidaturas. Seu objetivo é mostrar, município a município (nesta primeira versão, no Estado de São Paulo), como mudou o resultado da eleição presidencial de 2026 entre o 1º e o 2º turno, separando o que foi observado, o que é matematicamente possível e o que um modelo estima sob hipóteses declaradas.
 
 ## Origem da análise
 

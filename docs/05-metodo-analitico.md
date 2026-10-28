@@ -11,8 +11,9 @@ Este documento responde aos achados críticos C1–C4 (e ao A1) de `analise-crit
 
 - **Eleição:** Presidente da República, 2026. 1º turno em 4 de outubro e 2º turno em 25 de outubro
   de 2026.
-- **Unidade de análise publicada:** município. São todos os municípios do país, porque a eleição
-  presidencial teve 2º turno em todos eles.
+- **Unidade de análise publicada:** município. A eleição presidencial teve 2º turno em todos os
+  municípios. **A primeira versão publicada cobre só o Estado de São Paulo (645 municípios)**
+  (`incluir_ufs` em `config/eleicoes/2026-presidente.yml`); a calibração usa margens de SP.
 - **Fora do escopo:** outros cargos e outras eleições; votos no exterior (UF `ZZ`), que não
   pertencem a município.
 - **Nenhuma outra eleição** é usada, nem para desenvolvimento ou calibração. A calibração

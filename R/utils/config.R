@@ -69,6 +69,15 @@ git_sha <- function() {
   if (length(sha) == 1L && grepl("^[0-9a-f]{40}$", sha)) sha else "0000000000000000000000000000000000000000"
 }
 
+# Filtro SQL de UF: exclui `excluir_ufs` e, se `incluir_ufs` estiver definido, restringe a ele
+# (primeira versão: só SP; ver config/eleicoes/<election_id>.yml).
+uf_where <- function(cfg, col = "SG_UF") {
+  q <- function(x) paste0("'", x, "'", collapse = ", ")
+  w <- sprintf("%s NOT IN (%s)", col, q(cfg$excluir_ufs))
+  if (length(cfg$incluir_ufs)) w <- paste0(w, sprintf(" AND %s IN (%s)", col, q(cfg$incluir_ufs)))
+  w
+}
+
 log_msg <- function(...) {
   message(format(Sys.time(), "[%H:%M:%S] "), ...)
 }

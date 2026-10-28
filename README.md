@@ -4,7 +4,7 @@
 
 Escolha um município brasileiro, compare o 1º e o 2º turno da **eleição presidencial de 2026** seção por seção e entenda o que os dados permitem concluir. Três níveis de evidência ficam sempre separados: o que foi **observado** (contabilidade exata, reconciliada com o TSE), o que é **matematicamente possível** (limites sob hipóteses explícitas) e o que é **estimado** (inferência ecológica com incerteza e diagnósticos).
 
-O motor de dados é feito em **R** e publica resultados pré-computados em **JSON + Parquet**. O site é **estático**, feito em **Quarto + JavaScript (ES modules) + DuckDB-Wasm + Plotly** — o mesmo stack do DudesApp. Não há backend de aplicação. Todos os números exibidos vêm de dados oficiais do TSE processados pelo pipeline, para qualquer município.
+O motor de dados é feito em **R** e publica resultados pré-computados em **JSON + Parquet**. **A primeira versão publicada cobre os municípios do Estado de São Paulo.** O site é **estático**, feito em **Quarto + JavaScript (ES modules) + DuckDB-Wasm + Plotly** — o mesmo stack do DudesApp. Não há backend de aplicação. Todos os números exibidos vêm de dados oficiais do TSE processados pelo pipeline, para qualquer município.
 
 ## Origem da ideia
 
