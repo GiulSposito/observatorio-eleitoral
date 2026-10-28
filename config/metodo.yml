@@ -22,3 +22,18 @@ estimacao:
 calibracao:
   cobertura_alvo: 0.90
   processos: [G1, G2, G3, G4]
+# Parâmetros de execução (não são limiares do 05 §6). Fixados pelo benchmark (tests/benchmark/RESULTS.md).
+execucao:
+  orcamento_segundos_por_municipio: 14400  # custo previsto acima disso -> md-bayes "failed" com motivo
+  eipack:
+    lambda1: 4                     # prior gama dos alphas (padrão do eiPack; ver benchmark)
+    lambda2: 2
+    burnin: 10000
+    amostras: 1000
+    thin: 10
+    tune: true                     # eiPack::tuneMD antes de amostrar
+    ntunes: 5
+    tune_draws: 2000
+    fundir_populacao_abaixo_de: 0.01   # N e S com menos de 1% do total são fundidas com X para o ajuste
+  usar_ecolrxc: false              # ecolRxC só se couber no orçamento (ver benchmark)
+  ecolrxc_max_unidades: 60

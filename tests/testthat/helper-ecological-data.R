@@ -1,12 +1,4 @@
-# Carrega o código do método (R/ecological, R/diagnostics) para os testes.
-local({
-  root <- normalizePath(file.path(testthat::test_path(), "..", ".."))
-  for (dir in c("R/ecological", "R/diagnostics")) {
-    for (f in sort(list.files(file.path(root, dir), pattern = "\\.R$", full.names = TRUE))) {
-      sys.source(f, envir = globalenv())
-    }
-  }
-})
+# Dados sintéticos para os testes do método (o código de R/ é carregado por helper-00-load.R).
 
 # Gera unidades sintéticas com matriz de transição conhecida (processo G1, homogêneo).
 ec_test_units <- function(n, P = NULL, sizes = 250:400, seed = 1, with_population = FALSE) {
