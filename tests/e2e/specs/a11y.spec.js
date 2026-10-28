@@ -47,6 +47,13 @@ test("página Sobre tem a seção Origem da análise", async ({ page }) => {
   await expect(page.locator("main")).toContainText("Rômulo Fiúza e Mello");
 });
 
+for (const path of ["index.html", "metodologia.html", "dados-e-codigo.html", "sobre.html"]) {
+  test(`um único H1 visível: ${path}`, async ({ page }) => {
+    await page.goto(path);
+    await expect(page.locator("h1:visible")).toHaveCount(1);
+  });
+}
+
 test("foco visível e link de pular para o conteúdo", async ({ page }) => {
   await page.goto("index.html");
   await page.keyboard.press("Tab");

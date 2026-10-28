@@ -46,6 +46,8 @@ $footer-fg: #57645F;
 .nav-footer a { color: var(--color-accent); }
 .nav-footer-center, .nav-footer-left, .nav-footer-right { line-height: 1.5; }
 #title-block-header { margin-block-end: 1.5rem; }
+// a home escreve o próprio H1 (com rótulo e texto de apoio); o título do Quarto só preenche metadados
+.home-page #title-block-header { display: none; }
 #title-block-header .title { font-size: var(--text-page); letter-spacing: -0.04em; font-weight: 600; }
 main.content { padding-top: 1.5rem; }
 .quarto-title-meta { display: none; }

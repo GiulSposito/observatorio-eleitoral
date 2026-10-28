@@ -1,6 +1,6 @@
 ---
 title: "Entenda o que mudou entre os turnos no seu município"
-title-block-style: none
+body-classes: home-page
 pagetitle: "Caderno Eleitoral · 1º × 2º turno, município a município"
 description: "Compare o 1º e o 2º turno da eleição presidencial de 2026 em qualquer município, seção por seção, e veja o que os dados permitem concluir."
 ---
