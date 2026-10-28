@@ -33,7 +33,7 @@ calibracao:
 execucao:
   orcamento_segundos_por_municipio: 1800   # custo previsto acima disso -> motor principal "failed" com motivo
   dm_homog:                        # motor principal (05 §5.2)
-    alpha_prior: 2                 # Dirichlet nas linhas: ~2 pseudo-votos por célula
+    alpha_prior: 1                 # Dirichlet(1) (uniforme) nas linhas; ver calibração em tests/benchmark
     phi_limites: [0.5, 100000]     # sobredispersão limitada (precisão numérica do lgamma)
     piloto: 4000                   # passeio aleatório a partir do MAP para a covariância da proposta
     iteracoes: 100000              # por cadeia e por rodada; metade inicial de cada cadeia é aquecimento

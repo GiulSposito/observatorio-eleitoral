@@ -1,13 +1,17 @@
 "municipio_tse","n_units","stratum","process","status","reason","rhat_max","predictive_pass","runtime_s"
-"90883",23,"15-29","G1","failed","md-bayes: sem convergência: R-hat máximo 1.636 (célula B>A), ESS mínimo 79",1.6361,NA,10.422
-"90883",23,"15-29","G2","failed","md-bayes: sem convergência: R-hat máximo 1.198 (célula B>A), ESS mínimo 66",1.1982,NA,10.37
-"90883",23,"15-29","G3","failed","md-bayes: sem convergência: R-hat máximo 1.322 (célula B>B), ESS mínimo 78",1.3221,NA,11.975
-"90883",23,"15-29","G4","failed","md-bayes: sem convergência: R-hat máximo 1.319 (célula B>A), ESS mínimo 77",1.3185,NA,14.268
-"24678",36,"30-59","G1","failed","md-bayes: sem convergência: R-hat máximo 1.259 (célula B>I), ESS mínimo 65",1.2591,NA,13.347
-"24678",36,"30-59","G2","failed","md-bayes: sem convergência: R-hat máximo 1.647 (célula A>A), ESS mínimo 72",1.6473,NA,11.94
-"24678",36,"30-59","G3","failed","md-bayes: sem convergência: R-hat máximo 1.268 (célula A>A), ESS mínimo 43",1.2679,NA,14.139
-"24678",36,"30-59","G4","failed","md-bayes: sem convergência: R-hat máximo 1.232 (célula B>A), ESS mínimo 32",1.2318,NA,14.09
-"14710",119,"60+","G1","failed","md-bayes: sem convergência: R-hat máximo 1.574 (célula X>A), ESS mínimo 49",1.5737,NA,36.994
-"14710",119,"60+","G2","failed","md-bayes: sem convergência: R-hat máximo 1.522 (célula A>I), ESS mínimo 32",1.522,NA,38.1
-"14710",119,"60+","G3","failed","md-bayes: sem convergência: R-hat máximo 1.521 (célula X>I), ESS mínimo 35",1.5206,NA,36.643
-"14710",119,"60+","G4","failed","md-bayes: sem convergência: R-hat máximo 2.011 (célula A>B), ESS mínimo 43",2.0106,NA,36.764
+"71595",20,"15-29","G1","ok",NA,1.0038,TRUE,19.258
+"71595",20,"15-29","G2","ok",NA,1.0086,TRUE,17.325
+"71595",20,"15-29","G3","ok",NA,1.008,TRUE,17.815
+"71595",20,"15-29","G4","ok",NA,1.006,TRUE,52.934
+"68870",187,"150+","G1","ok",NA,1.0094,TRUE,136.263
+"68870",187,"150+","G2","ok",NA,1.0084,TRUE,108.049
+"68870",187,"150+","G3","failed","dm-homog: sem convergência: R-hat máximo 1.021 (célula A>I), ESS mínimo 512",1.0206,NA,190.8
+"68870",187,"150+","G4","ok",NA,1.0061,TRUE,137.342
+"62596",57,"30-59","G1","failed","dm-homog: sem convergência: R-hat máximo 1.012 (célula X>B), ESS mínimo 789",1.0124,NA,66.816
+"62596",57,"30-59","G2","failed","dm-homog: sem convergência: R-hat máximo 1.014 (célula O>I), ESS mínimo 570",1.0138,NA,71.388
+"62596",57,"30-59","G3","failed","dm-homog: sem convergência: R-hat máximo 1.012 (célula I>B), ESS mínimo 822",1.012,NA,69.5940000000001
+"62596",57,"30-59","G4","ok",NA,1.0075,TRUE,57.272
+"61018",83,"60-149","G1","failed","dm-homog: sem convergência: R-hat máximo 1.019 (célula I>X), ESS mínimo 482",1.0188,NA,69.8240000000001
+"61018",83,"60-149","G2","failed","dm-homog: sem convergência: R-hat máximo 1.014 (célula O>B), ESS mínimo 809",1.0136,NA,70.329
+"61018",83,"60-149","G3","failed","dm-homog: sem convergência: R-hat máximo 1.010 (célula X>A), ESS mínimo 467",1.0101,NA,84.0829999999999
+"61018",83,"60-149","G4","failed","dm-homog: sem convergência: R-hat máximo 1.033 (célula X>B), ESS mínimo 548",1.0326,NA,93.962

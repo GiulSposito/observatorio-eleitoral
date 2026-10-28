@@ -129,7 +129,7 @@ ec_dm_counts_for_P <- function(P, Oa, Da, cells, act) {
 }
 
 # ---------------------------------------------------------------- ajuste
-ec_fit_dm_homog <- function(O, D, params, seed) {
+ec_fit_dm_homog <- function(O, D, params, seed, return_chains = FALSE) {
   ec_dm_cpp()
   cfg <- params$execucao$dm_homog
   n_chains <- params$estimacao$cadeias
@@ -277,6 +277,7 @@ ec_fit_dm_homog <- function(O, D, params, seed) {
     }
   }
   acc_rate <- sum(vapply(state, `[[`, numeric(1), "acc")) / sum(vapply(state, `[[`, numeric(1), "it"))
+  if (return_chains) attr(draws, "chains") <- list(theta = chains, map = map, map_values = vals, check = check)
   list(status = "ok", draws = draws, check = check, runtime_s = proc.time()[["elapsed"]] - t0,
        diagnostics = c(diag_base, list(acceptance = round(acc_rate, 3), rounds = rounds,
                                        iterations_per_chain = state[[1]]$it, phi_map = signif(exp(map[d]), 4),

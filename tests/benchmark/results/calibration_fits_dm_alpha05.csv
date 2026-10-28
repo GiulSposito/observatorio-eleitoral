@@ -1,0 +1,17 @@
+"municipio_tse","n_units","stratum","process","status","reason","rhat_max","predictive_pass","runtime_s"
+"71595",20,"15-29","G1","failed","dm-homog: sem convergência: R-hat máximo 1.014 (célula A>X), ESS mínimo 591",1.0138,NA,36.162
+"71595",20,"15-29","G2","ok",NA,1.0083,TRUE,29.507
+"71595",20,"15-29","G3","failed","dm-homog: sem convergência: R-hat máximo 1.015 (célula X>X), ESS mínimo 477",1.0154,NA,33.763
+"71595",20,"15-29","G4","failed","dm-homog: sem convergência: R-hat máximo 1.036 (célula X>A), ESS mínimo 297",1.036,NA,38.222
+"68870",187,"150+","G1","failed","dm-homog: sem convergência: R-hat máximo 1.083 (célula O>X), ESS mínimo 249",1.0828,NA,149.612
+"68870",187,"150+","G2","failed","dm-homog: sem convergência: R-hat máximo 1.025 (célula X>I), ESS mínimo 352",1.0253,NA,161.684
+"68870",187,"150+","G3","failed","dm-homog: sem convergência: R-hat máximo 1.314 (célula A>I), ESS mínimo 235",1.3145,NA,154.024
+"68870",187,"150+","G4","failed","dm-homog: sem convergência: R-hat máximo 1.019 (célula X>X), ESS mínimo 256",1.0188,NA,225.108
+"62596",57,"30-59","G1","failed","dm-homog: sem convergência: R-hat máximo 1.379 (célula A>X), ESS mínimo 355",1.3789,NA,56.357
+"62596",57,"30-59","G2","failed","dm-homog: sem convergência: R-hat máximo 1.091 (célula A>I), ESS mínimo 276",1.0913,NA,58.514
+"62596",57,"30-59","G3","failed","dm-homog: sem convergência: R-hat máximo 1.027 (célula I>B), ESS mínimo 366",1.027,NA,71.564
+"62596",57,"30-59","G4","failed","dm-homog: sem convergência: R-hat máximo 1.060 (célula X>A), ESS mínimo 213",1.0605,NA,104.003
+"61018",83,"60-149","G1","failed","dm-homog: sem convergência: R-hat máximo 1.073 (célula B>I), ESS mínimo 203",1.0729,NA,90.8510000000001
+"61018",83,"60-149","G2","failed","dm-homog: sem convergência: R-hat máximo 1.160 (célula O>B), ESS mínimo 167",1.1604,NA,93.623
+"61018",83,"60-149","G3","failed","dm-homog: sem convergência: R-hat máximo 1.103 (célula O>I), ESS mínimo 214",1.1027,NA,90.5989999999999
+"61018",83,"60-149","G4","failed","dm-homog: sem convergência: R-hat máximo 1.087 (célula B>I), ESS mínimo 267",1.0872,NA,102.414
