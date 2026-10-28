@@ -194,7 +194,7 @@ ec_calibrate <- function(margins_t1, params, seed) {
       report = report, thresholds = list(calibration_id = calibration_id, calibration_status = "failed"),
       calibration_id = calibration_id, status = "failed",
       decision = sprintf(paste0("Nenhum limiar atinge cobertura de %.0f%% nas células estimadas (G2–G4); ",
-                                "md-bayes convergiu em %.0f%% dos ajustes simulados. Publicar só limites."),
+                                "o motor principal convergiu em %.0f%% dos ajustes simulados. Publicar só limites."),
                          100 * cal$cobertura_alvo, 100 * conv_rate),
       runtime_s = proc.time()[["elapsed"]] - t_start
     ))

@@ -2,12 +2,14 @@
 #   CADERNO_DATA_DIR=<raiz de dados> Rscript tests/benchmark/benchmark.R <etapa> [args]
 # Etapas:
 #   bounds            tempo nacional de ec_bounds (base e sem-troca-finalistas) e do LP por unidade
+#   main <n_por_estrato> [uf] [max_unidades]
+#                     motor principal dm-homog numa amostra estratificada por porte: convergência e tempo
+#   one <municipio>   dm-homog num município (ex.: capital de SP, 71072)
 #   md <n_por_estrato> [burnin thin amostras lambda1 lambda2]
-#                     md-bayes (eiPack) numa amostra estratificada por porte: convergência e tempo
-#   pilot <municipio> custo previsto do md-bayes e tempo de lphom/validação cruzada num município
+#                     md-bayes original (eiPack, tests/benchmark/eipack_md.R), só para comparação
+#   pilot <municipio> custo previsto do md-bayes (eiPack) e tempo de lphom/validação cruzada num município
 #   ecolrxc <municipio> tempo do ecolRxC
 #   calib <n_por_estrato>  calibração reduzida
-#   dm <municipio> [iteracoes]  experimento do motor alternativo (tests/benchmark/experimento_dm.R)
 # Resultados em tests/benchmark/results/.
 
 suppressPackageStartupMessages({
@@ -67,7 +69,47 @@ if (stage == "bounds") {
   append_csv(res, "bounds.csv")
 }
 
+run_main <- function(um, label, stratum = NA_character_) {
+  m <- ec_margins(um)
+  seed <- seed_for("2026-presidente|metodo-1.0.0", um$municipio_tse[1], "dm-homog")
+  fit <- ec_fit_main(m$O, m$D, params, seed)
+  d <- fit$diagnostics
+  tibble::tibble(config = label, municipio_tse = um$municipio_tse[1], uf = um$uf[1], n_units = nrow(um),
+                 stratum = stratum, status = fit$status, rhat_max = d$rhat_max %||% NA_real_,
+                 ess_min = d$ess_min %||% NA_real_, worst_cell = d$worst_cell %||% NA_character_,
+                 cells_checked = d$cells_checked %||% NA_integer_, units_fit = d$units_fit %||% NA_integer_,
+                 rounds = d$rounds %||% NA_integer_, acceptance = d$acceptance %||% NA_real_,
+                 predicted_s = d$predicted_s %||% NA_real_, runtime_s = round(fit$runtime_s, 1))
+}
+
+if (stage == "main") {
+  per <- as.integer(args[[2]])
+  uf <- if (length(args) >= 3) args[[3]] else NULL
+  max_units <- if (length(args) >= 4) as.integer(args[[4]]) else 1e6
+  label <- paste0("dm-homog/", params$execucao$dm_homog$iteracoes, "/", params$execucao$dm_homog$max_unidades_ajuste)
+  u <- read_units(if (is.null(uf)) NULL else sprintf("uf = '%s'", uf))
+  smp <- stratified_sample(u, per, seed = 20261027, breaks = c(15, 30, 60, 150, 500, 2000, 1e6))
+  smp <- smp[smp$n <= max_units, ]
+  for (i in seq_len(nrow(smp))) {
+    row <- run_main(u[u$municipio_tse == smp$municipio_tse[i], ], label, smp$stratum[i])
+    print(row)
+    append_csv(row, "dm_homog.csv")
+  }
+}
+
+if (stage == "one") {
+  um <- read_units(sprintf("municipio_tse = '%s'", args[[2]]))
+  label <- paste0("dm-homog/", params$execucao$dm_homog$iteracoes, "/", params$execucao$dm_homog$max_unidades_ajuste)
+  row <- run_main(um, label, "capital")
+  print(row)
+  append_csv(row, "dm_homog.csv")
+}
+
 if (stage == "md") {
+  source("tests/benchmark/eipack_md.R")
+  params$execucao$eipack <- list(lambda1 = 4, lambda2 = 2, burnin = 10000, amostras = 1000, thin = 10, tune = TRUE,
+                                 ntunes = 5, tune_draws = 2000, fundir_populacao_abaixo_de = 0.01)
+  params$execucao$orcamento_segundos_por_municipio <- 14400
   per <- as.integer(args[[2]])
   if (length(args) >= 7) {
     params$execucao$eipack$burnin <- as.integer(args[[3]])
@@ -131,7 +173,7 @@ if (stage == "calib") {
   params$calibracao$municipios_por_estrato <- as.integer(args[[2]])
   if (length(args) >= 3) params$calibracao$estratos <- as.numeric(strsplit(args[[3]], ",")[[1]])
   if (length(args) >= 4) params$calibracao$max_unidades <- as.integer(args[[4]])
-  u <- read_units()
+  u <- read_units(if (length(args) >= 5) sprintf("uf = '%s'", args[[5]]) else NULL)
   res <- ec_calibrate(u, params, seed = 20261025L)
   cat("status:", res$status, "\n", res$decision, "\n runtime:", res$runtime_s, "\n")
   print(res$report)
@@ -140,20 +182,4 @@ if (stage == "calib") {
   if (!is.null(fits)) append_csv(fits, "calibration_fits.csv")
   append_csv(res$report, "calibration_report.csv")
   if (!is.null(attr(res$report, "grid"))) append_csv(attr(res$report, "grid"), "calibration_grid.csv")
-}
-
-if (stage == "dm") {
-  source("tests/benchmark/experimento_dm.R")
-  mun <- args[[2]]
-  um <- read_units(sprintf("municipio_tse = '%s'", mun))
-  m <- ec_margins(um)
-  exec <- list(cadeias = 4, dm = list(alpha_prior = 2, piloto = 4000, iteracoes = if (length(args) >= 3) as.integer(args[[3]]) else 25000,
-                                      thin = 10, extensoes_max = 3, amostras_contagem = 400, rhat_alvo = 1.01, ess_alvo = 400))
-  fit <- ec_fit_md_dm(m$O, m$D, exec, 11L, 1e6)
-  conv <- ec_convergence(fit$conv_draws)
-  res <- tibble::tibble(municipio_tse = mun, n_units = nrow(um), rhat_max = conv$rhat_max, ess_min = conv$ess_min,
-                        acceptance = fit$acc_rate, rounds = fit$rounds, iterations_per_chain = fit$iterations_per_chain,
-                        runtime_s = fit$runtime_s)
-  print(res)
-  append_csv(res, "dm_experiment.csv")
 }

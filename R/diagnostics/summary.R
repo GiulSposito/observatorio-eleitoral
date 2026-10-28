@@ -5,11 +5,11 @@
 ec_diagnostics_summary <- function(models) {
   if (!length(models)) {
     return(list(municipalities = 0L, by_model_status = structure(list(), names = character()),
-                md_bayes = list(fits = 0L, converged = 0L), top_reasons = list()))
+                main_model = list(fits = 0L, converged = 0L), top_reasons = list()))
   }
   status <- vapply(models, function(m) m$status %||% NA_character_, character(1))
   md <- lapply(models, function(m) {
-    x <- Filter(function(mm) identical(mm$method_id, "md-bayes"), m$methods %||% list())
+    x <- Filter(function(mm) identical(mm$method_id, ec_main_model_id), m$methods %||% list())
     if (length(x)) x[[1]] else NULL
   })
   md <- Filter(Negate(is.null), md)
@@ -26,7 +26,7 @@ ec_diagnostics_summary <- function(models) {
   list(
     municipalities = length(models),
     by_model_status = as.list(table(status)),
-    md_bayes = list(
+    main_model = list(
       fits = length(md), converged = sum(md_status == "ok", na.rm = TRUE),
       rhat_median = if (any(is.finite(rhat))) round(stats::median(rhat, na.rm = TRUE), 3) else NULL,
       runtime_s_total = round(sum(runtime, na.rm = TRUE), 1)

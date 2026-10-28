@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "release_id": "DEMO-001",
   "election_id": "2026-presidente",
   "municipio_tse": "00002",
@@ -18,13 +18,13 @@
     "summary": {
       "path": "2026-presidente/municipios/GO/00002/resumo.json",
       "media_type": "application/json",
-      "sha256": "348a82bec7055b7fd4cce6396eaca34978aa2325fa3b2a1776574df9dc3773e4",
+      "sha256": "dd13ee9315217ff17a9dbdd75d8f19fdb3f7a1fb3f4c978f07720e8313c6f828",
       "bytes": 1576
     },
     "quality": {
       "path": "2026-presidente/municipios/GO/00002/qualidade.json",
       "media_type": "application/json",
-      "sha256": "4ddd4ef6822f50493f9581fec5e4d060ae737ec663c07aeb10417224fbddee4c",
+      "sha256": "cccc4c0bb227c60fe38a0c1ae544b61ee4d152f8a10874f3fd251f2c39ebb9b2",
       "bytes": 1789
     },
     "sections": {

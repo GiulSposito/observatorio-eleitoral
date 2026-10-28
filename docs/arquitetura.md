@@ -201,8 +201,8 @@ Módulos, cada um com entrada e saída tabulares:
 Regras do motor:
 
 - **Limites, estimação e cenários** conforme `05-metodo-analitico.md` §4–5: limites de Fréchet
-  somados por unidade; estimação com pelo menos dois métodos de famílias diferentes (`md-bayes` via
-  `eiPack::ei.MD.bayes`, `lphom`, opcionalmente `ecolRxC`); cenários com restrições por unidade. A
+  somados por unidade; estimação com pelo menos dois métodos de famílias diferentes (`dm-homog`, com
+  núcleo em C++ via Rcpp, e `lphom`; `ecolRxC` desligado por custo); cenários com restrições por unidade. A
   interface mostra limites e estimativa na mesma tabela, com a classe de identificação de cada célula.
 - **Sem pooling entre municípios** na estimativa municipal. Um contexto por UF, se existir, é outro
   produto, rotulado como tal.

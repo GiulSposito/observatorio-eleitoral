@@ -1,6 +1,6 @@
 # Caderno Eleitoral — Contratos de dados R → site estático
 
-**Versão do contrato:** `1.2.0` · **Compatibilidade:** verificada no build, nunca presumida.
+**Versão do contrato:** `1.3.0` · **Compatibilidade:** verificada no build, nunca presumida.
 **Objetivo:** especificar os produtos publicados pelo pipeline em R e consumidos pelo site estático
 (Quarto + ES modules + DuckDB-Wasm; ver `arquitetura.md`). A versão legível por máquina está em
 `contract/` (JSON Schema dos arquivos JSON e `marts.yml` para os Parquets); as duas mudam juntas.
@@ -59,7 +59,7 @@ data/
 
 ```json
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "release_id": "2026-presidente-20261027T180000Z",
   "published_at": "2026-10-27T18:00:00Z",
   "release_base": "releases/2026-presidente-20261027T180000Z/",
@@ -75,7 +75,7 @@ Os caminhos de `latest.json` são relativos à raiz `data/`.
 
 ```json
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "release_id": "2026-presidente-20261027T180000Z",
   "generated_at": "2026-10-27T18:00:00Z",
   "election": {
@@ -116,7 +116,7 @@ Os caminhos de `latest.json` são relativos à raiz `data/`.
 
 ```json
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "release_id": "2026-presidente-20261027T180000Z",
   "election_id": "2026-presidente",
   "municipio_tse": "00000",
@@ -161,7 +161,7 @@ Os caminhos de `latest.json` são relativos à raiz `data/`.
 
 ```json
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "release_id": "2026-presidente-20261027T180000Z",
   "election_id": "2026-presidente",
   "status": "ready",
@@ -268,9 +268,9 @@ Uma linha por município × origem × destino, só para municípios com `feature
 |---|---|---|
 | `election_id`, `uf`, `municipio_tse` | STRING | Chave |
 | `origin`, `destination` | STRING | Categorias do §2 |
-| `model_id`, `model_version` | STRING | `md-bayes`, versão |
+| `model_id`, `model_version` | STRING | `dm-homog`, versão (`dm-homog-1.0.0`) |
 | `assumption_id` | STRING | `homogeneidade-municipal+pop-liquida-minima` |
-| `estimate_votes` | DOUBLE | Média posterior das contagens (`model_estimate`) |
+| `estimate_votes` | DOUBLE | Média posterior das contagens do `dm-homog` (`model_estimate`); as contagens de cada amostra fecham as margens de origem e de destino (05 §5.2) |
 | `estimate_statistic` | STRING | Sempre `posterior_mean` |
 | `interval_low`, `interval_high` | DOUBLE | Intervalo de credibilidade |
 | `interval_type`, `interval_level` | STRING, DOUBLE | `credible_interval`, `0.95` |
@@ -280,14 +280,14 @@ Uma linha por município × origem × destino, só para municípios com `feature
 | `identification_class` | STRING | `determined | estimated | weak | not_identified` |
 | `model_status` | STRING | `ready | partial` |
 
-- A soma de `estimate_votes` por origem fecha a margem da origem dentro da tolerância de ponto flutuante.
+- A soma de `estimate_votes` por origem e por destino fecha as margens do município dentro da tolerância de ponto flutuante, e cada estimativa fica dentro de `[bounds_min, bounds_max]`.
 - Sankey só com `features.ecological_model = ready`, usando apenas células `determined` e `estimated`.
 
 ## 12. `qualidade.json` (por município)
 
 ```json
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "release_id": "2026-presidente-20261027T180000Z",
   "election_id": "2026-presidente",
   "municipio_tse": "00000",
@@ -310,7 +310,7 @@ Uma linha por município × origem × destino, só para municípios com `feature
     "status": "partial",
     "reason_unavailable": null,
     "methods": [
-      {"method_id": "md-bayes", "version": "eiPack-0.2-2", "status": "ok", "runtime_s": 12.4, "diagnostics": {"rhat_max": 1.004, "ess_min": 812}},
+      {"method_id": "dm-homog", "version": "dm-homog-1.0.0", "status": "ok", "runtime_s": 12.4, "diagnostics": {"rhat_max": 1.004, "ess_min": 812, "cells_checked": 22, "units_fit": 34, "grouped": false}},
       {"method_id": "lphom", "version": "lphom-0.3.5-7", "status": "ok", "runtime_s": 0.3, "diagnostics": {}}
     ],
     "predictive_check": {"k_folds": 5, "model_error": 0.061, "null_error": 0.072, "passed": true},
@@ -365,6 +365,7 @@ Conteúdo da página de metodologia e da aba Qualidade que não depende do munic
 
 ## 17. Histórico
 
+- `1.3.0` (28/10/2026): motor principal da estimação passa a ser `dm-homog` (05 §5.2), no lugar do `md-bayes` do eiPack, que não convergiu nos dados de 2026 (`tests/benchmark/RESULTS.md`): `model_id` em `fluxos_estimados.parquet` e `methods[].method_id` em `qualidade.json` aceitam `dm-homog`; as contagens fecham também as margens de destino.
 - `1.2.0` (27/10/2026): vocabulário unificado (`election_id`, `release_id`, slots `A`/`B` com regra nacional, categorias, versões); layout com JSON por município e Parquet por UF; `latest.release_base`; `catalogo.election` único com finalistas; `blank`/`null` separados; `cenarios.parquet` e `metodo.json` especificados; aba Horários e `horarios.parquet` removidos do escopo.
 - `1.1.0` (27/10/2026): campos de verificação, tipo de seção e população; pseudo-categorias; classe de identificação; `posterior_mean` obrigatório.
 - `1.0.0`: versão inicial.

@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "release_id": "DEMO-001",
   "election_id": "2026-presidente",
   "municipio_tse": "00003",
@@ -18,14 +18,14 @@
     "summary": {
       "path": "2026-presidente/municipios/SC/00003/resumo.json",
       "media_type": "application/json",
-      "sha256": "be4b6ee3c13c5267c48b2881776436d12cd48e9e41030949c97066dc0fe8f526",
+      "sha256": "91e228a5d360a24d9e3fac1e36f3e3110a971b598e4d103e1f2b3e00a36cb125",
       "bytes": 1605
     },
     "quality": {
       "path": "2026-presidente/municipios/SC/00003/qualidade.json",
       "media_type": "application/json",
-      "sha256": "3d420470c7622a20c01ca1e6dc227d9a3c725d0b70057e0ebc704080be7718c5",
-      "bytes": 2369
+      "sha256": "a45d6899ace8a63d9ab1bd406cbff558ce8385fe7b7bd2b1d931e8398f00dedb",
+      "bytes": 2371
     },
     "sections": {
       "path": "2026-presidente/uf=SC/secoes.parquet",
@@ -48,8 +48,8 @@
     "flows": {
       "path": "2026-presidente/uf=SC/fluxos_estimados.parquet",
       "media_type": "application/vnd.apache.parquet",
-      "sha256": "454563e4f5838263124b5474b73e7192cbaf9d960898d3fc7b13ab7ee46423e6",
-      "bytes": 5570
+      "sha256": "3e81f1ac55ab9c81e72c3df3b13f18f4e905d7479509b57190dec2ec02db6f94",
+      "bytes": 5580
     }
   },
   "sources": [

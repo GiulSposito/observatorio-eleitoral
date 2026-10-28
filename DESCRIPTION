@@ -28,4 +28,6 @@ Imports:
     lphom,
     ecolRxC,
     lpSolve,
+    Rcpp,
+    coda,
     testthat

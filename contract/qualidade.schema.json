@@ -58,7 +58,7 @@
           "items": {
             "type": "object", "required": ["method_id","version","status","runtime_s","diagnostics"], "additionalProperties": false,
             "properties": {
-              "method_id": {"type": "string", "enum": ["md-bayes","lphom","ecolrxc"]},
+              "method_id": {"type": "string", "enum": ["dm-homog","lphom","ecolrxc"]},
               "version": {"type": "string"},
               "status": {"type": "string", "enum": ["ok","failed","skipped"]},
               "runtime_s": {"type": ["number","null"], "minimum": 0},

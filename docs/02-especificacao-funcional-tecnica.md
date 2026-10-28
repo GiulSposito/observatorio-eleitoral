@@ -251,7 +251,7 @@ Limites de Fréchet em fórmula fechada por unidade, somados no município, e ce
 
 Fase posterior ao motor determinístico, implementada em módulos isolados:
 
-- Métodos (`md-bayes`, `lphom`, `ecolRxC`), sem pooling entre municípios, com grau de identificação por célula, checagem preditiva, calibração por simulação e regras de publicação: `05-metodo-analitico.md` §5.
+- Métodos (`dm-homog`, `lphom`; `ecolRxC` desligado por custo), sem pooling entre municípios, com grau de identificação por célula, checagem preditiva, calibração por simulação e regras de publicação: `05-metodo-analitico.md` §5.
 - Registrar priors, algoritmos, número de amostras, seed, versão, convergência, performance e sensibilidade às especificações.
 - Estimativas de transferência são agregadas, **não identificadas individualmente**.
 - Não rodar inferência quando o universo não puder ser harmonizado ou o município tiver informação insuficiente; status `insufficient_data` e explicação.

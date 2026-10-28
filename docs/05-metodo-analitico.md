@@ -194,21 +194,43 @@ não passa vira "não identificado", não um número.
 
 | ID | Família | Saída |
 |---|---|---|
-| `md-bayes` | Multinomial-Dirichlet hierárquico (Rosen et al., `eiPack::ei.MD.bayes`) | média posterior das contagens e intervalo de credibilidade de 95% |
+| `dm-homog` | Bayesiano com taxas homogêneas no município e sobredispersão Dirichlet-multinomial | média posterior das contagens e intervalo de credibilidade de 95% |
 | `lphom` | Programação linear sob homogeneidade (`lphom`) | matriz pontual |
-| `ecolrxc` (opcional) | Estrutura latente de Thomsen (`ecolRxC`) | matriz pontual |
+| `ecolrxc` (desligado) | Estrutura latente de Thomsen (`ecolRxC`) | matriz pontual; custo de ~0,7 s por unidade, fora do orçamento |
 
-A **estimativa publicada** é a média posterior das contagens do `md-bayes`. Ela fecha as margens
-por linearidade da esperança. A mediana posterior nunca forma matriz pontual (achado A1) e só
-aparece como coluna de uma célula. Os outros métodos formam a **faixa entre métodos** de cada
-célula.
+**Modelo `dm-homog`.** Uma matriz de taxas `P` (uma linha por origem) vale para todas as unidades do
+município. As margens de destino de cada unidade seguem uma Dirichlet-multinomial com média
+(composição de origem da unidade) × `P` e sobredispersão `φ`, limitada a [0,5; 10⁵]. Prior
+Dirichlet(2) em cada linha de `P` (cerca de 2 pseudo-votos por célula) e log `φ` ~ Normal(log 50, 3).
+`N → S` é zero estrutural.
+
+**Contagens publicadas.** Para cada amostra de `P`, a tabela interna de cada unidade é obtida por
+ajuste proporcional iterativo (IPF) às duas margens da unidade, a partir da semente
+`o_ir × P[r, c]`; a contagem municipal é a soma dessas tabelas. Assim, cada amostra fecha as margens de
+origem e de destino do município e fica dentro dos limites de Fréchet (§4.1) por construção. A
+**estimativa publicada** é a média posterior dessas contagens. A mediana posterior nunca forma
+matriz pontual (achado A1) e só aparece como coluna de uma célula. Os outros métodos formam a
+**faixa entre métodos** de cada célula.
+
+O `md-bayes` hierárquico de Rosen et al. (`eiPack::ei.MD.bayes`), previsto na versão anterior deste
+documento, não convergiu nos dados de 2026 (R-hat entre 1,05 e 4,1 em todos os municípios testados,
+inclusive com cadeias 5× mais longas) e foi substituído; o estudo está em `tests/benchmark/RESULTS.md`.
 
 ### 5.3 Validade computacional
 
-- `md-bayes`: R-hat ≤ `rhat_max` e ESS ≥ `ess_min` em todas as contagens municipais; pelo menos 4
-  cadeias com inícios dispersos.
+- `dm-homog`: máximo a posteriori por L-BFGS-B a partir de 3 inícios; piloto de passeio aleatório
+  que estima a covariância da proposta; pelo menos 4 cadeias iniciadas em torno do máximo e estendidas
+  por rodadas até atingir os limiares ou o orçamento por município. R-hat ≤ `rhat_max` e ESS ≥
+  `ess_min` nas contagens municipais de todas as células **não determinadas** (§5.4): nas células
+  determinadas a interface mostra o próprio limite e a estimativa não pesa em nenhuma decisão.
+- **Escala.** Acima de `max_unidades_ajuste` unidades (400), a verossimilhança é avaliada em grupos de
+  unidades de composição parecida: as unidades são ordenadas pela participação do finalista A no 1º
+  turno (arredondada a 1 ponto percentual) e depois pela de abstenção, e somadas em blocos
+  consecutivos de tamanho igual. Sob a hipótese de homogeneidade, somar unidades preserva `P`; a
+  perda é de informação, não de validade. As contagens publicadas continuam calculadas nas unidades
+  originais (IPF). O `lphom` usa a mesma regra acima de 800 unidades.
 - `lphom` e `ecolrxc`: solução ótima ou convergida, reportada.
-- As margens fecham dentro da tolerância numérica.
+- Custo previsto acima do orçamento por município: `failed`, com motivo.
 
 Falha computacional: `model_status = failed`.
 
@@ -217,9 +239,12 @@ Falha computacional: `model_status = failed`.
 Para cada célula `i → j` do município:
 
 - `W` = largura do limite determinístico municipal (§4.1, sem cenários);
-- `P` = largura do intervalo de credibilidade de 95% do `md-bayes`;
+- `P` = largura do intervalo de credibilidade de 95% do `dm-homog`;
 - `F` = faixa entre os métodos (maior estimativa pontual menos a menor);
 - `R = max(P, F) ÷ W`.
+
+O intervalo publicado é cortado nos limites determinísticos da célula. Com as contagens por IPF ele já
+fica dentro deles; o corte só garante a regra para qualquer motor.
 
 | Classe | Condição | O que a interface mostra |
 |---|---|---|
@@ -256,8 +281,14 @@ Antes da primeira publicação de estimativas, uma simulação calibra os limiar
    - G4, G2 mais mudança líquida de aptos.
 3. Rodar o pipeline completo e medir, por classe de identificação e estrato, a cobertura dos
    intervalos e o erro absoluto.
-4. Fixar `r_estimado`, `r_fraco`, `n_secoes_min` e `ganho_preditivo_min` de modo que células
-   `estimated` tenham **cobertura empírica ≥ 90% nos processos G2–G4**.
+4. Fixar `r_estimado` como o maior limiar da grade com **cobertura empírica ≥ 90% nos processos
+   G2–G4** nas células com `R` até ele (e pelo menos 30 células); `r_fraco` como o maior limiar, a
+   partir de `r_estimado`, com cobertura ≥ 75% no mesmo conjunto; `n_secoes_min` como o menor limite
+   de estrato a partir do qual todos os estratos atingem 90%. `ganho_preditivo_min` não é recalibrado
+   nesta versão: o relatório mostra a taxa de aprovação da checagem preditiva por processo.
+
+A amostra da calibração vem dos municípios publicados na release (na primeira versão, os de São
+Paulo), estratificados por número de unidades e limitados a 499 unidades por custo.
 
 Se nenhum conjunto de limiares atingir a meta, o produto publica **apenas limites**, e isso é
 comunicado como resultado metodológico. O relatório de calibração tem `calibration_id`, é

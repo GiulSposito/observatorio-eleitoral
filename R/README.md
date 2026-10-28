@@ -40,19 +40,33 @@ O método expõe (em `R/ecological/`):
 ```r
 ec_bounds(units, scenario = "base", assumptions)  # -> tibble: origin, destination, min_votes, max_votes,
                                                   #    status, units_used, units_infeasible, method_id
-ec_estimate(units, params, seed, context)                # -> list(flows = tibble (colunas de 03 §11 sem chaves),
-                                                  #         status = "ready"|"partial"|"insufficient_data"|"failed",
+ec_estimate(units, params, seed, context)         # context = list(eligible_share_used = <dbl>)
+                                                  # -> list(flows = tibble (colunas de 03 §11 sem chaves),
+                                                  #         status = "ready"|"partial"|"insufficient_data"|
+                                                  #                  "failed"|"unavailable",
                                                   #         model = list(...)  # campos de qualidade.model (03 §12)
                                                   #    )
-ec_calibrate(margins_t1, params, seed)            # -> list(report = tibble, thresholds = list(...),
-                                                  #         calibration_id, status, decision)
+ec_calibrate(margins_t1, params, seed)            # margins_t1 = tabela de unidades publicada (só o 1º turno é usado)
+                                                  # -> list(report = tibble, thresholds = list(...),
+                                                  #         calibration_id, status = "passed"|"failed",
+                                                  #         decision, runtime_s)
 ```
 
 - `params` é `config/metodo.yml` já carregado (lista), com os limiares calibrados quando existirem.
 - `seed` é derivado de `(election_id | method_version, municipio_tse, method_id)` por `seed_for()` em
   `R/utils/`; não depende do `release_id`, para o cache do `targets` sobreviver entre releases.
 - `ec_estimate()` aplica as regras de publicação de 05 §5.7 e nunca devolve linhas para
-  `insufficient_data` ou `failed`.
+  `insufficient_data`, `failed` ou `unavailable`. Devolve `unavailable` sem rodar o modelo quando
+  `params$estimacao$calibration_status == "failed"` (05 §5.6: a release publica só limites).
+- `ec_calibrate()$thresholds` traz os limiares calibrados (`r_estimado`, `r_fraco`, `n_secoes_min`,
+  quando a calibração passa) e sempre `calibration_id` e `calibration_status`. O runner copia todos para
+  `params$estimacao`, de onde `ec_estimate()` lê `calibration_id` (gravado em `qualidade.model`) e
+  `calibration_status`.
+- Motor principal `dm-homog` (05 §5.2): o núcleo é C++ (`R/ecological/dm_homog.cpp`, Rcpp), compilado
+  na primeira chamada de cada processo por `ec_dm_cpp()`, com cache em `CADERNO_RCPP_CACHE` (padrão:
+  `tools::R_user_dir("cadernoeleitoral", "cache")/rcpp`). Os workers do `crew` compartilham o cache: o
+  primeiro compila (trava por diretório) e os demais só carregam a biblioteca. Exige compilador C++
+  (no macOS, as Command Line Tools do Xcode).
 - A camada de dados não implementa nada de `R/ecological/`; nos testes dela, usar o stub de
   `tests/testthat/helper-ecological-stub.R`.
 

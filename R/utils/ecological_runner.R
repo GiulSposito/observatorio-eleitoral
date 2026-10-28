@@ -74,7 +74,7 @@ run_ecological_uf <- function(uf, units_path, totals_path, validation, calibrati
                                n_units_used = nrow(u), calibration_id = calibration$result$calibration_id))
     } else {
       est <- tryCatch(
-        ec_estimate(u, params, seed_for(namespace, mun, "md-bayes"), context = list(eligible_share_used = share)),
+        ec_estimate(u, params, seed_for(namespace, mun, "dm-homog"), context = list(eligible_share_used = share)),
         error = function(e) list(flows = NULL, status = "failed",
                                  model = list(status = "failed", reason_unavailable = conditionMessage(e),
                                               methods = list(), predictive_check = NULL,

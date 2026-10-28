@@ -1,39 +1,11 @@
-# Motor bayesiano "md-bayes" (05 §5.2): Multinomial-Dirichlet hierárquico de Rosen et al. (2001) via
-# eiPack::ei.MD.bayes. A estimativa publicada é a média posterior de Cell.counts (contagens municipais
-# somadas nas unidades); R-hat e ESS são calculados sobre essas contagens, que é o que se publica.
+# BENCHMARK (fora do caminho de produção): motor md-bayes original do 05 v1 (eiPack::ei.MD.bayes),
+# substituído pelo dm-homog depois do estudo de convergência (tests/benchmark/RESULTS.md).
+# Usa ec_convergence() e ec_draws_to_summary() de R/ecological/dm_homog.R.
 #
-# Antes de ajustar:
-# - categorias com margem municipal zero saem do ajuste e voltam como zeros;
-# - categorias de população (N, S) com margem quase zero são fundidas com a abstenção (X) do mesmo
-#   turno, porque linhas e colunas minúsculas misturam mal e não têm informação própria. Depois do
-#   ajuste, as células da categoria fundida são repartidas na proporção das margens (N herda as
-#   taxas de X na origem; S recebe a parte proporcional da coluna X no destino). Essa repartição é
-#   declarada em diagnostics$merged e as células continuam sujeitas aos limites determinísticos.
+# Configuração esperada em params$execucao$eipack (lambda1, lambda2, burnin, amostras, thin, tune, ntunes,
+# tune_draws, fundir_populacao_abaixo_de); ver tests/benchmark/benchmark.R, etapa "md".
 
 ec_md_version <- function() paste0("eiPack-", as.character(utils::packageVersion("eiPack")))
-
-ec_draws_to_summary <- function(draws_list, level) {
-  all <- do.call(rbind, draws_list)
-  a <- (1 - level) / 2
-  list(
-    mean = colMeans(all),
-    low = apply(all, 2, stats::quantile, probs = a, names = FALSE),
-    high = apply(all, 2, stats::quantile, probs = 1 - a, names = FALSE)
-  )
-}
-
-# R-hat (Gelman-Rubin, univariado) e ESS somado entre cadeias, nas células com variância posterior.
-ec_convergence <- function(draws_list) {
-  all <- do.call(rbind, draws_list)
-  keep <- which(apply(all, 2, stats::var) > 1e-8)
-  if (!length(keep)) return(list(rhat_max = 1, ess_min = Inf, worst_cell = NA_character_))
-  ml <- coda::mcmc.list(lapply(draws_list, function(x) coda::mcmc(x[, keep, drop = FALSE])))
-  rh <- tryCatch(coda::gelman.diag(ml, autoburnin = FALSE, multivariate = FALSE)$psrf[, 1],
-                 error = function(e) rep(Inf, length(keep)))
-  es <- coda::effectiveSize(ml)
-  list(rhat_max = max(rh, na.rm = TRUE), ess_min = min(es, na.rm = TRUE),
-       worst_cell = colnames(all)[keep][which.max(rh)])
-}
 
 # Fusão de categorias de população quase vazias com a abstenção do mesmo turno.
 ec_merge_small_population <- function(O, D, min_share) {

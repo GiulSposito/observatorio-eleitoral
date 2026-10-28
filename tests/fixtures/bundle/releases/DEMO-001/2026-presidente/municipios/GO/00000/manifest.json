@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "release_id": "DEMO-001",
   "election_id": "2026-presidente",
   "municipio_tse": "00000",
@@ -18,14 +18,14 @@
     "summary": {
       "path": "2026-presidente/municipios/GO/00000/resumo.json",
       "media_type": "application/json",
-      "sha256": "d1b22556a568128d5eb3a2134695761a7caac3c7f676d6f442755ed8ee264d96",
+      "sha256": "7b1d598a9178c7092fda1abb0e9095b303ba3d9bb2ba57329b567e18379dda89",
       "bytes": 1598
     },
     "quality": {
       "path": "2026-presidente/municipios/GO/00000/qualidade.json",
       "media_type": "application/json",
-      "sha256": "1f32c04dde49c403c65a8e4266527b549f5846378656b09c98c546ee7a75ccc9",
-      "bytes": 2238
+      "sha256": "a0a6a4e90f2e6700be081e925b1306974e2f72a53ed2650c345f8dd1c815e301",
+      "bytes": 2240
     },
     "sections": {
       "path": "2026-presidente/uf=GO/secoes.parquet",
@@ -48,8 +48,8 @@
     "flows": {
       "path": "2026-presidente/uf=GO/fluxos_estimados.parquet",
       "media_type": "application/vnd.apache.parquet",
-      "sha256": "ada65872e35c6d6321efeb55bb321bfa24e91194c238c463edefabd8a429ce39",
-      "bytes": 5732
+      "sha256": "39df753b6fc483e4560c8dd1d29f1d51a371331f0b41ad6b708574fc205f3548",
+      "bytes": 5742
     }
   },
   "sources": [
