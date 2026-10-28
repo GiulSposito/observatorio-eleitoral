@@ -112,3 +112,19 @@ test_that("ec_estimate aplica §5.7 e devolve o formato de fluxos_estimados (com
   p2$estimacao$massa_identificada_min <- 1.01
   expect_equal(ec_estimate(u, p2, seed = 9, context = list(eligible_share_used = 1))$status, "partial")
 })
+
+test_that("resumo nacional de diagnósticos conta status e convergência", {
+  models <- list(
+    "00001" = list(status = "insufficient_data", reason_unavailable = "Menos de 15 seções comparáveis (8).", methods = list()),
+    "00002" = list(status = "failed", reason_unavailable = "md-bayes: sem convergência: R-hat máximo 1.700",
+                   methods = list(list(method_id = "md-bayes", status = "failed", runtime_s = 10, diagnostics = list(rhat_max = 1.7)))),
+    "00003" = list(status = "partial", reason_unavailable = NULL,
+                   methods = list(list(method_id = "md-bayes", status = "ok", runtime_s = 5, diagnostics = list(rhat_max = 1.005))))
+  )
+  s <- ec_diagnostics_summary(models)
+  expect_equal(s$municipalities, 3L)
+  expect_equal(s$md_bayes$fits, 2L)
+  expect_equal(s$md_bayes$converged, 1L)
+  expect_equal(s$by_model_status$failed, 1L)
+  expect_equal(length(s$top_reasons), 2L)
+})
