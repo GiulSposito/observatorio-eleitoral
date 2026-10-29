@@ -9,7 +9,7 @@ Construir um observatório eleitoral estático, em português brasileiro, que pe
 
 O produto não identifica como cada eleitor votou, não infere fraude e não apresenta transferências estimadas como fatos individuais. É um projeto independente, com fontes oficiais referenciadas e metodologia aberta.
 
-**Origem e crédito.** A ideia da análise vem da thread de Rômulo Fiúza e Mello (@fiuzaemello), publicada no X em 26 de outubro de 2026: https://x.com/fiuzaemello/status/2114763737425211824. O registro da motivação está em `visao_inicial.md`. O crédito é **requisito do produto**: aparece no rodapé de todas as páginas e na página `Sobre` (ver §3, §4.1 e §4.9). O produto analisa qualquer município do país na eleição presidencial de 2026, com dados oficiais do TSE, e não dá tratamento, fixture ou destaque especial a nenhum município.
+**Origem e crédito.** A ideia da análise vem da thread de Rômulo Fiúza e Mello (@fiuzaemello), publicada no X em 26 de outubro de 2026: https://x.com/fiuzaemello/status/2114763737425211824. O registro da motivação está em `visao_inicial.md`. O crédito é **requisito do produto**: aparece no rodapé de todas as páginas e na página `Sobre` (ver §3, §4.1 e §4.8). O produto analisa qualquer município do país na eleição presidencial de 2026, com dados oficiais do TSE, e não dá tratamento, fixture ou destaque especial a nenhum município.
 
 ### 0.1 Decisões fechadas (MVP)
 
@@ -60,6 +60,7 @@ Documentação oficial: https://quarto.org/docs/websites/ ; https://duckdb.org/d
 - Aplicação Shiny, backend REST, GraphQL, Postgres, autenticação ou infraestrutura serverless para a interface.
 - Outros cargos e outras eleições, inclusive como base de desenvolvimento ou calibração.
 - Comparação entre municípios como requisito de primeira versão; arquitetura preparada para fases seguintes.
+- Logs de urna e análise de horários de votação.
 
 ## 2. Arquitetura e fluxo de dados
 
@@ -111,7 +112,7 @@ Não gerar milhares de páginas durante o build. `explorar.qmd` é uma página �
 2. Foco na busca por município (mínimo três caracteres para filtro ou pesquisa por UF).
 3. Combobox sugere `Município — UF`, ordenado por correspondência textual e sem duplicar homônimos.
 4. Usuário escolhe eleição/cargo (MVP com uma eleição padrão disponível no catálogo, configurável).
-5. Navegar para `explorar.html?e=2026-presidente-2t&m=<codigo_tse>` (o ID do exemplo deve existir no catálogo real).
+5. Navegar para `explorar.html?e=2026-presidente&m=<codigo_tse>` (o ID do exemplo deve existir no catálogo real).
 6. Validar disponibilidade; buscar `resumo.json`; apresentar título, números, cobertura e alertas.
 7. Quando usuário abre `Seções`, `Transferências` etc., lazy-load dos Parquets e do runtime Wasm.
 8. Se não houver dados suficientes, preservar resumo e explicar o bloqueio da análise específica.
@@ -143,7 +144,7 @@ Sem mapa decorativo, carousel de destaques partidários, hero visual ilustrativo
 - Subtítulo com eleição, cargo, turno e quantidade de seções com dados comparáveis.
 - Ações: `Trocar município`, `Compartilhar`, `Baixar dados`.
 - Indicador discreto de qualidade: `112 de 115 seções na análise de transição` ou `Cobertura parcial`, com link para `Qualidade`.
-- Navegação horizontal por abas: `Resumo`, `Seções`, `Transferências`, `Cenários`, `Qualidade`; `Horários` somente quando logs estiverem disponíveis.
+- Navegação horizontal por abas: `Resumo`, `Seções`, `Transferências`, `Cenários`, `Qualidade`.
 
 ### 4.3 Aba Resumo (MVP obrigatório)
 
@@ -208,13 +209,7 @@ Não marcar seções com rótulo `suspeita` ou `fraude`. Seções agregadas/inco
 - `Reproduzibilidade`: versão do código do pipeline, release e link para o método, com botões para downloads.
 - Mensagem obrigatória: `Resultados agregados não identificam transferências individuais de voto.`
 
-### 4.8 Aba Horários (somente após tratamento válido de logs)
-
-- Série temporal agregada por faixas horárias de eventos de votação; não relacionar timestamp a candidato.
-- Mostrar taxas de cobertura e origem dos logs; jamais associar registros identificáveis ou horários de eventos a preferência de voto.
-- Se inexistentes, ocultar aba inteira em vez de usar visualização vazia.
-
-### 4.9 Metodologia e dados
+### 4.8 Metodologia e dados
 
 - Metodologia inclui notação formal, identidades contábeis, diferença entre limites e intervalos, falácia ecológica, restrições utilizadas e exemplos sem alegação de causa.
 - Dados e código trazem links oficiais TSE, repositório (quando publicado), changelog de datasets, licença e histórico de releases.
@@ -225,9 +220,9 @@ Não marcar seções com rótulo `suspeita` ou `fraude`. Seções agregadas/inco
 
 ### 5.1 Fontes e ingestão
 
-Fonte prioritária: Portal de Dados Abertos TSE (`https://dadosabertos.tse.jus.br/`). Adapters separados para resultados por seção, boletins, eleitorado/local e logs. Descoberta de recursos por eleição e UF; downloads por lote, com retries, checksum e registro de URL/data/tamanho.
+Fonte prioritária: Portal de Dados Abertos TSE (`https://dadosabertos.tse.jus.br/`). Fontes: `votacao_secao_2026_BR.zip` (votos por seção e candidato) e `detalhe_votacao_secao_2026.zip` (aptos, comparecimento, brancos, nulos, situação da seção). Descoberta de recursos por eleição e UF; downloads por lote, com retries, checksum e registro de URL/data/tamanho.
 
-Não depender de arquivo `csv` de formato único entre eleições. Criar schemas por versão de fonte, testes de parser e contrato canônico. O parser de BU deve conferir seus totais com os dados agregados. Logs são módulo opcional e desacoplado.
+Não depender de arquivo `csv` de formato único entre eleições. Criar schemas por versão de fonte, testes de parser e contrato canônico. O parser de BU deve conferir seus totais com os dados agregados.
 
 ### 5.2 Pipeline `targets`
 
@@ -256,7 +251,7 @@ Limites de Fréchet em fórmula fechada por unidade, somados no município, e ce
 
 Fase posterior ao motor determinístico, implementada em módulos isolados:
 
-- Métodos (`md-bayes`, `lphom`, `ecolRxC`), sem pooling entre municípios, com grau de identificação por célula, checagem preditiva, calibração por simulação e regras de publicação: `05-metodo-analitico.md` §5.
+- Métodos (`dm-homog`, `lphom`; `ecolRxC` desligado por custo), sem pooling entre municípios, com grau de identificação por célula, checagem preditiva, calibração por simulação e regras de publicação: `05-metodo-analitico.md` §5.
 - Registrar priors, algoritmos, número de amostras, seed, versão, convergência, performance e sensibilidade às especificações.
 - Estimativas de transferência são agregadas, **não identificadas individualmente**.
 - Não rodar inferência quando o universo não puder ser harmonizado ou o município tiver informação insuficiente; status `insufficient_data` e explicação.
@@ -270,7 +265,6 @@ Fase posterior ao motor determinístico, implementada em módulos isolados:
 - `limites.parquet`: limites LP por cenário/fluxo.
 - `fluxos_estimados.parquet`: matrizes pontuais + intervalos, apenas se há modelo confiável.
 - `qualidade.json` e `manifest.json` por município, com disponibilidade de cada aba.
-- `horarios.parquet` apenas quando há logs válidos.
 
 Detalhamento em `03-contratos-de-dados.md`.
 

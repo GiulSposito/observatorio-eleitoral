@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "catalogo.schema.json",
+  "type": "object",
+  "required": ["schema_version","release_id","generated_at","election","municipalities"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/definitions/schema_version"},
+    "release_id": {"$ref": "common.schema.json#/definitions/release_id"},
+    "generated_at": {"$ref": "common.schema.json#/definitions/timestamp"},
+    "election": {
+      "type": "object",
+      "required": ["election_id","year","office","label","rounds","slot_rule","finalists"],
+      "additionalProperties": false,
+      "properties": {
+        "election_id": {"$ref": "common.schema.json#/definitions/election_id"},
+        "year": {"type": "integer", "enum": [2026]},
+        "office": {"type": "string", "enum": ["presidente"]},
+        "label": {"type": "string", "minLength": 1},
+        "rounds": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": {"type": "object", "required": ["round","date"], "additionalProperties": false,
+                    "properties": {"round": {"type": "integer", "enum": [1,2]}, "date": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}}}
+        },
+        "slot_rule": {"type": "string", "enum": ["lowest_ballot_number"]},
+        "finalists": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": {"type": "object", "required": ["slot","number","name"], "additionalProperties": false,
+                    "properties": {"slot": {"$ref": "common.schema.json#/definitions/slot"}, "number": {"type": "string", "pattern": "^[0-9]{2}$"}, "name": {"type": "string", "minLength": 1}}}
+        }
+      }
+    },
+    "municipalities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["municipio_tse","municipio_ibge","name","display_name","uf","n_sections","manifest_url","publication_status"],
+        "additionalProperties": false,
+        "properties": {
+          "municipio_tse": {"$ref": "common.schema.json#/definitions/municipio_tse"},
+          "municipio_ibge": {"type": ["string","null"], "pattern": "^[0-9]{7}$"},
+          "name": {"type": "string", "minLength": 1},
+          "display_name": {"type": "string", "minLength": 1},
+          "uf": {"$ref": "common.schema.json#/definitions/uf"},
+          "n_sections": {"type": "integer", "minimum": 0},
+          "manifest_url": {"$ref": "common.schema.json#/definitions/relpath"},
+          "publication_status": {"type": "string", "enum": ["ready","partial","unavailable"]}
+        }
+      }
+    }
+  }
+}

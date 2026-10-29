@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "latest.schema.json",
+  "type": "object",
+  "required": ["schema_version","release_id","published_at","release_base","catalog_url","pipeline_git_sha","method_version"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/definitions/schema_version"},
+    "release_id": {"$ref": "common.schema.json#/definitions/release_id"},
+    "published_at": {"$ref": "common.schema.json#/definitions/timestamp"},
+    "release_base": {"$ref": "common.schema.json#/definitions/relpath"},
+    "catalog_url": {"$ref": "common.schema.json#/definitions/relpath"},
+    "pipeline_git_sha": {"$ref": "common.schema.json#/definitions/git_sha"},
+    "method_version": {"$ref": "common.schema.json#/definitions/method_version"}
+  }
+}

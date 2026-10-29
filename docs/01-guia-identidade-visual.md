@@ -52,7 +52,7 @@ Todas as cores deverão ser consumidas por tokens semânticos em CSS (`web/css/d
 
 ### Associação de cores a candidatos
 
-A e B são **slots visuais**, definidos exclusivamente pela ordem explícita no `manifest.json` daquela disputa. Nunca atribuir a cor por ideologia/partido, não alternar cores entre telas da mesma disputa e nunca presumir significado político para azul/terra. A cor não basta para identificar série: usar rótulo direto, forma de marcador, padrão de linha ou legenda textual.
+A e B são **slots visuais** com regra nacional: `A` é o finalista com o menor número de urna (03 §2), registrado uma vez no `catalogo.json`. Nunca atribuir a cor por ideologia/partido, não alternar cores entre telas da mesma disputa e nunca presumir significado político para azul/terra. A cor não basta para identificar série: usar rótulo direto, forma de marcador, padrão de linha ou legenda textual.
 
 ### Contraste e acessibilidade
 
@@ -183,7 +183,6 @@ O rodapé de **todas as páginas** traz, em texto discreto e com link: `Análise
 | Como variam os municípios? | Dot plot e distribuição com percentis | Normalizar por aptos | Comparar volumes absolutos desigual |
 | Quais fluxos o modelo estima? | Sankey + matriz RxC tabular | Selecionar método/hipóteses | Fluxo parecer individualmente observado |
 | Qual o grau de identificação? | Intervalos lado a lado e matriz de limites | Trocar suposições | Misturar limite LP e IC bayesiano |
-| Como o log se comporta? | Histograma temporal | Agregar por faixa horária | Relacionar horário a preferência de voto |
 
 **Dados com incerteza:** quando houver inferência, exibir estimativa central e intervalo **com o tipo nomeado** (`95% de credibilidade` ou `faixa viável sob restrição X`). Não misturar o conceito num único objeto `lower/upper` sem metadados.
 

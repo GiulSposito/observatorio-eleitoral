@@ -1,0 +1,31 @@
+election_id: "2026-presidente"
+year: 2026
+office: presidente
+cd_cargo: "1"
+label: "Presidência · 2026 · 1º × 2º turno · Estado de São Paulo"
+rounds:
+  - {round: 1, date: "2026-10-04"}
+  - {round: 2, date: "2026-10-25"}
+slot_rule: lowest_ballot_number
+votavel_branco: "95"
+votavel_nulo: "96"
+excluir_ufs: [ZZ]
+# Primeira versão publicada: só municípios do Estado de São Paulo. Remover para cobrir o país.
+incluir_ufs: [SP]
+fontes:
+  votacao_secao:
+    dataset: "Votação por seção eleitoral 2026"
+    url: "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_2026_BR.zip"
+    membro: "votacao_secao_2026_BR.csv"
+  detalhe_votacao_secao:
+    dataset: "Detalhe da votação por seção eleitoral 2026"
+    url: "https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_secao/detalhe_votacao_secao_2026.zip"
+    membro: "detalhe_votacao_secao_2026_BR.csv"
+  votacao_candidato_munzona:
+    dataset: "Votação nominal por município e zona 2026"
+    url: "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_candidato_munzona/votacao_candidato_munzona_2026.zip"
+    membro: "votacao_candidato_munzona_2026_BR.csv"
+  detalhe_votacao_munzona:
+    dataset: "Detalhe da votação por município e zona 2026"
+    url: "https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_munzona/detalhe_votacao_munzona_2026.zip"
+    membro: "detalhe_votacao_munzona_2026_BR.csv"

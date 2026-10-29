@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.3.0",
+  "release_id": "DEMO-001",
+  "election_id": "2026-presidente",
+  "municipio_tse": "00002",
+  "uf": "GO",
+  "name": "VALE SERENO",
+  "generated_at": "2026-10-27T18:00:00Z",
+  "validation_status": "passed",
+  "features": {
+    "summary": "ready",
+    "sections": "ready",
+    "bounds": "ready",
+    "scenarios": "ready",
+    "ecological_model": "insufficient_data"
+  },
+  "assets": {
+    "summary": {
+      "path": "2026-presidente/municipios/GO/00002/resumo.json",
+      "media_type": "application/json",
+      "sha256": "dd13ee9315217ff17a9dbdd75d8f19fdb3f7a1fb3f4c978f07720e8313c6f828",
+      "bytes": 1576
+    },
+    "quality": {
+      "path": "2026-presidente/municipios/GO/00002/qualidade.json",
+      "media_type": "application/json",
+      "sha256": "cccc4c0bb227c60fe38a0c1ae544b61ee4d152f8a10874f3fd251f2c39ebb9b2",
+      "bytes": 1789
+    },
+    "sections": {
+      "path": "2026-presidente/uf=GO/secoes.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "32c7e0daaaa6187f3ef3646549cfeb07d505ddaa4531ad86c6acb5583b08a5f9",
+      "bytes": 8796
+    },
+    "bounds": {
+      "path": "2026-presidente/uf=GO/limites.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "8b20b06b5b98f2e08f1282d8c438929c2176cb28adfb757e5a7dccbf2dd88592",
+      "bytes": 3892
+    },
+    "scenarios": {
+      "path": "2026-presidente/uf=GO/cenarios.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "fccf8ef20305077166d2ed9aef49f1cbf32c8d83f18ec1cf6122a9a362e11029",
+      "bytes": 1430
+    }
+  },
+  "sources": [
+    {
+      "provider": "FIXTURE",
+      "dataset": "Bundle sintético de demonstração",
+      "file": "make_bundle.R",
+      "source_url": null,
+      "collected_at": null,
+      "source_sha256": null,
+      "bytes": null
+    }
+  ],
+  "pipeline_git_sha": "DEMO",
+  "method_version": "metodo-1.0.0"
+}

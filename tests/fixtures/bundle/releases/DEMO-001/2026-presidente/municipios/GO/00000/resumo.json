@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.3.0",
+  "release_id": "DEMO-001",
+  "election_id": "2026-presidente",
+  "status": "ready",
+  "validation_status": "passed",
+  "location": {
+    "municipio_tse": "00000",
+    "uf": "GO",
+    "name": "CIDADE MODELO",
+    "display_name": "Cidade Modelo"
+  },
+  "finalists": [
+    {
+      "slot": "A",
+      "number": "13",
+      "name": "CANDIDATO A (DEMONSTRAÇÃO)",
+      "round_1_votes": 4805,
+      "round_2_votes": 5234,
+      "delta_votes": 429
+    },
+    {
+      "slot": "B",
+      "number": "22",
+      "name": "CANDIDATO B (DEMONSTRAÇÃO)",
+      "round_1_votes": 4437,
+      "round_2_votes": 4710,
+      "delta_votes": 273
+    }
+  ],
+  "totals": {
+    "round_1": {
+      "eligible": 12800,
+      "turnout": 10602,
+      "abstention": 2198,
+      "valid": 9989,
+      "other": 747,
+      "blank": 245,
+      "null": 368,
+      "invalid": 613
+    },
+    "round_2": {
+      "eligible": 12806,
+      "turnout": 10549,
+      "abstention": 2257,
+      "valid": 9944,
+      "other": 0,
+      "blank": 243,
+      "null": 362,
+      "invalid": 605
+    }
+  },
+  "accounting": {
+    "other_round_1": 747,
+    "delta_turnout": -53,
+    "delta_invalid": -8,
+    "delta_valid": -45,
+    "delta_finalists": 702,
+    "identity_residual": 0,
+    "scope": "all_sections",
+    "evidence_type": "observed"
+  },
+  "coverage": {
+    "sections_total": 40,
+    "sections_installed": 40,
+    "units_in_transition_analysis": 40,
+    "eligible_share_used": 1
+  },
+  "display_notes": [
+    "DADOS FICTÍCIOS. Bundle de demonstração para desenvolvimento; não é resultado eleitoral."
+  ]
+}

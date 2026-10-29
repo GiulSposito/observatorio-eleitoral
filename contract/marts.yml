@@ -1,0 +1,111 @@
+# Parquets publicados por UF (docs/03-contratos-de-dados.md §8–§11), contrato 1.3.0.
+# Tipos DuckDB. "nullable: false" é verificado pelo validador. "sort" é a ordenação física exigida.
+schema_version: "1.3.0"
+marts:
+  secoes:
+    file: "uf={uf}/secoes.parquet"
+    evidence_type: observed
+    primary_key: [municipio_tse, zona, secao]
+    sort: [municipio_tse, zona, secao]
+    columns:
+      election_id: {type: VARCHAR, nullable: false}
+      uf: {type: VARCHAR, nullable: false}
+      municipio_tse: {type: VARCHAR, nullable: false}
+      zona: {type: VARCHAR, nullable: false}
+      secao: {type: VARCHAR, nullable: false}
+      comparison_unit_id: {type: VARCHAR, nullable: false}
+      unit_type: {type: VARCHAR, nullable: false, enum: ["section", "aggregated_sections"]}
+      comparison_status: {type: VARCHAR, nullable: false, enum: ["matched", "aggregated", "unmatched"]}
+      section_type: {type: VARCHAR, nullable: false, enum: ["regular", "transit", "special", "unknown"]}
+      polling_place_id: {type: VARCHAR, nullable: true}
+      polling_place_name: {type: VARCHAR, nullable: true}
+      location_changed: {type: BOOLEAN, nullable: true}
+      integrity_status: {type: VARCHAR, nullable: false, enum: ["passed", "failed"]}
+      installed: {type: BOOLEAN, nullable: false}
+      eligible_t1: {type: INTEGER, nullable: true}
+      eligible_t2: {type: INTEGER, nullable: true}
+      turnout_t1: {type: INTEGER, nullable: true}
+      turnout_t2: {type: INTEGER, nullable: true}
+      abstention_t1: {type: INTEGER, nullable: true}
+      abstention_t2: {type: INTEGER, nullable: true}
+      candidate_a_t1: {type: INTEGER, nullable: true}
+      candidate_a_t2: {type: INTEGER, nullable: true}
+      candidate_b_t1: {type: INTEGER, nullable: true}
+      candidate_b_t2: {type: INTEGER, nullable: true}
+      others_t1: {type: INTEGER, nullable: true}
+      blank_t1: {type: INTEGER, nullable: true}
+      null_t1: {type: INTEGER, nullable: true}
+      blank_t2: {type: INTEGER, nullable: true}
+      null_t2: {type: INTEGER, nullable: true}
+      invalid_t1: {type: INTEGER, nullable: true}
+      invalid_t2: {type: INTEGER, nullable: true}
+      delta_turnout: {type: INTEGER, nullable: true}
+      delta_a: {type: INTEGER, nullable: true}
+      delta_b: {type: INTEGER, nullable: true}
+      delta_invalid: {type: INTEGER, nullable: true}
+      eligible_net_change: {type: INTEGER, nullable: true}
+      population_status: {type: VARCHAR, nullable: true, enum: ["closed", "net_change", "excluded_population"]}
+      in_transition_analysis: {type: BOOLEAN, nullable: false}
+      exclusion_reason: {type: VARCHAR, nullable: true, enum: ["not_installed", "integrity_failed", "unmatched", "transit_section", "special_section", "population_change_above_tau", "possible_aggregation"]}
+  limites:
+    file: "uf={uf}/limites.parquet"
+    evidence_type: conditional_bound
+    primary_key: [municipio_tse, scenario_id, origin, destination]
+    sort: [municipio_tse, scenario_id, origin, destination]
+    columns:
+      election_id: {type: VARCHAR, nullable: false}
+      uf: {type: VARCHAR, nullable: false}
+      municipio_tse: {type: VARCHAR, nullable: false}
+      scenario_id: {type: VARCHAR, nullable: false}
+      assumption_id: {type: VARCHAR, nullable: false}
+      origin: {type: VARCHAR, nullable: false, enum: ["A", "B", "O", "I", "X", "N"]}
+      destination: {type: VARCHAR, nullable: false, enum: ["A", "B", "I", "X", "S"]}
+      min_votes: {type: BIGINT, nullable: true}
+      max_votes: {type: BIGINT, nullable: true}
+      status: {type: VARCHAR, nullable: false, enum: ["feasible", "infeasible", "insufficient_data"]}
+      units_used: {type: INTEGER, nullable: false}
+      units_infeasible: {type: INTEGER, nullable: false}
+      eligible_share_used: {type: DOUBLE, nullable: false}
+      method_id: {type: VARCHAR, nullable: false, enum: ["frechet", "transport-lp"]}
+      method_version: {type: VARCHAR, nullable: false}
+  cenarios:
+    file: "uf={uf}/cenarios.parquet"
+    evidence_type: conditional_bound
+    primary_key: [municipio_tse, scenario_id]
+    sort: [municipio_tse, scenario_id]
+    columns:
+      election_id: {type: VARCHAR, nullable: false}
+      uf: {type: VARCHAR, nullable: false}
+      municipio_tse: {type: VARCHAR, nullable: false}
+      scenario_id: {type: VARCHAR, nullable: false}
+      assumption_id: {type: VARCHAR, nullable: false}
+      status: {type: VARCHAR, nullable: false, enum: ["feasible", "infeasible", "insufficient_data"]}
+      units_used: {type: INTEGER, nullable: false}
+      units_infeasible: {type: INTEGER, nullable: false}
+  fluxos_estimados:
+    file: "uf={uf}/fluxos_estimados.parquet"
+    evidence_type: mixed
+    primary_key: [municipio_tse, origin, destination]
+    sort: [municipio_tse, origin, destination]
+    columns:
+      election_id: {type: VARCHAR, nullable: false}
+      uf: {type: VARCHAR, nullable: false}
+      municipio_tse: {type: VARCHAR, nullable: false}
+      origin: {type: VARCHAR, nullable: false, enum: ["A", "B", "O", "I", "X", "N"]}
+      destination: {type: VARCHAR, nullable: false, enum: ["A", "B", "I", "X", "S"]}
+      model_id: {type: VARCHAR, nullable: false, enum: ["dm-homog"]}
+      model_version: {type: VARCHAR, nullable: false}
+      assumption_id: {type: VARCHAR, nullable: false}
+      estimate_votes: {type: DOUBLE, nullable: false}
+      estimate_statistic: {type: VARCHAR, nullable: false, enum: ["posterior_mean"]}
+      interval_low: {type: DOUBLE, nullable: false}
+      interval_high: {type: DOUBLE, nullable: false}
+      interval_type: {type: VARCHAR, nullable: false, enum: ["credible_interval"]}
+      interval_level: {type: DOUBLE, nullable: false}
+      method_range_low: {type: DOUBLE, nullable: true}
+      method_range_high: {type: DOUBLE, nullable: true}
+      bounds_min: {type: DOUBLE, nullable: false}
+      bounds_max: {type: DOUBLE, nullable: false}
+      identification_ratio: {type: DOUBLE, nullable: true}
+      identification_class: {type: VARCHAR, nullable: false, enum: ["determined", "estimated", "weak", "not_identified"]}
+      model_status: {type: VARCHAR, nullable: false, enum: ["ready", "partial"]}

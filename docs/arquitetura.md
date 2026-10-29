@@ -55,8 +55,8 @@ dados versionado que o navegador consulta com DuckDB-Wasm.
 6. **Proveniência ponta a ponta.** Qualquer número na tela leva até a release, o modelo, as
    hipóteses e os arquivos do TSE (URL + hash) que o produziram.
 7. **O motor é genérico; a eleição é configuração.** Nada no código conhece "Lula", "Flávio",
-   "2026" ou "presidente". Candidatos são mapeados para categorias (`finalist_a`, `finalist_b`,
-   `other`, `invalid`, `abstention`) por arquivo de configuração. O escopo do produto é a eleição
+   "2026" ou "presidente". Candidatos são mapeados para as categorias `A`, `B`, `O`, `I`, `X` (e `N`/`S`)
+   de 03 §2 por arquivo de configuração. O escopo do produto é a eleição
    presidencial de 2026 (1º × 2º turno); nenhuma outra eleição é usada.
 8. **Infraestrutura mínima.** `git clone` + dados de entrada + build = aplicação completa.
 
@@ -74,7 +74,7 @@ São regras de revisão: um PR que viole uma delas está errado, mesmo que funci
 | I2 | Toda seção, em cada turno, satisfaz comparecimento = soma dos votos e aptos = comparecimento + abstenção (V1). A identidade ΔA + ΔB = O₁ + ΔC − ΔI é consequência disso e não verifica o pareamento entre turnos | `reconcile/`, gate de integridade |
 | I3 | Somas por município e UF batem com os totais oficiais do TSE | `reconcile/` |
 | I4 | Todo valor numérico publicado tem `evidence_type`; `conditional_bound` sempre traz `assumption_id` e status de viabilidade; `model_estimate` sempre traz `model_id`, `model_version`, `assumption_id` e intervalo com tipo | `validate_web_bundle()` |
-| I5 | Município com `validation_status != "passed"` não publica `model_estimate` | `validate_web_bundle()` |
+| I5 | Município com `validation_status = "failed"` não publica `model_estimate` (03 §6) | `validate_web_bundle()` |
 | I6 | Todos os marts de uma release vêm do mesmo `release_id`, da mesma versão Silver e da mesma `model_version` | `validate_web_bundle()` |
 | I7 | Identificadores são `string` no bundle; não há list-columns; `NA` vira `NULL` no Parquet | `write_mart()` |
 | I8 | O frontend só conhece caminhos de dados via `latest.json` → catálogo → manifesto; nenhum caminho fixo no JS | revisão + teste de fumaça |
@@ -97,7 +97,7 @@ publicação** (arquivos estáticos em CDN).
 │  resultados/seção     arquivos       modelo canônico   resultados        │
 │  boletins de urna     originais,     harmonizado,      analíticos        │
 │  eleitorado/locais    hashes,        Parquet por UF,   completos:        │
-│  logs de urna         proveniência   chaves validadas  reconciliação,    │
+│                       proveniência   chaves validadas  reconciliação,    │
 │                                                        limites, modelos, │
 │                                                        cenários,         │
 │                                                        diagnósticos      │
@@ -136,7 +136,7 @@ proveniência deles. Nenhuma transformação de conteúdo.
 
 - **Adaptadores por tipo de fonte**, com interface comum `descobrir_fontes(config) →
   baixar_verificar(fonte) → arquivo`:
-  - download em lote por UF/turno (resultados por seção, BUs, eleitorado, locais, logs);
+  - download em lote por UF/turno (votação por seção e detalhe da votação por seção);
   - coleta individual de BUs quando o lote ainda não foi publicado (caso do 2º turno de 2026
     citado na visão).
 - **`source_files`** (tabela de proveniência): `file_id`, `election_id`, `uf`, `turno`, `kind`,
@@ -197,13 +197,12 @@ Módulos, cada um com entrada e saída tabulares:
 | `ecological/calibration` | margens reais do 1º turno + processos G1–G4 | `calibration_report` — cobertura e erro por classe de identificação e porte; fixa os limiares de `config/metodo.yml` | — |
 | `diagnostics/` | modelo + Silver | `model_diagnostics` — R-hat, ESS, unidades usadas, cobertura, checagem preditiva, classe de identificação por célula | — |
 | `context/` | `municipal_indicators` | `municipal_context` — posição do município entre comparáveis (UF, porte, perfil) | observed |
-| `logs/` (posterior) | logs de urna | `vote_time_profile` — distribuição temporal agregada, só onde a cobertura é confiável | observed |
 
 Regras do motor:
 
 - **Limites, estimação e cenários** conforme `05-metodo-analitico.md` §4–5: limites de Fréchet
-  somados por unidade; estimação com pelo menos dois métodos de famílias diferentes (`md-bayes` via
-  `eiPack::ei.MD.bayes`, `lphom`, opcionalmente `ecolRxC`); cenários com restrições por unidade. A
+  somados por unidade; estimação com pelo menos dois métodos de famílias diferentes (`dm-homog`, com
+  núcleo em C++ via Rcpp, e `lphom`; `ecolRxC` desligado por custo); cenários com restrições por unidade. A
   interface mostra limites e estimativa na mesma tabela, com a classe de identificação de cada célula.
 - **Sem pooling entre municípios** na estimativa municipal. Um contexto por UF, se existir, é outro
   produto, rotulado como tal.
@@ -255,7 +254,7 @@ Mesmo stack do DudesApp: **Quarto website + ES modules sem etapa de build + Duck
 
 ```text
 web/js/
-├── head.html        import map com versões fixas (DuckDB-Wasm, Plotly) — CDN ou vendor/
+├── vendor.js        URLs com versão fixa de DuckDB-Wasm e Plotly, carregados sob demanda — CDN ou vendor/
 ├── data.js          ÚNICO módulo que busca latest/catálogo/manifesto/resumo e fala com DuckDB-Wasm
 ├── catalog.js       busca de município sobre catalogo.json (sem DuckDB; acentos, homônimos por UF)
 ├── state.js         seleção canônica na URL (e, m, aba); invalida respostas de recortes anteriores
@@ -295,7 +294,7 @@ latest.json                                   único arquivo mutável (Cache-Con
 └── releases/<release_id>/catalogo.json       busca de município, sem DuckDB
     └── …/<municipio_tse>/manifest.json       features, assets (path + sha256), fontes, versões
         ├── resumo.json · qualidade.json      first paint e aba Qualidade, sem Wasm
-        └── secoes · limites · cenarios · fluxos_estimados · horarios (.parquet)
+        └── uf=<UF>/ secoes · limites · cenarios · fluxos_estimados (.parquet)
                                               via DuckDB-Wasm, só ao abrir a aba que usa
 ```
 
@@ -330,7 +329,6 @@ tipo de Parquet, contra mais de 16 mil no layout por município.
 | Transferências | `limites.parquet`; `fluxos_estimados.parquet` só com modelo `ready` | conditional_bound; model_estimate |
 | Cenários | `cenarios.parquet` | declarado por cenário |
 | Qualidade | `qualidade.json`, manifesto | — |
-| Horários | `horarios.parquet`, só com logs válidos | observed |
 
 ---
 
@@ -435,7 +433,8 @@ até uma política explícita de retenção.
 Como no DudesApp, `data/` e o bundle são gitignored e o build roda na máquina do autor; o CI, quando
 existir, roda testes com fixtures, não o pipeline nacional.
 
-Dependências de runtime (Plotly, DuckDB-Wasm) vêm de jsDelivr com versão fixa no import map,
+Dependências de runtime (Plotly, DuckDB-Wasm) vêm de jsDelivr com versão fixa em `web/js/vendor.js`
+(o Quarto insere scripts de módulo antes do `<head>` incluído, então import map não funciona),
 começando pelas mesmas do DudesApp (`@duckdb/duckdb-wasm@1.29.0`, `plotly.js-dist-min@2.35.2`).
 O `web/vendor/` permite servir tudo localmente, se o CDN de terceiros virar problema.
 

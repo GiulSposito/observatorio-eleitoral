@@ -1,0 +1,66 @@
+---
+title: "Metodologia"
+description: "Como os números do Caderno Eleitoral são verificados, limitados e estimados."
+---
+
+::: {.prose}
+
+Este site separa três coisas que têm graus de certeza muito diferentes: **o que foi observado**, **o que é matematicamente possível** e **o que um modelo estima**. Dados agregados por seção não permitem saber como cada pessoa votou nem quem trocou de candidato. O site nunca afirma fraude, intenção de voto, causa ou transferência individual.
+
+## Escopo
+
+Eleição para Presidente da República de 2026: 1º turno em 4 de outubro e 2º turno em 25 de outubro. Nesta primeira versão, os municípios do Estado de São Paulo; os demais estados entram nas próximas versões, com o mesmo método. Votos no exterior ficam fora, porque não pertencem a município. A unidade observada é a seção eleitoral, pareada entre os dois turnos.
+
+## Notação e categorias
+
+Em cada seção, no 1º turno: votos do finalista A ($A_1$), do finalista B ($B_1$), dos demais candidatos ($O_1$), brancos e nulos ($I_1$) e abstenção ($X_1$). No 2º turno: $A_2$, $B_2$, $I_2$ e $X_2$. Os finalistas recebem os rótulos A e B por uma regra nacional e neutra: **A é o finalista com o menor número de urna**. As cores acompanham esses rótulos, nunca partidos.
+
+## A conta que fecha é aritmética
+
+Em cada turno, o comparecimento é a soma dos votos: $C_1 = A_1 + B_1 + O_1 + I_1$ e $C_2 = A_2 + B_2 + I_2$. Subtraindo,
+
+$$\Delta A + \Delta B = O_1 + \Delta C - \Delta I.$$
+
+O ganho somado dos finalistas é igual aos votos dos demais candidatos no 1º turno, mais a variação do comparecimento, mais a redução de brancos e nulos. A igualdade decorre das contas de cada turno; ela explica os totais, mas **não mostra quem mudou de voto** e não serve para verificar o pareamento das seções entre turnos.
+
+## Verificações
+
+- **V1 — integridade em cada turno:** comparecimento = soma dos votos; aptos = comparecimento + abstenção; nenhuma contagem negativa.
+- **V2 — harmonização entre turnos:** cada seção pareada uma a uma, mesmo tipo de seção, local de votação conferido, classe de população.
+- **V3 — totais oficiais:** a soma das seções bate com o total oficial do município; divergências só passam com explicação registrada.
+
+## Eleitores que mudam entre turnos
+
+O cadastro eleitoral fecha antes da eleição, mas o voto em trânsito é pedido por turno e as seções especiais têm dinâmica própria. Seções de trânsito e especiais ficam fora da análise de transição (continuam nos totais). Nas demais, se os aptos não mudam, a matriz é fechada; se mudam pouco (até a tolerância τ), entra uma categoria de entrada ou saída líquida, supondo que só a diferença líquida entrou ou saiu; se mudam mais, a seção fica fora da análise de transição.
+
+## Limites: o que as margens permitem
+
+Para cada fluxo de uma categoria $i$ do 1º turno para uma categoria $j$ do 2º, numa seção com totais $r_i$, $c_j$ e total $T$, os limites são
+
+$$\max(0,\, r_i + c_j - T) \;\le\; x_{ij} \;\le\; \min(r_i,\, c_j).$$
+
+O limite do município é a soma dos limites das seções. Os limites de células diferentes não podem ser atingidos ao mesmo tempo; por isso nunca formam um gráfico de fluxos. Cenários (como "sem troca direta entre os finalistas") acrescentam restrições a cada seção e são calculados no pipeline, não no navegador.
+
+## Estimação ecológica
+
+Quando o município tem seções suficientes, dois ou mais métodos de famílias diferentes estimam as taxas de transição supondo que elas são as mesmas em todas as seções do município (sem emprestar informação de outros municípios). A estimativa publicada é a média posterior das contagens do modelo multinomial-Dirichlet; os outros métodos dão a faixa entre métodos. Nenhum diagnóstico interno prova que a estimativa de um município está correta: o site só afirma que ela é **compatível com os dados sob hipóteses declaradas**.
+
+Cada célula recebe uma classe de identificação, comparando a incerteza (intervalo e faixa entre métodos) com a largura do limite:
+
+- **Determinada:** as margens bastam.
+- **Estimada:** a incerteza é pequena diante do limite; mostramos estimativa, intervalo e faixa entre métodos.
+- **Fraca:** mostramos o limite e, à parte, a estimativa sinalizada.
+- **Não identificada:** só o limite — os dados não distinguem os fluxos possíveis.
+
+O gráfico de fluxos (Sankey) só aparece quando o município passa em todos os critérios: cálculo válido, cobertura e número de seções mínimos, checagem preditiva com seções deixadas de fora e massa de mudança suficiente em células determinadas ou estimadas. Os limiares foram calibrados por simulação, gerando segundos turnos com matrizes conhecidas sob hipóteses verdadeiras e falsas.
+
+:::
+
+::: {#metodo-dinamico .prose}
+Carregando os parâmetros desta publicação…
+:::
+
+<script type="module">
+import { boot } from "./js/app.js";
+boot("metodologia");
+</script>

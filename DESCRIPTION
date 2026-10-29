@@ -1,0 +1,33 @@
+Type: Project
+Package: cadernoeleitoral
+Title: Caderno Eleitoral - pipeline de dados e analise
+Version: 0.1.0
+Description: Pipeline em R do Caderno Eleitoral (presidente 2026, 1o x 2o turno):
+    ingestao do TSE, verificacoes, limites, estimacao ecologica e bundle do site.
+    Arquivo usado pelo renv para declarar dependencias (modo explicit); nao e um pacote.
+License: MIT
+Encoding: UTF-8
+Imports:
+    targets,
+    crew,
+    duckdb,
+    DBI,
+    dplyr,
+    tidyr,
+    purrr,
+    tibble,
+    dm,
+    httr2,
+    curl,
+    digest,
+    checkmate,
+    yaml,
+    jsonlite,
+    jsonvalidate,
+    eiPack,
+    lphom,
+    ecolRxC,
+    lpSolve,
+    Rcpp,
+    coda,
+    testthat

@@ -1,0 +1,47 @@
+---
+title: "Entenda o que mudou entre os turnos no seu município"
+body-classes: home-page
+pagetitle: "Caderno Eleitoral · 1º × 2º turno, município a município"
+description: "Compare o 1º e o 2º turno da eleição presidencial de 2026 nos municípios do Estado de São Paulo, seção por seção, e veja o que os dados permitem concluir."
+---
+
+::: {#app}
+
+```{=html}
+<section class="home-hero">
+  <div class="ce-label">Presidência · 2026 · 1º × 2º turno · Estado de São Paulo</div>
+  <h1>Entenda o que mudou entre os turnos no seu município</h1>
+  <p class="lead">Compare o 1º e o 2º turno da eleição presidencial de 2026, explore as seções eleitorais e veja o que os dados permitem — e o que não permitem — concluir.</p>
+  <div id="search-slot" class="home-search">
+    <noscript><p>A busca de municípios precisa de JavaScript. A metodologia e os dados podem ser lidos sem ele.</p></noscript>
+  </div>
+  <p class="trust-line">Primeira versão: os 645 municípios do Estado de São Paulo. Os demais estados entram nas próximas versões.</p>
+  <p class="trust-line">Projeto independente · Dados públicos do TSE · Métodos e versões abertos</p>
+</section>
+
+<section class="how-to-read" aria-labelledby="como-ler">
+  <h2 id="como-ler" class="sr-only">Como ler</h2>
+  <div>
+    <span class="ce-method-tag tag-observed">Observado</span>
+    <h2>O que o TSE publicou</h2>
+    <p>Votos, comparecimento, brancos e nulos de cada seção nos dois turnos, conferidos com os totais oficiais. São contagens exatas.</p>
+  </div>
+  <div>
+    <span class="ce-method-tag tag-bound">Limite condicional</span>
+    <h2>O que as margens permitem</h2>
+    <p>Para cada fluxo entre categorias, o mínimo e o máximo possíveis dados os totais de cada seção. É matemática, não estimativa.</p>
+  </div>
+  <div>
+    <span class="ce-method-tag tag-estimate">Estimado pelo modelo</span>
+    <h2>O que um modelo estima</h2>
+    <p>Uma distribuição compatível com os dados sob hipóteses declaradas, com incerteza. Aparece só quando passa nos critérios de qualidade.</p>
+  </div>
+</section>
+```
+
+:::
+
+<script type="module">
+import { boot } from "./js/app.js";
+boot("index");
+</script>

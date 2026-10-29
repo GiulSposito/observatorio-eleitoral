@@ -1,0 +1,55 @@
+project:
+  type: website
+  output-dir: _site
+  resources:
+    - "data/**"
+    - "js/**"
+    - "vendor/**"
+
+lang: pt-BR
+
+website:
+  title: "caderno eleitoral."
+  site-url: "https://giulsposito.github.io/observatorio-eleitoral/"
+  description: "Mudanças de voto entre o 1º e o 2º turno da eleição presidencial de 2026, município a município, com dados públicos do TSE."
+  favicon: favicon.svg
+  reader-mode: false
+  page-navigation: false
+  bread-crumbs: false
+  search: false
+  navbar:
+    background: light
+    collapse-below: md
+    left:
+      - text: "Explorar"
+        href: explorar.qmd
+      - text: "Metodologia"
+        href: metodologia.qmd
+      - text: "Dados e código"
+        href: dados-e-codigo.qmd
+  page-footer:
+    left: |
+      Projeto independente · Análise inspirada na [thread de Rômulo Fiúza e Mello](https://x.com/fiuzaemello/status/2114763737425211824) (@fiuzaemello)
+    center: |
+      Dados públicos do TSE · <span id="data-version">versão dos dados: carregando…</span>
+    right:
+      - text: "Sobre"
+        href: sobre.qmd
+      - text: "Metodologia"
+        href: metodologia.qmd
+      - text: "Código"
+        href: https://github.com/GiulSposito/observatorio-eleitoral
+
+format:
+  html:
+    theme: [default, css/site.scss]
+    css: css/design-tokens.css
+    page-layout: full
+    toc: false
+    anchor-sections: false
+    smooth-scroll: false
+    link-external-newwindow: true
+    include-in-header: js/head.html
+    include-before-body: js/before-body.html
+    grid:
+      body-width: 1200px

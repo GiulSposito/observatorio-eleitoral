@@ -1,0 +1,99 @@
+{
+  "schema_version": "1.3.0",
+  "release_id": "DEMO-001",
+  "election_id": "2026-presidente",
+  "municipio_tse": "00003",
+  "computed_at": "2026-10-27T18:00:00Z",
+  "pipeline_git_sha": "DEMO",
+  "method_version": "metodo-1.0.0",
+  "validation_status": "partial",
+  "section_coverage": {
+    "sections_total": 30,
+    "sections_installed": 29,
+    "units_paired": 30,
+    "units_in_transition_analysis": 27,
+    "eligible_share_used": 0.9419,
+    "excluded_by_reason": {
+      "not_installed": 1,
+      "population_change_above_tau": 1,
+      "transit_section": 1
+    },
+    "net_change_tolerance_rule": "max(2, 1% de E1)"
+  },
+  "population": {
+    "closed": 18,
+    "net_change": 10,
+    "excluded_population": 1
+  },
+  "checks": [
+    {
+      "id": "integrity.turnout_equals_votes",
+      "family": "integrity",
+      "passed": true,
+      "scope": "sections",
+      "count_failed": 0
+    },
+    {
+      "id": "integrity.eligible_equals_turnout_plus_abstention",
+      "family": "integrity",
+      "passed": true,
+      "scope": "sections",
+      "count_failed": 0
+    },
+    {
+      "id": "harmonization.pairing_one_to_one",
+      "family": "harmonization",
+      "passed": true,
+      "scope": "units",
+      "count_failed": 0
+    },
+    {
+      "id": "official_totals.round_1",
+      "family": "official_totals",
+      "passed": true,
+      "scope": "municipality",
+      "count_failed": 0,
+      "explanation_code": null
+    },
+    {
+      "id": "official_totals.round_2",
+      "family": "official_totals",
+      "passed": false,
+      "scope": "municipality",
+      "count_failed": 1,
+      "explanation_code": "demo_explained_divergence"
+    }
+  ],
+  "model": {
+    "status": "partial",
+    "reason_unavailable": null,
+    "methods": [
+      {
+        "method_id": "dm-homog",
+        "version": "dm-homog-1.0.0",
+        "status": "ok",
+        "runtime_s": 3.2,
+        "diagnostics": {
+          "rhat_max": 1.004,
+          "ess_min": 900
+        }
+      },
+      {
+        "method_id": "lphom",
+        "version": "lphom-0.3.5-7",
+        "status": "ok",
+        "runtime_s": 0.2,
+        "diagnostics": {}
+      }
+    ],
+    "predictive_check": {
+      "k_folds": 5,
+      "model_error": 0.058,
+      "null_error": 0.061,
+      "passed": false
+    },
+    "identified_change_share": 0.41,
+    "n_units_used": 27,
+    "calibration_id": "cal-DEMO-001"
+  }
+}

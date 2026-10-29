@@ -8,13 +8,14 @@ Este arquivo é a referência obrigatória para agentes de código neste reposit
 
 ## Estado atual do repositório
 
-Ainda **não há pipeline nem site**. Existem três áreas, que não se misturam:
+Pipeline e site implementados (Fases 0–4) e publicados em https://giulsposito.github.io/observatorio-eleitoral/ (branch `gh-pages`). A primeira release cobre os 645 municípios de SP.
 
-- `docs/` — documentação (visão de origem, arquitetura, guia visual, especificação, contratos, roteiro, método analítico, revisão crítica).
-- `web/` — código da aplicação; por enquanto só `web/css/design-tokens.css`.
-- `examples/` — referência que a aplicação nunca lê: `contrato/*.demo.json` (`release_id: DEMO-001`, município `00000`) e `preview/` (prévia HTML estática da identidade).
+- `R/`, `_targets.R`, `run.R`, `config/`, `contract/`: pipeline TSE → bronze/silver/gold → método → bundle validado (`R/README.md`).
+- `web/`: site Quarto; `web/data/` recebe o bundle local (gitignored). `web/scripts/use-fixture.sh` troca pelo bundle sintético `DEMO-001`, contra o qual rodam os E2E.
+- `tests/`: `testthat`, `tests/web/*.check.mjs`, `tests/e2e/` (Playwright + axe), `tests/fixtures/`, `tests/benchmark/` (custos e calibração do motor).
+- `docs/`: especificação e método; `examples/`: referência que a aplicação nunca lê.
 
-`R/`, `config/`, `contract/`, `tests/`, `_targets.R`, `run.R` e `renv.lock` nascem nas Fases 0–1; árvore-alvo em `docs/arquitetura.md` §10. `.claude/skills/` traz skills de R do projeto (ex.: `tdd-workflow`, `r-style-guide`, `dm-relational`).
+Resultado do método na release de SP: calibração aprovada só na faixa de 15 a 149 seções comparáveis (`n_secoes_max = 150`; acima disso a cobertura ficou entre 40% e 75%). Status de `ecological_model`: 170 `ready`, 207 `failed` (sem convergência do dm-homog), 154 `insufficient_data`, 114 `unavailable`. Melhorar a estimação (taxas que variam entre seções, HMC) é o próximo incremento.
 
 ## Missão
 
@@ -42,13 +43,14 @@ Em caso de conflito: contratos (03) para schema; método (05) para verificaçõe
 ## Decisões fixas
 
 - Português brasileiro, acessibilidade WCAG 2.2 AA.
-- Escopo eleitoral: Presidente da República 2026, 1º turno (4/10) × 2º turno (25/10), todos os municípios; exterior fora. Nenhuma outra eleição é usada, nem para desenvolvimento ou calibração.
+- Escopo eleitoral: Presidente da República 2026, 1º turno (4/10) × 2º turno (25/10), todos os municípios; exterior fora. Nenhuma outra eleição é usada, nem para desenvolvimento ou calibração. **Primeira versão: só o Estado de São Paulo** (`incluir_ufs: [SP]` na configuração da eleição).
 - Site estático; sem autenticação, API própria, Shiny, SSR, Node no build do site, chatbot, banco operacional ou WebR no MVP.
 - Catálogo/manifestos JSON e estatísticas Parquet versionados; `resumo.json` acessível sem WASM.
 - DuckDB-Wasm inicializado apenas ao solicitar detalhes; sempre protegido por fallback.
-- Plotly é a única biblioteca de gráficos (inclui Sankey); dependências de runtime com versão fixa no import map de `web/js/head.html`.
+- Plotly é a única biblioteca de gráficos (inclui Sankey); dependências de runtime (Plotly, DuckDB-Wasm) com URL e versão fixas em `web/js/vendor.js`, carregadas sob demanda. O Quarto insere scripts de módulo antes do `<head>` incluído, então import map não funciona.
 - Sem UI kit genérico, gradientes, glassmorphism, sombras e cartões ornamentais. Não adicionar frameworks, mapas, ícones, animações ou bibliotecas sem requisito existente que justifique.
-- As cores de candidatos são **slots editoriais A/B**, nunca identidade político-partidária.
+- As cores de candidatos são **slots editoriais A/B**, nunca identidade político-partidária. Regra nacional: `A` = menor número de urna (03 §2).
+- Sem aba Horários nem logs de urna (fora do escopo).
 - Separar rigorosamente `observed`, `conditional_bound` e `model_estimate`. Não remover avisos de incerteza, cobertura e fonte para melhorar a estética.
 - Não introduzir mapas sem necessidade analítica comprovada.
 - Não acessar feeds de dados ao executar testes offline; arquivos TSE são obtidos por job próprio.
@@ -73,10 +75,10 @@ Em caso de conflito: contratos (03) para schema; método (05) para verificaçõe
 **R calcula; JSON/Parquet transportam; DuckDB-Wasm seleciona; JavaScript apresenta.** O navegador nunca estima, reconcilia nem corrige números.
 
 - **Pipeline (R, `targets`):** TSE → bronze (brutos + URL/sha256/coleta) → silver (IDs e seções normalizados, TSE ≠ IBGE) → gold (reconciliação, LP, modelo, diagnósticos) → `R/web/build_web_bundle()` → `validate_web_bundle()` (gate) → release em staging → só então atualizar `latest.json` (publicação atômica). Entrada única: `Rscript run.R <election_id>`. `data/` é gitignored.
-- **Release:** `latest.json` (único arquivo mutável) → `releases/<release_id>/catalogo.json` → manifesto por município → assets (`resumo.json`, `qualidade.json`, `secoes.parquet`, `limites.parquet`, `cenarios.parquet`, opcionais `fluxos_estimados.parquet`, `horarios.parquet`). O empacotamento físico pode mudar (Parquet agrupado por UF, ADR-04); o frontend só usa caminhos que o manifesto lista.
+- **Release:** `latest.json` (único arquivo mutável) → `releases/<release_id>/catalogo.json` → manifesto por município → assets (`resumo.json`, `qualidade.json`, `secoes.parquet`, `limites.parquet`, `cenarios.parquet`, `fluxos_estimados.parquet`), com JSON por município e Parquet por UF (03 §3); o frontend só usa caminhos que o manifesto lista.
 - **Frontend (`web/`):** páginas `index`, `explorar`, `metodologia`, `dados-e-codigo`, `sobre` (`.qmd` com ponto de montagem); lógica em `web/js/`. `data.js` é o **único** módulo que busca JSON e fala com DuckDB-Wasm; `catalog.js` busca município sem DuckDB; `state.js` mantém o recorte na URL; `format.js`, `evidence.js`, `components.js`, `charts.js` (Plotly), `app.js`, `pages/`.
 - **Carga:** `latest` → catálogo (busca) → manifesto → `resumo.json` (first paint, sem Wasm) → Parquet via DuckDB-Wasm só ao abrir aba de detalhe.
-- **Gates por status:** `manifest.features.*` ∈ `ready | partial | insufficient_data | failed | unavailable` decide quais abas aparecem (ex.: `vote_logs: unavailable` oculta Horários; `ecological_model`: `ready` permite Sankey, `partial` publica só a tabela, conforme 05 §5.7). `validation_status != passed` exige advertência e bloqueio de análises sensíveis. `catalogo.publication_status`: `ready | partial | unavailable`.
+- **Gates por status:** `manifest.features.*` ∈ `ready | partial | insufficient_data | failed | unavailable` decide quais abas aparecem (ex.: `ecological_model`: `ready` permite Sankey, `partial` publica só a tabela, conforme 05 §5.7). `validation_status != passed` exige advertência e bloqueio de análises sensíveis. `catalogo.publication_status`: `ready | partial | unavailable`.
 - **Classe de evidência:** `evidence_type ∈ {observed, conditional_bound, model_estimate}`; limite LP (`min_votes/max_votes` + `assumption_id` + `constraint_scope`) nunca se mistura com intervalo estatístico (`interval_low/estimate/interval_high` + `interval_type`).
 - **Versões rastreadas:** `app_version`, `schema_version` (semver; major em mudança incompatível), `pipeline_git_sha`, `method_version`, `release_id`.
 

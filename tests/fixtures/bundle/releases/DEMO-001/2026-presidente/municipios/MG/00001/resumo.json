@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.3.0",
+  "release_id": "DEMO-001",
+  "election_id": "2026-presidente",
+  "status": "ready",
+  "validation_status": "passed",
+  "location": {
+    "municipio_tse": "00001",
+    "uf": "MG",
+    "name": "VALE SERENO",
+    "display_name": "Vale Sereno"
+  },
+  "finalists": [
+    {
+      "slot": "A",
+      "number": "13",
+      "name": "CANDIDATO A (DEMONSTRAÇÃO)",
+      "round_1_votes": 3361,
+      "round_2_votes": 3664,
+      "delta_votes": 303
+    },
+    {
+      "slot": "B",
+      "number": "22",
+      "name": "CANDIDATO B (DEMONSTRAÇÃO)",
+      "round_1_votes": 2379,
+      "round_2_votes": 2598,
+      "delta_votes": 219
+    }
+  ],
+  "totals": {
+    "round_1": {
+      "eligible": 8232,
+      "turnout": 6543,
+      "abstention": 1689,
+      "valid": 6254,
+      "other": 514,
+      "blank": 117,
+      "null": 172,
+      "invalid": 289
+    },
+    "round_2": {
+      "eligible": 8236,
+      "turnout": 6586,
+      "abstention": 1650,
+      "valid": 6262,
+      "other": 0,
+      "blank": 131,
+      "null": 193,
+      "invalid": 324
+    }
+  },
+  "accounting": {
+    "other_round_1": 514,
+    "delta_turnout": 43,
+    "delta_invalid": 35,
+    "delta_valid": 8,
+    "delta_finalists": 522,
+    "identity_residual": 0,
+    "scope": "all_sections",
+    "evidence_type": "observed"
+  },
+  "coverage": {
+    "sections_total": 26,
+    "sections_installed": 26,
+    "units_in_transition_analysis": 26,
+    "eligible_share_used": 1
+  },
+  "display_notes": [
+    "DADOS FICTÍCIOS. Bundle de demonstração para desenvolvimento; não é resultado eleitoral."
+  ]
+}

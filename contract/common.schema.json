@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "common.schema.json",
+  "title": "Definições comuns do contrato 1.3.0",
+  "definitions": {
+    "schema_version": {"type": "string", "pattern": "^1\\.[0-9]+\\.[0-9]+$"},
+    "release_id": {"type": "string", "pattern": "^(2026-presidente-[0-9]{8}T[0-9]{6}Z|DEMO-[0-9]{3})$"},
+    "election_id": {"type": "string", "enum": ["2026-presidente"]},
+    "municipio_tse": {"type": "string", "pattern": "^[0-9]{5}$"},
+    "uf": {"type": "string", "enum": ["AC","AL","AM","AP","BA","CE","DF","ES","GO","MA","MG","MS","MT","PA","PB","PE","PI","PR","RJ","RN","RO","RR","RS","SC","SE","SP","TO"]},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "timestamp": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+    "git_sha": {"type": "string", "pattern": "^([0-9a-f]{40}|DEMO)$"},
+    "method_version": {"type": "string", "pattern": "^metodo-[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "relpath": {"type": "string", "pattern": "^(?!/)(?!.*\\.\\.)(?!https?:)[A-Za-z0-9_./=-]+$"},
+    "feature_status": {"type": "string", "enum": ["ready","partial","insufficient_data","failed","unavailable"]},
+    "validation_status": {"type": "string", "enum": ["passed","partial","failed"]},
+    "count": {"type": ["integer","null"], "minimum": 0},
+    "share": {"type": ["number","null"], "minimum": 0, "maximum": 1},
+    "slot": {"type": "string", "enum": ["A","B"]},
+    "asset": {
+      "type": "object",
+      "required": ["path","media_type","sha256","bytes"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {"$ref": "#/definitions/relpath"},
+        "media_type": {"type": "string", "enum": ["application/json","application/vnd.apache.parquet"]},
+        "sha256": {"$ref": "#/definitions/sha256"},
+        "bytes": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}

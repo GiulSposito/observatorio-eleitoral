@@ -1,0 +1,156 @@
+{
+  "schema_version": "1.3.0",
+  "release_id": "DEMO-001",
+  "method_version": "metodo-1.0.0",
+  "parameters": {
+    "method_version": "metodo-1.0.0",
+    "populacao": {
+      "tau_minimo_eleitores": 2,
+      "tau_fracao": 0.01
+    },
+    "cobertura_minima": 0.9,
+    "estimacao": {
+      "n_secoes_min": 15,
+      "rhat_max": 1.01,
+      "ess_min": 400,
+      "cadeias": 4,
+      "largura_determinada": {
+        "votos_minimo": 5,
+        "fracao_linha": 0.01
+      },
+      "r_estimado": 0.25,
+      "r_fraco": 0.5,
+      "k_folds": 5,
+      "ganho_preditivo_min": 0.9,
+      "massa_identificada_min": 0.8,
+      "intervalo_nivel": 0.95
+    },
+    "calibracao": {
+      "cobertura_alvo": 0.9,
+      "processos": ["G1", "G2", "G3", "G4"],
+      "estratos": [15, 30, 60, 150],
+      "municipios_por_estrato": 3,
+      "max_unidades": 499,
+      "grade_r": [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.75, 1],
+      "cobertura_fraca": 0.75,
+      "min_celulas": 30
+    },
+    "execucao": {
+      "orcamento_segundos_por_municipio": 1800,
+      "dm_homog": {
+        "alpha_prior": 2,
+        "phi_limites": [
+          0.5,
+          100000
+        ],
+        "piloto": 4000,
+        "iteracoes": 100000,
+        "thin": 50,
+        "extensoes_max": 5,
+        "amostras_contagem": 2000,
+        "max_unidades_ajuste": 400
+      },
+      "usar_ecolrxc": false,
+      "ecolrxc_max_unidades": 60
+    }
+  },
+  "categories": [
+    {
+      "code": "A",
+      "round": 1,
+      "label_ptbr": "Finalista A"
+    },
+    {
+      "code": "B",
+      "round": 1,
+      "label_ptbr": "Finalista B"
+    },
+    {
+      "code": "O",
+      "round": 1,
+      "label_ptbr": "Demais candidatos"
+    },
+    {
+      "code": "I",
+      "round": 1,
+      "label_ptbr": "Brancos e nulos"
+    },
+    {
+      "code": "X",
+      "round": 1,
+      "label_ptbr": "Abstenção"
+    },
+    {
+      "code": "N",
+      "round": 1,
+      "label_ptbr": "Entrada líquida de aptos"
+    },
+    {
+      "code": "A",
+      "round": 2,
+      "label_ptbr": "Finalista A"
+    },
+    {
+      "code": "B",
+      "round": 2,
+      "label_ptbr": "Finalista B"
+    },
+    {
+      "code": "I",
+      "round": 2,
+      "label_ptbr": "Brancos e nulos"
+    },
+    {
+      "code": "X",
+      "round": 2,
+      "label_ptbr": "Abstenção"
+    },
+    {
+      "code": "S",
+      "round": 2,
+      "label_ptbr": "Saída líquida de aptos"
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "pop-liquida-minima",
+      "label_ptbr": "Rotatividade mínima de eleitores",
+      "description_ptbr": "Quando os aptos de uma seção mudam entre os turnos, supõe-se que só a diferença líquida entrou ou saiu, sem eleitores saindo e outros entrando na mesma seção."
+    },
+    {
+      "id": "homogeneidade-municipal",
+      "label_ptbr": "Taxas iguais nas seções do município",
+      "description_ptbr": "O modelo supõe que as taxas de mudança entre categorias são as mesmas em todas as seções do município, com variação aleatória em torno delas."
+    },
+    {
+      "id": "sem-troca-finalistas",
+      "label_ptbr": "Sem troca direta entre os finalistas",
+      "description_ptbr": "Nenhum eleitor do finalista A no 1º turno votou no finalista B no 2º, e vice-versa."
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "base",
+      "assumption_id": "pop-liquida-minima",
+      "label_ptbr": "Só as margens observadas",
+      "description_ptbr": "Limites que decorrem apenas dos totais de cada seção nos dois turnos."
+    },
+    {
+      "id": "sem-troca-finalistas",
+      "assumption_id": "pop-liquida-minima+sem-troca-finalistas",
+      "label_ptbr": "Sem troca direta entre os finalistas",
+      "description_ptbr": "Limites supondo que nenhum eleitor trocou diretamente de um finalista para o outro."
+    }
+  ],
+  "calibration": {
+    "calibration_id": "cal-DEMO-001",
+    "status": "not_run",
+    "target_coverage": 0.9,
+    "results": [],
+    "decision": "Fixture: calibração não executada."
+  },
+  "national_summary": {
+    "municipalities": 4,
+    "note": "DADOS FICTÍCIOS"
+  }
+}

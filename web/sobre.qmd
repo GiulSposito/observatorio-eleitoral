@@ -1,0 +1,31 @@
+---
+title: "Sobre"
+description: "Independência, princípios editoriais e a origem da análise do Caderno Eleitoral."
+---
+
+::: {.prose}
+
+O Caderno Eleitoral é um projeto independente, sem vínculo com o Tribunal Superior Eleitoral, partidos ou candidaturas. Seu objetivo é mostrar, município a município (nesta primeira versão, no Estado de São Paulo), como mudou o resultado da eleição presidencial de 2026 entre o 1º e o 2º turno, separando o que foi observado, o que é matematicamente possível e o que um modelo estima sob hipóteses declaradas.
+
+## Origem da análise
+
+A ideia desta análise vem da [thread de Rômulo Fiúza e Mello (@fiuzaemello)](https://x.com/fiuzaemello/status/2114763737425211824), publicada no X em 26 de outubro de 2026. O Caderno Eleitoral generaliza esse tipo de análise para todos os municípios, com metodologia própria. Método, código e eventuais erros são de responsabilidade do projeto, não do autor da thread.
+
+## Princípios
+
+- Todo número vem de dados oficiais do TSE e mostra sua fonte, sua versão e sua classe de evidência.
+- Dados agregados não identificam voto individual: o site não afirma quem mudou de voto, nem fraude, intenção ou causa.
+- Quando os dados não permitem uma estimativa, o site diz isso — nunca preenche o espaço com zero, com outro município ou com um número não validado.
+- Nenhum município recebe tratamento especial.
+- As cores dos finalistas seguem uma regra neutra (menor número de urna = A) e não representam partidos.
+
+## Contato e correções
+
+Correções e sugestões são bem-vindas pelo [repositório do projeto](https://github.com/GiulSposito/observatorio-eleitoral).
+
+:::
+
+<script type="module">
+import { boot } from "./js/app.js";
+boot("sobre");
+</script>

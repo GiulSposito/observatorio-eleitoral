@@ -48,7 +48,7 @@ Todo número exibido pela aplicação vem do pipeline R a partir de dados oficia
 
 **Prompt:**
 
-> Implemente a estimação de `docs/05-metodo-analitico.md` §5: `md-bayes` e `lphom` (e `ecolRxC`, se viável) sobre as unidades do próprio município, sem pooling entre municípios; validade computacional; grau de identificação por célula; checagem preditiva com validação cruzada; calibração por simulação com os processos G1–G4 antes de fixar os limiares de `config/metodo.yml`. Publique `fluxos_estimados.parquet` com a média posterior das contagens, a classe de identificação e a faixa entre métodos, e `features.ecological_model` conforme §5.7. Sankey só com `ready`, acompanhado da matriz tabular. Não assuma que bootstrap simples resolve toda incerteza.
+> Implemente a estimação de `docs/05-metodo-analitico.md` §5: `dm-homog` e `lphom` (e `ecolRxC`, se viável) sobre as unidades do próprio município, sem pooling entre municípios; validade computacional; grau de identificação por célula; checagem preditiva com validação cruzada; calibração por simulação com os processos G1–G4 antes de fixar os limiares de `config/metodo.yml`. Publique `fluxos_estimados.parquet` com a média posterior das contagens, a classe de identificação e a faixa entre métodos, e `features.ecological_model` conforme §5.7. Sankey só com `ready`, acompanhado da matriz tabular. Não assuma que bootstrap simples resolve toda incerteza.
 
 **Gate:** relatório de calibração com cobertura empírica ≥ 90% para células `estimated` nos processos G2–G4, ou decisão registrada de publicar só limites; regras de 05 §5.7 cobertas por testes; nenhuma alegação de transferência individual.
 

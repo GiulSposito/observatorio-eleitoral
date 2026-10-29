@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.3.0",
+  "release_id": "DEMO-001",
+  "election_id": "2026-presidente",
+  "municipio_tse": "00003",
+  "uf": "SC",
+  "name": "PORTO DAS ÁGUAS",
+  "generated_at": "2026-10-27T18:00:00Z",
+  "validation_status": "partial",
+  "features": {
+    "summary": "ready",
+    "sections": "ready",
+    "bounds": "ready",
+    "scenarios": "ready",
+    "ecological_model": "partial"
+  },
+  "assets": {
+    "summary": {
+      "path": "2026-presidente/municipios/SC/00003/resumo.json",
+      "media_type": "application/json",
+      "sha256": "91e228a5d360a24d9e3fac1e36f3e3110a971b598e4d103e1f2b3e00a36cb125",
+      "bytes": 1605
+    },
+    "quality": {
+      "path": "2026-presidente/municipios/SC/00003/qualidade.json",
+      "media_type": "application/json",
+      "sha256": "a45d6899ace8a63d9ab1bd406cbff558ce8385fe7b7bd2b1d931e8398f00dedb",
+      "bytes": 2371
+    },
+    "sections": {
+      "path": "2026-presidente/uf=SC/secoes.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "0f0e34d396578e703b9e2aa7927d134abc6499e96194be7012ab578330e2c9c6",
+      "bytes": 8402
+    },
+    "bounds": {
+      "path": "2026-presidente/uf=SC/limites.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "ea7b5f70b5ee780b3d2d0f12472f8c3e4474d3e0268b8f93c052af825339c102",
+      "bytes": 3738
+    },
+    "scenarios": {
+      "path": "2026-presidente/uf=SC/cenarios.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "39309fd099882af760f265ee076f89e66464c5417916cd1e133b3bbbb1d90032",
+      "bytes": 1404
+    },
+    "flows": {
+      "path": "2026-presidente/uf=SC/fluxos_estimados.parquet",
+      "media_type": "application/vnd.apache.parquet",
+      "sha256": "3e81f1ac55ab9c81e72c3df3b13f18f4e905d7479509b57190dec2ec02db6f94",
+      "bytes": 5580
+    }
+  },
+  "sources": [
+    {
+      "provider": "FIXTURE",
+      "dataset": "Bundle sintético de demonstração",
+      "file": "make_bundle.R",
+      "source_url": null,
+      "collected_at": null,
+      "source_sha256": null,
+      "bytes": null
+    }
+  ],
+  "pipeline_git_sha": "DEMO",
+  "method_version": "metodo-1.0.0"
+}

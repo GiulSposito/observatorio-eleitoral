@@ -11,8 +11,9 @@ Este documento responde aos achados críticos C1–C4 (e ao A1) de `analise-crit
 
 - **Eleição:** Presidente da República, 2026. 1º turno em 4 de outubro e 2º turno em 25 de outubro
   de 2026.
-- **Unidade de análise publicada:** município. São todos os municípios do país, porque a eleição
-  presidencial teve 2º turno em todos eles.
+- **Unidade de análise publicada:** município. A eleição presidencial teve 2º turno em todos os
+  municípios. **A primeira versão publicada cobre só o Estado de São Paulo (645 municípios)**
+  (`incluir_ufs` em `config/eleicoes/2026-presidente.yml`); a calibração usa margens de SP.
 - **Fora do escopo:** outros cargos e outras eleições; votos no exterior (UF `ZZ`), que não
   pertencem a município.
 - **Nenhuma outra eleição** é usada, nem para desenvolvimento ou calibração. A calibração
@@ -48,9 +49,13 @@ seções difere entre turnos, a unidade é o conjunto agregado (§2.2). Cada uni
 `N` e `S` são pseudo-categorias de população (§3). Com elas, as somas de linhas e colunas fecham:
 `E₁ + max(0, E₂ − E₁) = E₂ + max(0, E₁ − E₂)`.
 
-Votos com tratamento especial do TSE (votos anulados por decisão judicial, votação por cédula,
-seções anuladas) têm sua categoria definida no teste exploratório com os arquivos de 2026, antes do
-contrato 1.x ser congelado (achado M2). Até lá, entram como verificação pendente, não como `I`.
+Votos com tratamento especial: no arquivo de detalhe de 2026 (gerado em 26/10/2026), presidente não
+tem votos de legenda nem votos anulados apurados em separado, e nenhuma seção está anulada. As 41
+seções não instaladas ficam fora (`not_installed`). Boletins recuperados (RED), urna de contingência e
+sistema de apuração são contagens normais da seção. Votos em candidato sem destinação válida na
+totalização oficial (nulos técnicos; em 2026, 5.123 votos no número 28) entram em `I`, como faz o TSE.
+Se uma nova versão do arquivo trouxer anulados apurados em separado, eles entram como verificação
+pendente.
 
 ---
 
@@ -141,6 +146,9 @@ Antes de fixar `τ`, medir em 2026 a distribuição de `D` por seção, separand
 voto em trânsito. `D` depende só dos aptos, não dos votos, então medir e publicar na mesma eleição
 não contamina a análise. A distribuição é publicada na página de metodologia.
 
+Medição preliminar (arquivo de detalhe de 26/10/2026, 499.248 seções pareadas): 88,8% com `D = 0`,
+10,6% com `|D| ≤ 2`, 0,5% com `|D|` entre 3 e 10 e 237 seções com `|D| > 10`.
+
 ---
 
 ## 4. Limites determinísticos
@@ -186,21 +194,43 @@ não passa vira "não identificado", não um número.
 
 | ID | Família | Saída |
 |---|---|---|
-| `md-bayes` | Multinomial-Dirichlet hierárquico (Rosen et al., `eiPack::ei.MD.bayes`) | média posterior das contagens e intervalo de credibilidade de 95% |
+| `dm-homog` | Bayesiano com taxas homogêneas no município e sobredispersão Dirichlet-multinomial | média posterior das contagens e intervalo de credibilidade de 95% |
 | `lphom` | Programação linear sob homogeneidade (`lphom`) | matriz pontual |
-| `ecolrxc` (opcional) | Estrutura latente de Thomsen (`ecolRxC`) | matriz pontual |
+| `ecolrxc` (desligado) | Estrutura latente de Thomsen (`ecolRxC`) | matriz pontual; custo de ~0,7 s por unidade, fora do orçamento |
 
-A **estimativa publicada** é a média posterior das contagens do `md-bayes`. Ela fecha as margens
-por linearidade da esperança. A mediana posterior nunca forma matriz pontual (achado A1) e só
-aparece como coluna de uma célula. Os outros métodos formam a **faixa entre métodos** de cada
-célula.
+**Modelo `dm-homog`.** Uma matriz de taxas `P` (uma linha por origem) vale para todas as unidades do
+município. As margens de destino de cada unidade seguem uma Dirichlet-multinomial com média
+(composição de origem da unidade) × `P` e sobredispersão `φ`, limitada a [0,5; 10⁵]. Prior
+Dirichlet(2) em cada linha de `P` (cerca de 2 pseudo-votos por célula) e log `φ` ~ Normal(log 50, 3).
+`N → S` é zero estrutural.
+
+**Contagens publicadas.** Para cada amostra de `P`, a tabela interna de cada unidade é obtida por
+ajuste proporcional iterativo (IPF) às duas margens da unidade, a partir da semente
+`o_ir × P[r, c]`; a contagem municipal é a soma dessas tabelas. Assim, cada amostra fecha as margens de
+origem e de destino do município e fica dentro dos limites de Fréchet (§4.1) por construção. A
+**estimativa publicada** é a média posterior dessas contagens. A mediana posterior nunca forma
+matriz pontual (achado A1) e só aparece como coluna de uma célula. Os outros métodos formam a
+**faixa entre métodos** de cada célula.
+
+O `md-bayes` hierárquico de Rosen et al. (`eiPack::ei.MD.bayes`), previsto na versão anterior deste
+documento, não convergiu nos dados de 2026 (R-hat entre 1,05 e 4,1 em todos os municípios testados,
+inclusive com cadeias 5× mais longas) e foi substituído; o estudo está em `tests/benchmark/RESULTS.md`.
 
 ### 5.3 Validade computacional
 
-- `md-bayes`: R-hat ≤ `rhat_max` e ESS ≥ `ess_min` em todas as contagens municipais; pelo menos 4
-  cadeias com inícios dispersos.
+- `dm-homog`: máximo a posteriori por L-BFGS-B a partir de 3 inícios; piloto de passeio aleatório
+  que estima a covariância da proposta; pelo menos 4 cadeias iniciadas em torno do máximo e estendidas
+  por rodadas até atingir os limiares ou o orçamento por município. R-hat ≤ `rhat_max` e ESS ≥
+  `ess_min` nas contagens municipais de todas as células **não determinadas** (§5.4): nas células
+  determinadas a interface mostra o próprio limite e a estimativa não pesa em nenhuma decisão.
+- **Escala.** Acima de `max_unidades_ajuste` unidades (400), a verossimilhança é avaliada em grupos de
+  unidades de composição parecida: as unidades são ordenadas pela participação do finalista A no 1º
+  turno (arredondada a 1 ponto percentual) e depois pela de abstenção, e somadas em blocos
+  consecutivos de tamanho igual. Sob a hipótese de homogeneidade, somar unidades preserva `P`; a
+  perda é de informação, não de validade. As contagens publicadas continuam calculadas nas unidades
+  originais (IPF). O `lphom` usa a mesma regra acima de 800 unidades.
 - `lphom` e `ecolrxc`: solução ótima ou convergida, reportada.
-- As margens fecham dentro da tolerância numérica.
+- Custo previsto acima do orçamento por município: `failed`, com motivo.
 
 Falha computacional: `model_status = failed`.
 
@@ -209,9 +239,12 @@ Falha computacional: `model_status = failed`.
 Para cada célula `i → j` do município:
 
 - `W` = largura do limite determinístico municipal (§4.1, sem cenários);
-- `P` = largura do intervalo de credibilidade de 95% do `md-bayes`;
+- `P` = largura do intervalo de credibilidade de 95% do `dm-homog`;
 - `F` = faixa entre os métodos (maior estimativa pontual menos a menor);
 - `R = max(P, F) ÷ W`.
+
+O intervalo publicado é cortado nos limites determinísticos da célula. Com as contagens por IPF ele já
+fica dentro deles; o corte só garante a regra para qualquer motor.
 
 | Classe | Condição | O que a interface mostra |
 |---|---|---|
@@ -229,6 +262,9 @@ ponderado por aptos (`Σⱼ |previsto − observado| ÷ 2E`). O **modelo nulo** 
 distribuição municipal do 2º turno. A checagem passa se `erro_modelo ≤ ganho_preditivo_min ×
 erro_nulo`.
 
+O ajuste dentro da validação cruzada usa o `lphom`, que é rápido: a checagem testa a hipótese de
+homogeneidade, não um estimador específico.
+
 A checagem testa se a hipótese de homogeneidade explica a variação entre seções. Não testa os
 fluxos cruzados diretamente, por isso existe a calibração de §5.6.
 
@@ -245,8 +281,19 @@ Antes da primeira publicação de estimativas, uma simulação calibra os limiar
    - G4, G2 mais mudança líquida de aptos.
 3. Rodar o pipeline completo e medir, por classe de identificação e estrato, a cobertura dos
    intervalos e o erro absoluto.
-4. Fixar `r_estimado`, `r_fraco`, `n_secoes_min` e `ganho_preditivo_min` de modo que células
-   `estimated` tenham **cobertura empírica ≥ 90% nos processos G2–G4**.
+4. Fixar a **faixa de tamanho validada** `[n_secoes_min, n_secoes_max)`: os estratos contíguos, a
+   partir do primeiro cuja cobertura nas células estimadas de G2–G4 é ≥ 90%, até o primeiro estrato
+   seguinte que não atinge 90% (exclusivo; sem teto se todos atingem). Estrato sem célula estimada não
+   conta como validado. A cobertura não cresce necessariamente com o tamanho: com taxas homogêneas, a
+   posterior de um município grande fica estreita demais quando as taxas variam entre seções.
+5. Dentro dessa faixa, fixar `r_estimado` como o maior limiar da grade com **cobertura empírica ≥ 90%
+   nos processos G2–G4** nas células com `R` até ele (e pelo menos 30 células) e `r_fraco` como o
+   maior limiar, a partir de `r_estimado`, com cobertura ≥ 75% no mesmo conjunto.
+   `ganho_preditivo_min` não é recalibrado nesta versão: o relatório mostra a taxa de aprovação da
+   checagem preditiva por processo.
+
+A amostra da calibração vem dos municípios publicados na release (na primeira versão, os de São
+Paulo), estratificados por número de unidades e limitados a 499 unidades por custo.
 
 Se nenhum conjunto de limiares atingir a meta, o produto publica **apenas limites**, e isso é
 comunicado como resultado metodológico. O relatório de calibração tem `calibration_id`, é
@@ -260,6 +307,7 @@ versionado com `method_version` e aparece na página de metodologia.
 | `partial` | §5.3 ok, mas falha algum dos demais critérios de `ready` | tabela com classes; sem Sankey |
 | `insufficient_data` | unidades < `n_secoes_min`, cobertura insuficiente ou tipo de seção não identificável | só limites |
 | `failed` | falha computacional | só limites, com o motivo |
+| `unavailable` | calibração reprovada, unidades ≥ `n_secoes_max` (fora da faixa validada) ou totais divergentes (V3) | só limites, com o motivo |
 
 **Massa de mudança:** a soma das estimativas fora da retenção (todas as células, exceto `A→A`,
 `B→B`, `I→I` e `X→X`).
@@ -279,6 +327,7 @@ partida e os marcados com "simulação" são substituídos pelos da calibração
 | `tau_populacao` | `max(2, 1% de E₁)` | distribuição de `D` em 2026 (§3.4) |
 | `cobertura_minima` | 0,90 dos aptos do 1º turno | fixo |
 | `n_secoes_min` | 15 | simulação |
+| `n_secoes_max` | sem teto | simulação (limite superior da faixa validada, §5.6) |
 | `rhat_max` | 1,01 | fixo |
 | `ess_min` | 400 | fixo |
 | `largura_determinada` | `max(5 votos, 1% da linha)` | fixo |
