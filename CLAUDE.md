@@ -8,13 +8,14 @@ Este arquivo é a referência obrigatória para agentes de código neste reposit
 
 ## Estado atual do repositório
 
-Ainda **não há pipeline nem site**. Existem três áreas, que não se misturam:
+Pipeline e site implementados (Fases 0–4) e publicados em https://giulsposito.github.io/observatorio-eleitoral/ (branch `gh-pages`). A primeira release cobre os 645 municípios de SP.
 
-- `docs/` — documentação (visão de origem, arquitetura, guia visual, especificação, contratos, roteiro, método analítico, revisão crítica).
-- `web/` — código da aplicação; por enquanto só `web/css/design-tokens.css`.
-- `examples/` — referência que a aplicação nunca lê: `contrato/*.demo.json` (`release_id: DEMO-001`, município `00000`) e `preview/` (prévia HTML estática da identidade).
+- `R/`, `_targets.R`, `run.R`, `config/`, `contract/`: pipeline TSE → bronze/silver/gold → método → bundle validado (`R/README.md`).
+- `web/`: site Quarto; `web/data/` recebe o bundle local (gitignored). `web/scripts/use-fixture.sh` troca pelo bundle sintético `DEMO-001`, contra o qual rodam os E2E.
+- `tests/`: `testthat`, `tests/web/*.check.mjs`, `tests/e2e/` (Playwright + axe), `tests/fixtures/`, `tests/benchmark/` (custos e calibração do motor).
+- `docs/`: especificação e método; `examples/`: referência que a aplicação nunca lê.
 
-`R/`, `config/`, `contract/`, `tests/`, `_targets.R`, `run.R` e `renv.lock` nascem nas Fases 0–1; árvore-alvo em `docs/arquitetura.md` §10. `.claude/skills/` traz skills de R do projeto (ex.: `tdd-workflow`, `r-style-guide`, `dm-relational`).
+Resultado do método na release de SP: calibração aprovada só na faixa de 15 a 149 seções comparáveis (`n_secoes_max = 150`; acima disso a cobertura ficou entre 40% e 75%). Status de `ecological_model`: 170 `ready`, 207 `failed` (sem convergência do dm-homog), 154 `insufficient_data`, 114 `unavailable`. Melhorar a estimação (taxas que variam entre seções, HMC) é o próximo incremento.
 
 ## Missão
 

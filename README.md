@@ -14,7 +14,12 @@ O crédito também aparece na aplicação: no rodapé de todas as páginas e na 
 
 ## Estado atual
 
-Ainda não há pipeline nem site. O repositório tem a especificação, os tokens de design e exemplos de referência. A implementação segue as fases de [`docs/04-roteiro-implementacao-claude-code.md`](docs/04-roteiro-implementacao-claude-code.md), começando pela Fase 0.
+Publicado em **https://giulsposito.github.io/observatorio-eleitoral/**. A primeira release cobre os 645 municípios do Estado de São Paulo, com dados oficiais do TSE do 1º e do 2º turno.
+
+- Fatos observados e limites saem para todos os municípios; a verificação V1–V3 passou em todos.
+- A estimativa de fluxos só é publicada onde a calibração por simulação a validou: municípios com 15 a 149 seções comparáveis. Nos maiores, a cobertura dos intervalos ficou entre 40% e 75%, abaixo da meta de 90%, e o site mostra só os limites, com o motivo.
+- Na release atual, 170 municípios têm estimativa completa com Sankey; 207 ficaram sem estimativa porque o modelo não convergiu; 154 têm menos de 15 seções; 114 estão acima da faixa validada.
+- Próximo incremento: modelo com taxas que variam entre seções (HMC), para estender a estimativa aos municípios grandes, e os demais estados.
 
 ## Organização
 
@@ -30,14 +35,16 @@ obsEleitoral/
 │   ├── 04-roteiro-implementacao-claude-code.md
 │   ├── 05-metodo-analitico.md     verificações, população entre turnos, limites, estimação
 │   └── analise-critica-metodologia.md
-├── web/                           código da aplicação (site Quarto)
-│   └── css/design-tokens.css      tokens canônicos da identidade
+├── R/ · _targets.R · run.R        pipeline em R (TSE → bronze/silver/gold → método → bundle)
+├── config/ · contract/            parâmetros do método e contrato executável (JSON Schema, marts)
+├── tests/                         testthat, checks JS, E2E (Playwright), fixtures sintéticas
+├── web/                           site Quarto: páginas .qmd, js/, css/
 └── examples/                      referência; nada aqui é lido pela aplicação nem entra em release
     ├── contrato/                  *.demo.json — exemplos fictícios dos contratos do 03
     └── preview/                   prévia HTML estática da identidade + screenshots
 ```
 
-`R/`, `config/`, `contract/`, `tests/`, `_targets.R`, `run.R` e `renv.lock` nascem nas fases seguintes; a árvore completa está em [`docs/arquitetura.md`](docs/arquitetura.md) §10. `data/` (bronze/silver/gold/releases) e o bundle local `web/data/` nunca são versionados.
+Pipeline em `R/` (`_targets.R`, `run.R`, `config/`, `contract/`, `renv.lock`; ver [`R/README.md`](R/README.md)), testes em `tests/`; a árvore completa está em [`docs/arquitetura.md`](docs/arquitetura.md) §10. `data/` (bronze/silver/gold/releases) e o bundle local `web/data/` nunca são versionados.
 
 ## Documentos
 
@@ -55,14 +62,12 @@ obsEleitoral/
 ## Como começar
 
 1. Leia `CLAUDE.md` e os documentos acima.
-2. Peça ao Claude Code a **Fase 0** do roteiro: site Quarto em `web/` com os tokens de `web/css/design-tokens.css`, usando `examples/preview/identidade-preview.html` como referência visual e um bundle sintético de teste. Nenhum número real nesta fase.
-3. Depois: Fase 1A (ingestão factual em R), 1B (integração com DuckDB-Wasm), limites, inferência e escala nacional.
+2. `Rscript -e 'renv::restore()'` e, para gerar uma release, `Rscript run.R 2026-presidente`: baixa os arquivos do TSE, roda o pipeline e copia o bundle validado para `web/data/`. A release de SP leva cerca de 2 h em 8 núcleos, quase todo esse tempo gasto na calibração e na estimação.
+3. `quarto preview web` para ver o site local. Para desenvolver sem dados reais, `web/scripts/use-fixture.sh` copia o bundle sintético `DEMO-001`.
 
 Para ver a prévia de identidade, abra `examples/preview/identidade-preview.html` no navegador a partir do repositório (ela carrega os tokens de `web/css/`). Os números e as cidades da prévia são fictícios; ela não consulta o TSE, não inicializa DuckDB e não implementa modelagem.
 
 ## Comandos
-
-Os scripts ainda não existem; estes são os comandos-alvo definidos na arquitetura.
 
 ```bash
 Rscript -e 'renv::restore()'
@@ -72,6 +77,7 @@ Rscript -e 'testthat::test_dir("tests/testthat")'
 for f in tests/web/*.check.mjs; do node "$f"; done
 quarto preview web                              # desenvolvimento, com web/data/ local
 quarto render web                               # gera web/_site/
+quarto publish gh-pages web                     # publica no GitHub Pages
 ```
 
 ## Limitações deliberadas
