@@ -31,6 +31,7 @@ calibracao:
   min_celulas: 30                  # células mínimas para aceitar um limiar
 # Parâmetros de execução (não são limiares do 05 §6). Fixados pelo benchmark (tests/benchmark/RESULTS.md).
 execucao:
+  workers: 8                       # processos paralelos na calibração e na estimação (mclapply)
   orcamento_segundos_por_municipio: 1800   # custo previsto acima disso -> motor principal "failed" com motivo
   dm_homog:                        # motor principal (05 §5.2)
     alpha_prior: 1                 # Dirichlet(1) (uniforme) nas linhas; ver calibração em tests/benchmark

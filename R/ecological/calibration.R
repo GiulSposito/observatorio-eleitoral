@@ -6,9 +6,9 @@
 #   G4 = G2 + mudança líquida de aptos (pseudo-categorias N/S).
 # Roda o mesmo núcleo de estimação (ec_estimate_core) e mede, por célula, cobertura do intervalo e erro.
 # Escolhe r_estimado (maior limiar com cobertura >= alvo em G2–G4 nas células "estimated"), r_fraco
-# (maior limiar com cobertura >= cobertura_fraca) e n_secoes_min (menor estrato a partir do qual a
-# cobertura das células estimated atinge o alvo). Se nada atingir o alvo, status "failed" e a decisão
-# é publicar só limites.
+# (maior limiar com cobertura >= cobertura_fraca), ambos dentro da faixa de tamanho validada, e essa faixa
+# [n_secoes_min, n_secoes_max): estratos contíguos cuja cobertura das células estimated atinge o alvo
+# (ec_calibration_range). Se nada atingir o alvo, status "failed" e a decisão é publicar só limites.
 
 ec_calibration_base_P <- function() {
   P0 <- rbind(
@@ -115,45 +115,47 @@ ec_calibrate <- function(margins_t1, params, seed) {
     s[sample.int(nrow(s), min(nrow(s), cal$municipios_por_estrato)), , drop = FALSE]
   }))
 
-  cells <- list()
-  fits <- list()
-  k <- 0L
-  for (i in seq_len(nrow(sample_mun))) {
+  # Cada ajuste tem semente própria (seed + k), então rodar em paralelo não muda o resultado.
+  procs <- unlist(cal$processos)
+  tasks <- expand.grid(g = seq_along(procs), i = seq_len(nrow(sample_mun)))
+  tasks$k <- seq_len(nrow(tasks))
+  run_task <- function(t) {
+    i <- tasks$i[t]; g <- procs[tasks$g[t]]; k <- tasks$k[t]
     mun <- sample_mun$municipio_tse[i]
     u1 <- margins_t1[margins_t1$municipio_tse == mun, , drop = FALSE]
-    for (g in unlist(cal$processos)) {
-      k <- k + 1L
-      sim <- ec_simulate_t2(u1, g, seed + k)
-      m <- ec_margins(sim$units)
-      core <- ec_estimate_core(m$O, m$D, params, seed + 1000L + k)
-      pc_pass <- NA
-      if (identical(core$status, "ok")) {
-        pc <- ec_predictive_check(m$O, m$D, est$k_folds, seed + 2000L + k)
-        pc_pass <- pc$model_error <= est$ganho_preditivo_min * pc$null_error
-      }
-      fits[[k]] <- tibble::tibble(municipio_tse = mun, n_units = nrow(u1), stratum = sample_mun$stratum[i], process = g,
-                                  status = core$status, reason = core$reason %||% NA_character_,
-                                  rhat_max = core$md$diagnostics$rhat_max %||% NA_real_,
-                                  predictive_pass = pc_pass, runtime_s = core$md$runtime_s %||% NA_real_)
-      if (identical(core$status, "ok")) {
-        cc <- core$cells
-        truth <- mapply(function(o, d) sim$truth[o, d], cc$origin, cc$destination)
-        row_total <- colSums(m$O)[cc$origin]
-        det_lim <- pmax(est$largura_determinada$votos_minimo, est$largura_determinada$fracao_linha * row_total)
-        cells[[k]] <- tibble::tibble(
-          municipio_tse = mun, stratum = sample_mun$stratum[i], process = g,
-          origin = cc$origin, destination = cc$destination, truth = truth,
-          estimate = cc$estimate_votes, low = cc$interval_low, high = cc$interval_high,
-          W = cc$bounds_max - cc$bounds_min, R = cc$identification_ratio,
-          determined = (cc$bounds_max - cc$bounds_min) <= det_lim,
-          covered = truth >= cc$interval_low - 0.5 & truth <= cc$interval_high + 0.5,
-          abs_err = abs(cc$estimate_votes - truth)
-        )
-      }
+    sim <- ec_simulate_t2(u1, g, seed + k)
+    m <- ec_margins(sim$units)
+    core <- ec_estimate_core(m$O, m$D, params, seed + 1000L + k)
+    pc_pass <- NA
+    if (identical(core$status, "ok")) {
+      pc <- ec_predictive_check(m$O, m$D, est$k_folds, seed + 2000L + k)
+      pc_pass <- pc$model_error <= est$ganho_preditivo_min * pc$null_error
     }
+    fit <- tibble::tibble(municipio_tse = mun, n_units = nrow(u1), stratum = sample_mun$stratum[i], process = g,
+                          status = core$status, reason = core$reason %||% NA_character_,
+                          rhat_max = core$md$diagnostics$rhat_max %||% NA_real_,
+                          predictive_pass = pc_pass, runtime_s = core$md$runtime_s %||% NA_real_)
+    cell <- NULL
+    if (identical(core$status, "ok")) {
+      cc <- core$cells
+      truth <- mapply(function(o, d) sim$truth[o, d], cc$origin, cc$destination)
+      row_total <- colSums(m$O)[cc$origin]
+      det_lim <- pmax(est$largura_determinada$votos_minimo, est$largura_determinada$fracao_linha * row_total)
+      cell <- tibble::tibble(
+        municipio_tse = mun, stratum = sample_mun$stratum[i], process = g,
+        origin = cc$origin, destination = cc$destination, truth = truth,
+        estimate = cc$estimate_votes, low = cc$interval_low, high = cc$interval_high,
+        W = cc$bounds_max - cc$bounds_min, R = cc$identification_ratio,
+        determined = (cc$bounds_max - cc$bounds_min) <= det_lim,
+        covered = truth >= cc$interval_low - 0.5 & truth <= cc$interval_high + 0.5,
+        abs_err = abs(cc$estimate_votes - truth)
+      )
+    }
+    list(fit = fit, cells = cell)
   }
-  fits <- dplyr::bind_rows(fits)
-  cells <- dplyr::bind_rows(cells)
+  out <- ec_parallel_map(seq_len(nrow(tasks)), run_task, params$execucao$workers %||% 1L)
+  fits <- dplyr::bind_rows(lapply(out, `[[`, "fit"))
+  cells <- dplyr::bind_rows(lapply(out, `[[`, "cells"))
   if (!nrow(cells)) {
     cells <- tibble::tibble(municipio_tse = character(), stratum = character(), process = character(), origin = character(),
                             destination = character(), truth = double(), estimate = double(), low = double(), high = double(),
@@ -162,7 +164,11 @@ ec_calibrate <- function(margins_t1, params, seed) {
 
   hetero <- c("G2", "G3", "G4")
   grid <- unlist(cal$grade_r)
-  pool <- cells[!cells$determined & !is.na(cells$R) & cells$process %in% hetero, , drop = FALSE]
+  pool <- cells[!cells$determined & !is.na(cells$R) & cells$R <= max(grid) & cells$process %in% hetero, , drop = FALSE]
+  # Faixa de tamanho validada: os limiares de R só valem dentro dela (pool restrito)
+  size_range <- ec_calibration_range(pool, cal$cobertura_alvo)
+  pool <- pool[ec_stratum_lower(pool$stratum) >= size_range$n_min & ec_stratum_lower(pool$stratum) < size_range$n_max, ,
+               drop = FALSE]
   grid_tab <- tibble::tibble(
     r = grid,
     cells = vapply(grid, function(t) sum(pool$R <= t), integer(1)),
@@ -202,27 +208,52 @@ ec_calibrate <- function(margins_t1, params, seed) {
   r_est <- max(ok_est)
   r_weak <- max(c(r_est, ok_weak[ok_weak >= r_est]))
   report <- report_for(r_est)
-  # n_secoes_min: menor limite inferior de estrato a partir do qual todos os estratos atingem o alvo
-  by_stratum <- report[report$process %in% hetero, ] |>
-    dplyr::group_by(stratum) |>
-    dplyr::summarise(cov = stats::weighted.mean(coverage_estimated, cells_estimated, na.rm = TRUE), .groups = "drop")
-  lower <- as.numeric(sub("[-+].*$", "", by_stratum$stratum))
-  ord <- order(lower)
-  good <- !is.na(by_stratum$cov[ord]) & by_stratum$cov[ord] >= cal$cobertura_alvo
-  n_min <- est$n_secoes_min
-  if (any(good)) {
-    first_ok <- max(which(!good), 0L) + 1L
-    if (first_ok <= length(good)) n_min <- max(est$n_secoes_min, lower[ord][first_ok])
-  }
+  n_min <- max(est$n_secoes_min, size_range$n_min)
+  n_max <- size_range$n_max
   attr(report, "grid") <- grid_tab
   attr(report, "fits") <- fits
   list(
     report = report,
-    thresholds = list(r_estimado = r_est, r_fraco = r_weak, n_secoes_min = n_min, calibration_id = calibration_id,
-                      calibration_status = "passed"),
+    thresholds = list(r_estimado = r_est, r_fraco = r_weak, n_secoes_min = n_min,
+                      n_secoes_max = if (is.finite(n_max)) n_max else NULL,
+                      calibration_id = calibration_id, calibration_status = "passed"),
     calibration_id = calibration_id, status = "passed",
-    decision = sprintf("r_estimado = %.2f, r_fraco = %.2f, n_secoes_min = %d (cobertura-alvo %.0f%% em G2–G4).",
-                       r_est, r_weak, as.integer(n_min), 100 * cal$cobertura_alvo),
+    decision = sprintf("r_estimado = %.2f, r_fraco = %.2f, n_secoes_min = %d%s (cobertura-alvo %.0f%% em G2–G4).",
+                       r_est, r_weak, as.integer(n_min),
+                       if (is.finite(n_max)) sprintf(", n_secoes_max = %d", as.integer(n_max)) else "",
+                       100 * cal$cobertura_alvo),
     runtime_s = proc.time()[["elapsed"]] - t_start
   )
+}
+
+ec_stratum_lower <- function(stratum) as.numeric(sub("[-+].*$", "", stratum))
+
+# Faixa de tamanho em que a estimação foi validada (05 §5.6): estratos contíguos, a partir do primeiro
+# que atinge a cobertura-alvo nas células estimadas de G2–G4, até o primeiro que não atinge (exclusivo).
+# Estrato sem célula estimada não conta como validado. Sem estrato validado: n_min = n_max = Inf.
+ec_calibration_range <- function(pool, alvo) {
+  if (!nrow(pool)) return(list(n_min = Inf, n_max = Inf))
+  cov <- tapply(pool$covered, pool$stratum, mean)
+  lower <- ec_stratum_lower(names(cov))
+  ord <- order(lower)
+  good <- cov[ord] >= alvo
+  if (!any(good)) return(list(n_min = Inf, n_max = Inf))
+  first <- which(good)[1]
+  after <- which(!good & seq_along(good) > first)
+  list(n_min = lower[ord][first], n_max = if (length(after)) lower[ord][after[1]] else Inf)
+}
+
+# lapply com processos bifurcados quando workers > 1 (mclapply não existe no Windows).
+ec_parallel_map <- function(x, f, workers) {
+  if (workers > 1L && .Platform$OS.type == "unix") {
+    # o aviso genérico do mclapply sobre erros é substituído pelo erro do próprio processo
+    out <- withCallingHandlers(
+      parallel::mclapply(x, f, mc.cores = workers, mc.preschedule = FALSE),
+      warning = function(w) if (grepl("resulted in an error", conditionMessage(w))) invokeRestart("muffleWarning"))
+    bad <- vapply(out, inherits, logical(1), "try-error")
+    if (any(bad)) stop(conditionMessage(attr(out[[which(bad)[1]]], "condition")))
+    out
+  } else {
+    lapply(x, f)
+  }
 }

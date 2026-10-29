@@ -281,11 +281,16 @@ Antes da primeira publicação de estimativas, uma simulação calibra os limiar
    - G4, G2 mais mudança líquida de aptos.
 3. Rodar o pipeline completo e medir, por classe de identificação e estrato, a cobertura dos
    intervalos e o erro absoluto.
-4. Fixar `r_estimado` como o maior limiar da grade com **cobertura empírica ≥ 90% nos processos
-   G2–G4** nas células com `R` até ele (e pelo menos 30 células); `r_fraco` como o maior limiar, a
-   partir de `r_estimado`, com cobertura ≥ 75% no mesmo conjunto; `n_secoes_min` como o menor limite
-   de estrato a partir do qual todos os estratos atingem 90%. `ganho_preditivo_min` não é recalibrado
-   nesta versão: o relatório mostra a taxa de aprovação da checagem preditiva por processo.
+4. Fixar a **faixa de tamanho validada** `[n_secoes_min, n_secoes_max)`: os estratos contíguos, a
+   partir do primeiro cuja cobertura nas células estimadas de G2–G4 é ≥ 90%, até o primeiro estrato
+   seguinte que não atinge 90% (exclusivo; sem teto se todos atingem). Estrato sem célula estimada não
+   conta como validado. A cobertura não cresce necessariamente com o tamanho: com taxas homogêneas, a
+   posterior de um município grande fica estreita demais quando as taxas variam entre seções.
+5. Dentro dessa faixa, fixar `r_estimado` como o maior limiar da grade com **cobertura empírica ≥ 90%
+   nos processos G2–G4** nas células com `R` até ele (e pelo menos 30 células) e `r_fraco` como o
+   maior limiar, a partir de `r_estimado`, com cobertura ≥ 75% no mesmo conjunto.
+   `ganho_preditivo_min` não é recalibrado nesta versão: o relatório mostra a taxa de aprovação da
+   checagem preditiva por processo.
 
 A amostra da calibração vem dos municípios publicados na release (na primeira versão, os de São
 Paulo), estratificados por número de unidades e limitados a 499 unidades por custo.
@@ -302,6 +307,7 @@ versionado com `method_version` e aparece na página de metodologia.
 | `partial` | §5.3 ok, mas falha algum dos demais critérios de `ready` | tabela com classes; sem Sankey |
 | `insufficient_data` | unidades < `n_secoes_min`, cobertura insuficiente ou tipo de seção não identificável | só limites |
 | `failed` | falha computacional | só limites, com o motivo |
+| `unavailable` | calibração reprovada, unidades ≥ `n_secoes_max` (fora da faixa validada) ou totais divergentes (V3) | só limites, com o motivo |
 
 **Massa de mudança:** a soma das estimativas fora da retenção (todas as células, exceto `A→A`,
 `B→B`, `I→I` e `X→X`).
@@ -321,6 +327,7 @@ partida e os marcados com "simulação" são substituídos pelos da calibração
 | `tau_populacao` | `max(2, 1% de E₁)` | distribuição de `D` em 2026 (§3.4) |
 | `cobertura_minima` | 0,90 dos aptos do 1º turno | fixo |
 | `n_secoes_min` | 15 | simulação |
+| `n_secoes_max` | sem teto | simulação (limite superior da faixa validada, §5.6) |
 | `rhat_max` | 1,01 | fixo |
 | `ess_min` | 400 | fixo |
 | `largura_determinada` | `max(5 votos, 1% da linha)` | fixo |

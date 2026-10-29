@@ -59,3 +59,27 @@ test_that("ec_calibrate roda a simulação e reporta convergência por processo 
     expect_match(r$decision, "só limites")
   }
 })
+
+test_that("ec_calibration_range devolve a faixa contígua de estratos validados", {
+  pool <- function(cov) {
+    do.call(rbind, lapply(names(cov), function(s) {
+      n <- 20
+      data.frame(stratum = s, covered = seq_len(n) <= round(cov[[s]] * n))
+    }))
+  }
+  # cobertura cai com o tamanho: o estrato grande sai da faixa
+  r <- ec_calibration_range(pool(c("15-29" = 1, "30-59" = 0.95, "60-149" = 0.95, "150+" = 0.4)), 0.9)
+  expect_equal(r$n_min, 15); expect_equal(r$n_max, 150)
+  # cobertura sobe com o tamanho: faixa aberta acima
+  r <- ec_calibration_range(pool(c("15-29" = 0.5, "30-59" = 0.95, "150+" = 1)), 0.9)
+  expect_equal(r$n_min, 30); expect_equal(r$n_max, Inf)
+  # nenhum estrato validado
+  r <- ec_calibration_range(pool(c("15-29" = 0.5)), 0.9)
+  expect_equal(r$n_min, Inf)
+  expect_equal(ec_calibration_range(data.frame(stratum = character(), covered = logical()), 0.9)$n_min, Inf)
+})
+
+test_that("ec_parallel_map preserva a ordem e propaga erros", {
+  expect_equal(ec_parallel_map(1:6, function(i) i^2, 2L), as.list((1:6)^2))
+  expect_error(ec_parallel_map(1:3, function(i) if (i == 2) stop("falhou") else i, 2L), "falhou")
+})

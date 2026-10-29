@@ -45,8 +45,8 @@ run_ecological_uf <- function(uf, units_path, totals_path, validation, calibrati
   totals <- read_parquet_df(totals_path, where = sprintf("uf = '%s'", uf))
   scenarios <- assumptions$scenarios
 
-  lim <- list(); cen <- list(); flo <- list(); models <- list()
-  for (i in seq_len(nrow(totals))) {
+  run_mun <- function(i) {
+    lim <- list(); cen <- list(); flo <- NULL
     mun <- totals$municipio_tse[i]
     share <- totals$eligible_share_used[i]
     u <- units[units$municipio_tse == mun, c("election_id", "uf", "municipio_tse", unit_cols), drop = FALSE]
@@ -82,13 +82,18 @@ run_ecological_uf <- function(uf, units_path, totals_path, validation, calibrati
                                               calibration_id = calibration$result$calibration_id)))
     }
     est$model$status <- est$status
-    models[[mun]] <- est$model
     if (est$status %in% c("ready", "partial") && !is.null(est$flows) && nrow(est$flows) > 0L) {
-      f <- tibble::as_tibble(est$flows)
-      f$election_id <- cfg$election_id; f$uf <- uf; f$municipio_tse <- mun
-      flo[[length(flo) + 1L]] <- f
+      flo <- tibble::as_tibble(est$flows)
+      flo$election_id <- cfg$election_id; flo$uf <- uf; flo$municipio_tse <- mun
     }
+    list(lim = dplyr::bind_rows(lim), cen = dplyr::bind_rows(cen), flo = flo, model = est$model)
   }
+  # Municípios maiores primeiro, para equilibrar os processos; o resultado volta à ordem original.
+  n_units <- vapply(totals$municipio_tse, function(m) sum(units$municipio_tse == m), integer(1))
+  idx <- order(-n_units)
+  res <- ec_parallel_map(idx, run_mun, calibration$params$execucao$workers %||% 1L)[order(idx)]
+  lim <- lapply(res, `[[`, "lim"); cen <- lapply(res, `[[`, "cen"); flo <- lapply(res, `[[`, "flo")
+  models <- stats::setNames(lapply(res, `[[`, "model"), totals$municipio_tse)
 
   out_dir <- layer_dir("gold", cfg$election_id, "eco", paste0("uf=", uf))
   paths <- c(limites = file.path(out_dir, "limites.parquet"),

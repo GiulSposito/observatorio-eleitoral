@@ -128,6 +128,14 @@ ec_estimate <- function(units, params, seed, context = list(eligible_share_used 
     return(list(flows = ec_empty_flows(), status = "insufficient_data",
                 model = model("insufficient_data", sprintf("Menos de %d seções comparáveis (%d).", est$n_secoes_min, n))))
   }
+  # 05 §5.6: acima da faixa de tamanho validada pela calibração, o modelo não roda
+  if (!is.null(est$n_secoes_max) && n >= est$n_secoes_max) {
+    return(list(flows = ec_empty_flows(), status = "unavailable",
+                model = model("unavailable", sprintf(paste(
+                  "A calibração por simulação não validou a estimativa para municípios com %d ou mais seções",
+                  "comparáveis (este tem %d); nesta release só os limites são publicados."),
+                  as.integer(est$n_secoes_max), n))))
+  }
   if (!is.null(share_used) && !is.na(share_used) && share_used < params$cobertura_minima) {
     return(list(flows = ec_empty_flows(), status = "insufficient_data",
                 model = model("insufficient_data", sprintf("Seções comparáveis cobrem %.0f%% dos aptos; mínimo de %.0f%%.",

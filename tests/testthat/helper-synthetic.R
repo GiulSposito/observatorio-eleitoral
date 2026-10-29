@@ -112,6 +112,7 @@ default_sections <- function() {
 # Roda silver → gold sobre um conjunto sintético, numa raiz de dados temporária já ativa.
 run_synthetic_gold <- function(sections = default_sections(), ...) {
   cfg <- read_election_config("2026-presidente")
+  cfg$incluir_ufs <- character()  # as seções sintéticas cobrem várias UFs; o recorte da release não se aplica
   params <- read_method_params()
   ex <- write_synthetic_tse(sections, file.path(data_root(), "bronze", "extracted"), ...)
   sp <- build_silver(cfg, ex)

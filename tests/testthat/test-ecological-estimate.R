@@ -183,3 +183,17 @@ test_that("resumo nacional de diagnósticos conta status e convergência", {
   expect_equal(s$by_model_status$failed, 1L)
   expect_equal(length(s$top_reasons), 2L)
 })
+
+test_that("ec_estimate não roda o modelo acima de n_secoes_max", {
+  u <- ec_test_units(60, seed = 27)
+  p <- fast_params()
+  p$estimacao$n_secoes_min <- 15
+  p$estimacao$n_secoes_max <- 50
+  old <- ec_fit_main
+  assign("ec_fit_main", function(...) stop("não deveria rodar"), envir = globalenv())
+  on.exit(assign("ec_fit_main", old, envir = globalenv()), add = TRUE)
+  r <- ec_estimate(u, p, seed = 9, context = list(eligible_share_used = 1))
+  expect_equal(r$status, "unavailable")
+  expect_equal(nrow(r$flows), 0L)
+  expect_match(r$model$reason_unavailable, "50 ou mais seções")
+})
