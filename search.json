@@ -1,0 +1,135 @@
+[
+  {
+    "objectID": "dados-e-codigo.html",
+    "href": "dados-e-codigo.html",
+    "title": "Dados e código",
+    "section": "",
+    "text": "Pular para o conteúdo"
+  },
+  {
+    "objectID": "dados-e-codigo.html#fontes",
+    "href": "dados-e-codigo.html#fontes",
+    "title": "Dados e código",
+    "section": "Fontes",
+    "text": "Fontes\nTodos os números vêm de arquivos públicos do Tribunal Superior Eleitoral, baixados pelo pipeline com URL, tamanho, data de coleta e hash sha256 registrados:\n\nVotação por seção eleitoral, 2026 — votos por seção e candidato a presidente, nos dois turnos.\nDetalhe da votação por seção, 2026 — aptos, comparecimento, abstenção, brancos, nulos e situação da seção.\nPortal de Dados Abertos do TSE.\n\nCada município mostra, na aba Qualidade, os arquivos usados e seus hashes."
+  },
+  {
+    "objectID": "dados-e-codigo.html#como-os-dados-são-publicados",
+    "href": "dados-e-codigo.html#como-os-dados-são-publicados",
+    "title": "Dados e código",
+    "section": "Como os dados são publicados",
+    "text": "Como os dados são publicados\nO pipeline em R gera uma publicação imutável (release) com um catálogo de municípios, um resumo e um relatório de qualidade por município, e arquivos Parquet por UF com os dados de cada seção, os limites, os cenários e as estimativas. O site lê o resumo diretamente e consulta os Parquets no próprio navegador, com DuckDB-Wasm, só quando você abre uma aba de detalhe."
+  },
+  {
+    "objectID": "dados-e-codigo.html#como-reproduzir",
+    "href": "dados-e-codigo.html#como-reproduzir",
+    "title": "Dados e código",
+    "section": "Como reproduzir",
+    "text": "Como reproduzir\nO código está em github.com/GiulSposito/observatorio-eleitoral. Com R, renv e Quarto instalados:\nRscript -e 'renv::restore()'\nRscript run.R 2026-presidente     # baixa os arquivos do TSE, verifica, calcula e gera a publicação\nquarto render web                 # gera o site estático em web/_site/\nO contrato dos arquivos publicados está em docs/03-contratos-de-dados.md e contract/; o método, em docs/05-metodo-analitico.md."
+  },
+  {
+    "objectID": "dados-e-codigo.html#licença-e-uso",
+    "href": "dados-e-codigo.html#licença-e-uso",
+    "title": "Dados e código",
+    "section": "Licença e uso",
+    "text": "Licença e uso\nOs dados de origem são públicos. Ao reutilizar números deste site, cite a publicação (release) e a classe de evidência: observado, limite condicional ou estimado pelo modelo."
+  },
+  {
+    "objectID": "metodologia.html",
+    "href": "metodologia.html",
+    "title": "Metodologia",
+    "section": "",
+    "text": "Pular para o conteúdo"
+  },
+  {
+    "objectID": "metodologia.html#escopo",
+    "href": "metodologia.html#escopo",
+    "title": "Metodologia",
+    "section": "Escopo",
+    "text": "Escopo\nEleição para Presidente da República de 2026: 1º turno em 4 de outubro e 2º turno em 25 de outubro. Nesta primeira versão, os municípios do Estado de São Paulo; os demais estados entram nas próximas versões, com o mesmo método. Votos no exterior ficam fora, porque não pertencem a município. A unidade observada é a seção eleitoral, pareada entre os dois turnos."
+  },
+  {
+    "objectID": "metodologia.html#notação-e-categorias",
+    "href": "metodologia.html#notação-e-categorias",
+    "title": "Metodologia",
+    "section": "Notação e categorias",
+    "text": "Notação e categorias\nEm cada seção, no 1º turno: votos do finalista A (\\(A_1\\)), do finalista B (\\(B_1\\)), dos demais candidatos (\\(O_1\\)), brancos e nulos (\\(I_1\\)) e abstenção (\\(X_1\\)). No 2º turno: \\(A_2\\), \\(B_2\\), \\(I_2\\) e \\(X_2\\). Os finalistas recebem os rótulos A e B por uma regra nacional e neutra: A é o finalista com o menor número de urna. As cores acompanham esses rótulos, nunca partidos."
+  },
+  {
+    "objectID": "metodologia.html#a-conta-que-fecha-é-aritmética",
+    "href": "metodologia.html#a-conta-que-fecha-é-aritmética",
+    "title": "Metodologia",
+    "section": "A conta que fecha é aritmética",
+    "text": "A conta que fecha é aritmética\nEm cada turno, o comparecimento é a soma dos votos: \\(C_1 = A_1 + B_1 + O_1 + I_1\\) e \\(C_2 = A_2 + B_2 + I_2\\). Subtraindo,\n\\[\\Delta A + \\Delta B = O_1 + \\Delta C - \\Delta I.\\]\nO ganho somado dos finalistas é igual aos votos dos demais candidatos no 1º turno, mais a variação do comparecimento, mais a redução de brancos e nulos. A igualdade decorre das contas de cada turno; ela explica os totais, mas não mostra quem mudou de voto e não serve para verificar o pareamento das seções entre turnos."
+  },
+  {
+    "objectID": "metodologia.html#verificações",
+    "href": "metodologia.html#verificações",
+    "title": "Metodologia",
+    "section": "Verificações",
+    "text": "Verificações\n\nV1 — integridade em cada turno: comparecimento = soma dos votos; aptos = comparecimento + abstenção; nenhuma contagem negativa.\nV2 — harmonização entre turnos: cada seção pareada uma a uma, mesmo tipo de seção, local de votação conferido, classe de população.\nV3 — totais oficiais: a soma das seções bate com o total oficial do município; divergências só passam com explicação registrada."
+  },
+  {
+    "objectID": "metodologia.html#eleitores-que-mudam-entre-turnos",
+    "href": "metodologia.html#eleitores-que-mudam-entre-turnos",
+    "title": "Metodologia",
+    "section": "Eleitores que mudam entre turnos",
+    "text": "Eleitores que mudam entre turnos\nO cadastro eleitoral fecha antes da eleição, mas o voto em trânsito é pedido por turno e as seções especiais têm dinâmica própria. Seções de trânsito e especiais ficam fora da análise de transição (continuam nos totais). Nas demais, se os aptos não mudam, a matriz é fechada; se mudam pouco (até a tolerância τ), entra uma categoria de entrada ou saída líquida, supondo que só a diferença líquida entrou ou saiu; se mudam mais, a seção fica fora da análise de transição."
+  },
+  {
+    "objectID": "metodologia.html#limites-o-que-as-margens-permitem",
+    "href": "metodologia.html#limites-o-que-as-margens-permitem",
+    "title": "Metodologia",
+    "section": "Limites: o que as margens permitem",
+    "text": "Limites: o que as margens permitem\nPara cada fluxo de uma categoria \\(i\\) do 1º turno para uma categoria \\(j\\) do 2º, numa seção com totais \\(r_i\\), \\(c_j\\) e total \\(T\\), os limites são\n\\[\\max(0,\\, r_i + c_j - T) \\;\\le\\; x_{ij} \\;\\le\\; \\min(r_i,\\, c_j).\\]\nO limite do município é a soma dos limites das seções. Os limites de células diferentes não podem ser atingidos ao mesmo tempo; por isso nunca formam um gráfico de fluxos. Cenários (como “sem troca direta entre os finalistas”) acrescentam restrições a cada seção e são calculados no pipeline, não no navegador."
+  },
+  {
+    "objectID": "metodologia.html#estimação-ecológica",
+    "href": "metodologia.html#estimação-ecológica",
+    "title": "Metodologia",
+    "section": "Estimação ecológica",
+    "text": "Estimação ecológica\nQuando o município tem seções suficientes, dois ou mais métodos de famílias diferentes estimam as taxas de transição supondo que elas são as mesmas em todas as seções do município (sem emprestar informação de outros municípios). A estimativa publicada é a média posterior das contagens do modelo multinomial-Dirichlet; os outros métodos dão a faixa entre métodos. Nenhum diagnóstico interno prova que a estimativa de um município está correta: o site só afirma que ela é compatível com os dados sob hipóteses declaradas.\nCada célula recebe uma classe de identificação, comparando a incerteza (intervalo e faixa entre métodos) com a largura do limite:\n\nDeterminada: as margens bastam.\nEstimada: a incerteza é pequena diante do limite; mostramos estimativa, intervalo e faixa entre métodos.\nFraca: mostramos o limite e, à parte, a estimativa sinalizada.\nNão identificada: só o limite — os dados não distinguem os fluxos possíveis.\n\nO gráfico de fluxos (Sankey) só aparece quando o município passa em todos os critérios: cálculo válido, cobertura e número de seções mínimos, checagem preditiva com seções deixadas de fora e massa de mudança suficiente em células determinadas ou estimadas. Os limiares foram calibrados por simulação, gerando segundos turnos com matrizes conhecidas sob hipóteses verdadeiras e falsas."
+  },
+  {
+    "objectID": "sobre.html",
+    "href": "sobre.html",
+    "title": "Sobre",
+    "section": "",
+    "text": "Pular para o conteúdo"
+  },
+  {
+    "objectID": "sobre.html#origem-da-análise",
+    "href": "sobre.html#origem-da-análise",
+    "title": "Sobre",
+    "section": "Origem da análise",
+    "text": "Origem da análise\nA ideia desta análise vem da thread de Rômulo Fiúza e Mello (@fiuzaemello), publicada no X em 26 de outubro de 2026. O Caderno Eleitoral generaliza esse tipo de análise para todos os municípios, com metodologia própria. Método, código e eventuais erros são de responsabilidade do projeto, não do autor da thread."
+  },
+  {
+    "objectID": "sobre.html#princípios",
+    "href": "sobre.html#princípios",
+    "title": "Sobre",
+    "section": "Princípios",
+    "text": "Princípios\n\nTodo número vem de dados oficiais do TSE e mostra sua fonte, sua versão e sua classe de evidência.\nDados agregados não identificam voto individual: o site não afirma quem mudou de voto, nem fraude, intenção ou causa.\nQuando os dados não permitem uma estimativa, o site diz isso — nunca preenche o espaço com zero, com outro município ou com um número não validado.\nNenhum município recebe tratamento especial.\nAs cores dos finalistas seguem uma regra neutra (menor número de urna = A) e não representam partidos."
+  },
+  {
+    "objectID": "sobre.html#contato-e-correções",
+    "href": "sobre.html#contato-e-correções",
+    "title": "Sobre",
+    "section": "Contato e correções",
+    "text": "Contato e correções\nCorreções e sugestões são bem-vindas pelo repositório do projeto."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Entenda o que mudou entre os turnos no seu município",
+    "section": "",
+    "text": "Pular para o conteúdo\n\n\n\n\n\n\n\n  Presidência · 2026 · 1º × 2º turno · Estado de São Paulo\n  Entenda o que mudou entre os turnos no seu município\n  Compare o 1º e o 2º turno da eleição presidencial de 2026, explore as seções eleitorais e veja o que os dados permitem — e o que não permitem — concluir.\n  \n    A busca de municípios precisa de JavaScript. A metodologia e os dados podem ser lidos sem ele.\n  \n  Primeira versão: os 645 municípios do Estado de São Paulo. Os demais estados entram nas próximas versões.\n  Projeto independente · Dados públicos do TSE · Métodos e versões abertos\n\n\n\n  Como ler\n  \n    Observado\n    O que o TSE publicou\n    Votos, comparecimento, brancos e nulos de cada seção nos dois turnos, conferidos com os totais oficiais. São contagens exatas.\n  \n  \n    Limite condicional\n    O que as margens permitem\n    Para cada fluxo entre categorias, o mínimo e o máximo possíveis dados os totais de cada seção. É matemática, não estimativa.\n  \n  \n    Estimado pelo modelo\n    O que um modelo estima\n    Uma distribuição compatível com os dados sob hipóteses declaradas, com incerteza. Aparece só quando passa nos critérios de qualidade."
+  },
+  {
+    "objectID": "explorar.html",
+    "href": "explorar.html",
+    "title": "caderno eleitoral.",
+    "section": "",
+    "text": "Pular para o conteúdo\n\n\n\n\n\n\nCarregando…"
+  }
+]

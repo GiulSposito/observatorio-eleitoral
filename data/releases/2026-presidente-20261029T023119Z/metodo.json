@@ -1,0 +1,357 @@
+{
+  "schema_version": "1.3.0",
+  "release_id": "2026-presidente-20261029T023119Z",
+  "method_version": "metodo-1.0.0",
+  "parameters": {
+    "method_version": "metodo-1.0.0",
+    "populacao": {
+      "tau_minimo_eleitores": 2,
+      "tau_fracao": 0.01
+    },
+    "cobertura_minima": 0.9,
+    "estimacao": {
+      "n_secoes_min": 15,
+      "rhat_max": 1.01,
+      "ess_min": 400,
+      "cadeias": 4,
+      "largura_determinada": {
+        "votos_minimo": 5,
+        "fracao_linha": 0.01
+      },
+      "r_estimado": 1,
+      "r_fraco": 1,
+      "k_folds": 5,
+      "ganho_preditivo_min": 0.9,
+      "massa_identificada_min": 0.8,
+      "intervalo_nivel": 0.95,
+      "n_secoes_max": 150,
+      "calibration_id": "cal-2026-presidente-48bc859f",
+      "calibration_status": "passed"
+    },
+    "calibracao": {
+      "cobertura_alvo": 0.9,
+      "processos": ["G1", "G2", "G3", "G4"],
+      "estratos": [15, 30, 60, 150],
+      "municipios_por_estrato": 3,
+      "max_unidades": 499,
+      "grade_r": [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.75, 1],
+      "cobertura_fraca": 0.75,
+      "min_celulas": 30
+    },
+    "execucao": {
+      "workers": 8,
+      "orcamento_segundos_por_municipio": 1800,
+      "dm_homog": {
+        "alpha_prior": 1,
+        "phi_limites": [
+          0.5,
+          100000
+        ],
+        "piloto": 4000,
+        "iteracoes": 100000,
+        "thin": 50,
+        "extensoes_max": 5,
+        "amostras_contagem": 2000,
+        "max_unidades_ajuste": 400
+      },
+      "usar_ecolrxc": false,
+      "ecolrxc_max_unidades": 60
+    }
+  },
+  "categories": [
+    {
+      "code": "A",
+      "round": 1,
+      "label_ptbr": "Finalista A"
+    },
+    {
+      "code": "B",
+      "round": 1,
+      "label_ptbr": "Finalista B"
+    },
+    {
+      "code": "O",
+      "round": 1,
+      "label_ptbr": "Demais candidatos"
+    },
+    {
+      "code": "I",
+      "round": 1,
+      "label_ptbr": "Brancos e nulos"
+    },
+    {
+      "code": "X",
+      "round": 1,
+      "label_ptbr": "Abstenção"
+    },
+    {
+      "code": "N",
+      "round": 1,
+      "label_ptbr": "Entrada líquida de aptos"
+    },
+    {
+      "code": "A",
+      "round": 2,
+      "label_ptbr": "Finalista A"
+    },
+    {
+      "code": "B",
+      "round": 2,
+      "label_ptbr": "Finalista B"
+    },
+    {
+      "code": "I",
+      "round": 2,
+      "label_ptbr": "Brancos e nulos"
+    },
+    {
+      "code": "X",
+      "round": 2,
+      "label_ptbr": "Abstenção"
+    },
+    {
+      "code": "S",
+      "round": 2,
+      "label_ptbr": "Saída líquida de aptos"
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "pop-liquida-minima",
+      "label_ptbr": "Rotatividade mínima de eleitores",
+      "description_ptbr": "Quando os aptos de uma seção mudam entre os turnos, supõe-se que só a diferença líquida entrou ou saiu, sem eleitores saindo e outros entrando na mesma seção."
+    },
+    {
+      "id": "homogeneidade-municipal",
+      "label_ptbr": "Taxas iguais nas seções do município",
+      "description_ptbr": "O modelo supõe que as taxas de mudança entre categorias são as mesmas em todas as seções do município, com variação aleatória em torno delas."
+    },
+    {
+      "id": "sem-troca-finalistas",
+      "label_ptbr": "Sem troca direta entre os finalistas",
+      "description_ptbr": "Nenhum eleitor do finalista A no 1º turno votou no finalista B no 2º, e vice-versa."
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "base",
+      "assumption_id": "pop-liquida-minima",
+      "label_ptbr": "Só as margens observadas",
+      "description_ptbr": "Limites que decorrem apenas dos totais de cada seção nos dois turnos."
+    },
+    {
+      "id": "sem-troca-finalistas",
+      "assumption_id": "pop-liquida-minima+sem-troca-finalistas",
+      "label_ptbr": "Sem troca direta entre os finalistas",
+      "description_ptbr": "Limites supondo que nenhum eleitor trocou diretamente de um finalista para o outro."
+    }
+  ],
+  "calibration": {
+    "calibration_id": "cal-2026-presidente-48bc859f",
+    "status": "passed",
+    "target_coverage": 0.9,
+    "results": [
+      {
+        "process": "G1",
+        "stratum": "15-29",
+        "fits": 3,
+        "converged": 3,
+        "cells_estimated": 60,
+        "coverage_estimated": 0.833333333333333,
+        "mae_estimated": 76.1893335628812
+      },
+      {
+        "process": "G2",
+        "stratum": "15-29",
+        "fits": 3,
+        "converged": 3,
+        "cells_estimated": 60,
+        "coverage_estimated": 1,
+        "mae_estimated": 50.1221699555808
+      },
+      {
+        "process": "G3",
+        "stratum": "15-29",
+        "fits": 3,
+        "converged": 1,
+        "cells_estimated": 20,
+        "coverage_estimated": 0.95,
+        "mae_estimated": 114.590797939919
+      },
+      {
+        "process": "G4",
+        "stratum": "15-29",
+        "fits": 3,
+        "converged": 2,
+        "cells_estimated": 40,
+        "coverage_estimated": 1,
+        "mae_estimated": 70.5609992643559
+      },
+      {
+        "process": "G1",
+        "stratum": "150+",
+        "fits": 3,
+        "converged": 2,
+        "cells_estimated": 40,
+        "coverage_estimated": 0.925,
+        "mae_estimated": 278.760142173985
+      },
+      {
+        "process": "G2",
+        "stratum": "150+",
+        "fits": 3,
+        "converged": 1,
+        "cells_estimated": 20,
+        "coverage_estimated": 0.4,
+        "mae_estimated": 1578.37638861223
+      },
+      {
+        "process": "G3",
+        "stratum": "150+",
+        "fits": 3,
+        "converged": 0,
+        "cells_estimated": 0,
+        "coverage_estimated": null,
+        "mae_estimated": null
+      },
+      {
+        "process": "G4",
+        "stratum": "150+",
+        "fits": 3,
+        "converged": 1,
+        "cells_estimated": 24,
+        "coverage_estimated": 0.75,
+        "mae_estimated": 306.035368690786
+      },
+      {
+        "process": "G1",
+        "stratum": "30-59",
+        "fits": 3,
+        "converged": 1,
+        "cells_estimated": 20,
+        "coverage_estimated": 0.9,
+        "mae_estimated": 116.457789393822
+      },
+      {
+        "process": "G2",
+        "stratum": "30-59",
+        "fits": 3,
+        "converged": 2,
+        "cells_estimated": 40,
+        "coverage_estimated": 0.95,
+        "mae_estimated": 62.3532598524498
+      },
+      {
+        "process": "G3",
+        "stratum": "30-59",
+        "fits": 3,
+        "converged": 2,
+        "cells_estimated": 40,
+        "coverage_estimated": 0.95,
+        "mae_estimated": 75.8936214138617
+      },
+      {
+        "process": "G4",
+        "stratum": "30-59",
+        "fits": 3,
+        "converged": 0,
+        "cells_estimated": 0,
+        "coverage_estimated": null,
+        "mae_estimated": null
+      },
+      {
+        "process": "G1",
+        "stratum": "60-149",
+        "fits": 3,
+        "converged": 1,
+        "cells_estimated": 20,
+        "coverage_estimated": 0.9,
+        "mae_estimated": 155.372887917198
+      },
+      {
+        "process": "G2",
+        "stratum": "60-149",
+        "fits": 3,
+        "converged": 2,
+        "cells_estimated": 40,
+        "coverage_estimated": 0.975,
+        "mae_estimated": 90.4389452114454
+      },
+      {
+        "process": "G3",
+        "stratum": "60-149",
+        "fits": 3,
+        "converged": 1,
+        "cells_estimated": 20,
+        "coverage_estimated": 0.95,
+        "mae_estimated": 88.7565806192809
+      },
+      {
+        "process": "G4",
+        "stratum": "60-149",
+        "fits": 3,
+        "converged": 0,
+        "cells_estimated": 0,
+        "coverage_estimated": null,
+        "mae_estimated": null
+      }
+    ],
+    "decision": "r_estimado = 1.00, r_fraco = 1.00, n_secoes_min = 15, n_secoes_max = 150 (cobertura-alvo 90% em G2–G4)."
+  },
+  "national_summary": {
+    "municipalities": 645,
+    "by_publication_status": {
+      "ready": 645
+    },
+    "by_validation_status": {
+      "passed": 645
+    },
+    "by_ecological_model": {
+      "failed": 207,
+      "insufficient_data": 154,
+      "ready": 170,
+      "unavailable": 114
+    },
+    "sections_total": 103656,
+    "units_in_transition_analysis": 103144,
+    "sections_by_exclusion": {
+      "in_transition_analysis": 103144,
+      "special_section": 61,
+      "population_change_above_tau": 451
+    },
+    "eligible_net_change_distribution": [
+      {
+        "bucket": "0",
+        "n": 92021
+      },
+      {
+        "bucket": "1-2",
+        "n": 10909
+      },
+      {
+        "bucket": "3-10",
+        "n": 697
+      },
+      {
+        "bucket": ">10",
+        "n": 29
+      }
+    ],
+    "finalists_totals": [
+      {
+        "slot": "A",
+        "number": "13",
+        "round_1_votes": 9505413,
+        "round_2_votes": 12119274
+      },
+      {
+        "slot": "B",
+        "number": "22",
+        "round_1_votes": 12922023,
+        "round_2_votes": 14139178
+      }
+    ],
+    "official_totals_notes": "V3 confere votos por candidato nos dois turnos (votacao_candidato_munzona) e aptos, comparecimento, brancos e nulos no 1º turno (detalhe_votacao_munzona). O detalhe municipal do 2º turno não estava publicado na coleta; no 2º turno, esses totais vêm só da soma das seções.",
+    "exterior": "Votos no exterior (UF ZZ) fora do escopo."
+  }
+}
